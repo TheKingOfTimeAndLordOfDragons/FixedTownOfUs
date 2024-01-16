@@ -12,7 +12,6 @@ namespace TownOfUs.Roles
         public PlayerControl ClosestPlayer;
         public List<byte> InfectedPlayers = new List<byte>();
         public DateTime LastInfected;
-        public bool PlaguebearerWins { get; set; }
 
         public int InfectedAlive => InfectedPlayers.Count(x => Utils.PlayerById(x) != null && Utils.PlayerById(x).Data != null && !Utils.PlayerById(x).Data.IsDead && !Utils.PlayerById(x).Data.Disconnected);
         public bool CanTransform => PlayerControl.AllPlayerControls.ToArray().Count(x => x != null && !x.Data.IsDead && !x.Data.Disconnected) <= InfectedAlive;
@@ -27,35 +26,6 @@ namespace TownOfUs.Roles
             AddToRoleHistory(RoleType);
             Faction = Faction.NeutralKilling;
             InfectedPlayers.Add(player.PlayerId);
-        }
-
-        internal override bool NeutralWin(LogicGameFlowNormal __instance)
-        {
-            if (Player.Data.IsDead || Player.Data.Disconnected) return true;
-
-            if (PlayerControl.AllPlayerControls.ToArray().Count(x => !x.Data.IsDead && !x.Data.Disconnected) <= 2 &&
-                    PlayerControl.AllPlayerControls.ToArray().Count(x => !x.Data.IsDead && !x.Data.Disconnected &&
-                    (x.Data.IsImpostor() || x.Is(Faction.NeutralKilling))) == 1)
-            {
-                Utils.Rpc(CustomRPC.PlaguebearerWin, Player.PlayerId);
-                Wins();
-                Utils.EndGame();
-                return false;
-            }
-
-            return false;
-        }
-
-        public void Wins()
-        {
-            PlaguebearerWins = true;
-        }
-
-        protected override void IntroPrefix(IntroCutscene._ShowTeam_d__36 __instance)
-        {
-            var plaguebearerTeam = new Il2CppSystem.Collections.Generic.List<PlayerControl>();
-            plaguebearerTeam.Add(PlayerControl.LocalPlayer);
-            __instance.teamToShow = plaguebearerTeam;
         }
 
         public float InfectTimer()

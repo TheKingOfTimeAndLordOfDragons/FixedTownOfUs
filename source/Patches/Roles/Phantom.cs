@@ -7,7 +7,7 @@ namespace TownOfUs.Roles
     {
         public RoleEnum formerRole = new RoleEnum();
         public bool Caught;
-        public bool CompletedTasks;
+        public static bool CompletedTasks;
         public bool Faded;
 
         public Phantom(PlayerControl player) : base(player)

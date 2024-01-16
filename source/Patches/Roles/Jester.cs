@@ -4,7 +4,7 @@ namespace TownOfUs.Roles
 {
     public class Jester : Role
     {
-        public bool VotedOut;
+        public static bool VotedOut;
         public bool SpawnedAs = true;
 
 
@@ -17,27 +17,6 @@ namespace TownOfUs.Roles
             RoleType = RoleEnum.Jester;
             AddToRoleHistory(RoleType);
             Faction = Faction.NeutralEvil;
-        }
-
-        protected override void IntroPrefix(IntroCutscene._ShowTeam_d__36 __instance)
-        {
-            var jestTeam = new List<PlayerControl>();
-            jestTeam.Add(PlayerControl.LocalPlayer);
-            __instance.teamToShow = jestTeam;
-        }
-
-        internal override bool NeutralWin(LogicGameFlowNormal __instance)
-        {
-            if (!VotedOut || !Player.Data.IsDead && !Player.Data.Disconnected) return true;
-            if (!CustomGameOptions.NeutralEvilWinEndsGame) return true;
-            Utils.EndGame();
-            return false;
-        }
-
-        public void Wins()
-        {
-            //System.Console.WriteLine("Reached Here - Jester edition");
-            VotedOut = true;
         }
     }
 }

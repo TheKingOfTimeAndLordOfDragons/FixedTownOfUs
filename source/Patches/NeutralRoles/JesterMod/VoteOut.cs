@@ -19,18 +19,15 @@ namespace TownOfUs.NeutralRoles.JesterMod
             if (role == null) return;
             if (role.RoleType == RoleEnum.Jester)
             {
-                ((Jester)role).Wins();
-                
+                Jester.VotedOut = true;
 
                 if (CustomGameOptions.NeutralEvilWinEndsGame || !CustomGameOptions.JesterHaunt) return;
                 if (PlayerControl.LocalPlayer != player) return;
-                role.PauseEndCrit = true;
 
                 byte[] toKill = MeetingHud.Instance.playerStates.Where(x => !Utils.PlayerById(x.TargetPlayerId).Is(RoleEnum.Pestilence) && x.VotedFor == player.PlayerId).Select(x => x.TargetPlayerId).ToArray();
                 var pk = new PunishmentKill((x) =>
                 {
                     Utils.RpcMultiMurderPlayer(player, x);
-                    role.PauseEndCrit = false;
                 }, (y) =>
                 {
                     return toKill.Contains(y.PlayerId);

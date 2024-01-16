@@ -79,50 +79,45 @@ namespace TownOfUs.Roles.Modifiers
             lover2.OtherLover = lover1;
         }
 
-        internal override bool ModifierWin(LogicGameFlowNormal __instance)
-        {
-            if (FourPeopleLeft()) return false;
-
-            if (CheckLoversWin())
+        public static bool existing() {
+            bool existing = false;
+            foreach (var modifier in Modifier.GetModifiers(ModifierEnum.Lover))
             {
-                Utils.Rpc(CustomRPC.LoveWin, Player.PlayerId);
-                Win();
-                Utils.EndGame();
-                return false;
+                var lover = (Lover)modifier;
+                existing = lover.Player != null && lover.OtherLover.Player != null && !lover.Player.Data.Disconnected && !lover.OtherLover.Player.Data.Disconnected;
             }
-
-            return true;
+            return existing;
         }
 
-        private bool FourPeopleLeft()
-        {
-            var players = PlayerControl.AllPlayerControls.ToArray();
-            var alives = players.Where(x => !x.Data.IsDead).ToList();
-            var lover1 = Player;
-            var lover2 = OtherLover.Player;
+        public static bool existingAndAlive() {
+            bool existingAndAlive = false;
+            foreach (var modifier in Modifier.GetModifiers(ModifierEnum.Lover))
             {
-                return !lover1.Data.IsDead && !lover1.Data.Disconnected && !lover2.Data.IsDead && !lover2.Data.Disconnected &&
-                       alives.Count() == 4 && (lover1.Is(Faction.Impostors) || lover2.Is(Faction.Impostors));
+                var lover = (Lover)modifier;
+                existingAndAlive = existing() && !lover.Player.Data.IsDead && !lover.OtherLover.Player.Data.IsDead;
             }
+            return existingAndAlive;
         }
 
-        private bool CheckLoversWin()
-        {
-            //System.Console.WriteLine("CHECKWIN");
-            var players = PlayerControl.AllPlayerControls.ToArray();
-            var alives = players.Where(x => !x.Data.IsDead).ToList();
-            var lover1 = Player;
-            var lover2 = OtherLover.Player;
-
-            return !lover1.Data.IsDead && !lover1.Data.Disconnected && !lover2.Data.IsDead && !lover2.Data.Disconnected &&
-                   (alives.Count == 3) | (alives.Count == 2);
+        public static PlayerControl otherLover(PlayerControl oneLover) {
+            if (!existingAndAlive()) return null;
+            foreach (var modifier in Modifier.GetModifiers(ModifierEnum.Lover))
+            {
+                var lover = (Lover)modifier;
+                if (oneLover == lover.Player) return lover.OtherLover.Player;
+                if (oneLover == lover.OtherLover.Player) return lover.Player;
+            }
+            return null;
         }
 
-        public void Win()
-        {
-            if (CustomGameOptions.NeutralEvilWinEndsGame && Role.AllRoles.Where(x => x.RoleType == RoleEnum.Jester).Any(x => ((Jester) x).VotedOut)) return;
-            LoveCoupleWins = true;
-            OtherLover.LoveCoupleWins = true;
+        public static bool existingWithKiller() {
+            bool existingWithKiller = false;
+            foreach (var modifier in Modifier.GetModifiers(ModifierEnum.Lover))
+            {
+                var lover = (Lover)modifier;
+                existingWithKiller = existing() && (lover.Player.Is(Faction.Impostors) || lover.Player.Is(Faction.NeutralKilling) || lover.OtherLover.Player.Is(Faction.Impostors) || lover.OtherLover.Player.Is(Faction.NeutralKilling));
+            }
+            return existingWithKiller;
         }
     }
 }

@@ -61,30 +61,6 @@ namespace TownOfUs.Roles
         public bool IsUsingMimic { get; set; }
 
         public PlayerControl MimicTarget { get; set; }
-        public bool GlitchWins { get; set; }
-
-        internal override bool NeutralWin(LogicGameFlowNormal __instance)
-        {
-            if (Player.Data.IsDead || Player.Data.Disconnected) return true;
-
-            if (PlayerControl.AllPlayerControls.ToArray().Count(x => !x.Data.IsDead && !x.Data.Disconnected) <= 2 &&
-                    PlayerControl.AllPlayerControls.ToArray().Count(x => !x.Data.IsDead && !x.Data.Disconnected &&
-                    (x.Data.IsImpostor() || x.Is(Faction.NeutralKilling))) == 1)
-            {
-                Utils.Rpc(CustomRPC.GlitchWin, Player.PlayerId);
-                Wins();
-                Utils.EndGame();
-                return false;
-            }
-
-            return false;
-        }
-
-        public void Wins()
-        {
-            //System.Console.WriteLine("Reached Here - Glitch Edition");
-            GlitchWins = true;
-        }
 
         public void Reset()
         {
@@ -96,14 +72,6 @@ namespace TownOfUs.Roles
             HighlightedPlayer = null;
             PlayerIndex = 0;
         }
-
-        protected override void IntroPrefix(IntroCutscene._ShowTeam_d__36 __instance)
-        {
-            var glitchTeam = new Il2CppSystem.Collections.Generic.List<PlayerControl>();
-            glitchTeam.Add(PlayerControl.LocalPlayer);
-            __instance.teamToShow = glitchTeam;
-        }
-
         public void Update(HudManager __instance)
         {
             if (!Player.Data.IsDead)

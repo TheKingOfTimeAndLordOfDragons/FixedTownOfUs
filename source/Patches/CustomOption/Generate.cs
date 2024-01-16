@@ -497,6 +497,14 @@ namespace TownOfUs.CustomOption
         public static CustomOption ChillDuration;
         public static CustomOption ChillStartSpeed;
 
+        public static CustomOption BlockGameEndHeader;
+        public static CustomOption BlockGameEnd;
+        public static CustomOption SheriffBlockGameEnd;
+        public static CustomOption VeteranBlockGameEnd;
+        public static CustomOption MayorBlockGameEnd;
+        public static CustomOption SwapperBlockGameEnd;
+        public static CustomOption TiebreakerBlockGameEnd;
+
         public static Func<float, string> PercentFormat { get; } = (float value) => $"{value:0}%";
         public static Func<float, string> CooldownFormat { get; } = (float value) => $"{value:0.0#}s";
         public static Func<float, string> MultiplierFormat { get; } = (float value) => $"{value:0.0#}x";
@@ -696,14 +704,17 @@ namespace TownOfUs.CustomOption
             ExecutionerOn = CustomOption.CreateNumber(149, Types.Neutral, "<color=#8C4005FF>Executioner</color>", 0f, 0f, 100f, 10f, PercentFormat, NeutralEvilRoles, true);
             OnTargetDead = CustomOption.CreateString(150, Types.Neutral, "Executioner Becomes On Target Dead", new[] { "Crew", "Amnesiac", "Survivor", "Jester" }, ExecutionerOn);
             ExecutionerButton = CustomOption.CreateToggle(151, Types.Neutral, "Executioner Can Button", true, ExecutionerOn);
+            ExecutionerTorment = CustomOption.CreateToggle(417, Types.General, "Executioner Torment Player On Victory", false, ExecutionerOn);
 
             JesterOn = CustomOption.CreateNumber(153, Types.Neutral, "<color=#FFBFCCFF>Jester</color>", 0f, 0f, 100f, 10f, PercentFormat, NeutralEvilRoles, true);
             JesterButton = CustomOption.CreateToggle(154, Types.Neutral, "Jester Can Button", true, JesterOn);
             JesterVent = CustomOption.CreateToggle(155, Types.Neutral, "Jester Can Hide In Vents", false, JesterOn);
             JesterImpVision = CustomOption.CreateToggle(156, Types.Neutral, "Jester Has Impostor Vision", false, JesterOn);
+            JesterHaunt = CustomOption.CreateToggle(416, Types.General, "Jester Haunt Player On Victory", false, JesterOn);
 
             PhantomOn = CustomOption.CreateNumber(158, Types.Neutral, "<color=#662962FF>Phantom</color>", 0f, 0f, 100f, 10f, PercentFormat, NeutralEvilRoles, true);
             PhantomTasksRemaining = CustomOption.CreateNumber(159, Types.Neutral, "Tasks Remaining When Phantom Can Be Clicked", 5f, 1f, 15f, 1f, null, PhantomOn);
+            PhantomSpook = CustomOption.CreateToggle(415, Types.General, "Phantom Spook Player On Victory", false, PhantomOn);
 
 
             NeutralKillingRoles = CustomOption.CreateHeader(161, Types.Neutral, "Neutral Killing Roles");
@@ -940,9 +951,14 @@ namespace TownOfUs.CustomOption
             HiddenRoles = CustomOption.CreateToggle(352, Types.General, "Enable Hidden Roles", true, CustomGameSettings);
             FirstDeathShield = CustomOption.CreateToggle(353, Types.General, "First Death Shield Next Game", false, CustomGameSettings);
             NeutralEvilWinEndsGame = CustomOption.CreateToggle(354, Types.General, "Neutral Evil Win Ends Game", false, CustomGameSettings);
-            ExecutionerTorment = CustomOption.CreateToggle(417, Types.General, "Executioner Torment Player On Victory", false, NeutralEvilWinEndsGame);
-            JesterHaunt = CustomOption.CreateToggle(416, Types.General, "Jester Haunt Player On Victory", false, NeutralEvilWinEndsGame);
-            PhantomSpook = CustomOption.CreateToggle(415, Types.General, "Phantom Spook Player On Victory", false, NeutralEvilWinEndsGame);
+
+            BlockGameEndHeader = CustomOption.CreateHeader(445, Types.General, "Block Game Ending");
+            BlockGameEnd = CustomOption.CreateToggle(446, Types.General, "Power Crewmates Block Game End", false, BlockGameEndHeader);
+            SheriffBlockGameEnd = CustomOption.CreateToggle(447, Types.General, "Block Game End If Sheriff Is Alive", false, BlockGameEnd);
+            VeteranBlockGameEnd = CustomOption.CreateToggle(448, Types.General, "Block Game End If Veteran Is Alive", false, BlockGameEnd);
+            MayorBlockGameEnd = CustomOption.CreateToggle(449, Types.General, "Block Game End If Mayor Is Alive", false, BlockGameEnd);
+            SwapperBlockGameEnd = CustomOption.CreateToggle(450, Types.General, "Block Game End If Swapper Is Alive", false, BlockGameEnd);
+            TiebreakerBlockGameEnd = CustomOption.CreateToggle(451, Types.General, "Block Game End If Crew Tiebreaker Is Alive", false, BlockGameEnd);
 
             TaskTrackingSettings = CustomOption.CreateHeader(355, Types.General, "Task Tracking Settings");
             SeeTasksDuringRound = CustomOption.CreateToggle(356, Types.General, "See Tasks During Round", false, TaskTrackingSettings);

@@ -663,23 +663,6 @@ namespace TownOfUs
                         Activator.CreateInstance(asm.GetType(mstring), new object[] { player2 });
                         break;
 
-                    case CustomRPC.LoveWin:
-                        var winnerlover = Utils.PlayerById(reader.ReadByte());
-                        Modifier.GetModifier<Lover>(winnerlover).Win();
-                        break;
-
-                    case CustomRPC.NobodyWins:
-                        Role.NobodyWinsFunc();
-                        break;
-
-                    case CustomRPC.SurvivorOnlyWin:
-                        Role.SurvOnlyWin();
-                        break;
-
-                    case CustomRPC.VampireWin:
-                        Role.VampWin();
-                        break;
-
                     case CustomRPC.SetCouple:
                         var id = reader.ReadByte();
                         var id2 = reader.ReadByte();
@@ -700,9 +683,6 @@ namespace TownOfUs
                         ShowRoundOneShield.FirstRoundShielded = readByte == byte.MaxValue ? null : Utils.PlayerById(readByte);
                         ShowRoundOneShield.DiedFirst = "";
                         Murder.KilledPlayers.Clear();
-                        Role.NobodyWins = false;
-                        Role.SurvOnlyWins = false;
-                        Role.VampireWins = false;
                         ExileControllerPatch.lastExiled = null;
                         PatchKillTimer.GameStarted = false;
                         StartImitate.ImitatingPlayer = null;
@@ -854,14 +834,6 @@ namespace TownOfUs
                         theGlitchRole.IsUsingMimic = false;
                         Utils.Unmorph(theGlitchRole.Player);
                         break;
-                    case CustomRPC.GlitchWin:
-                        var theGlitch = Role.AllRoles.FirstOrDefault(x => x.RoleType == RoleEnum.Glitch);
-                        ((Glitch) theGlitch)?.Wins();
-                        break;
-                    case CustomRPC.JuggernautWin:
-                        var juggernaut = Role.AllRoles.FirstOrDefault(x => x.RoleType == RoleEnum.Juggernaut);
-                        ((Juggernaut)juggernaut)?.Wins();
-                        break;
                     case CustomRPC.SetHacked:
                         var hackPlayer = Utils.PlayerById(reader.ReadByte());
                         if (hackPlayer.PlayerId == PlayerControl.LocalPlayer.PlayerId)
@@ -983,28 +955,12 @@ namespace TownOfUs
                         grenadierRole.TimeRemaining = CustomGameOptions.GrenadeDuration;
                         grenadierRole.Flash();
                         break;
-                    case CustomRPC.ArsonistWin:
-                        var theArsonistTheRole = Role.AllRoles.FirstOrDefault(x => x.RoleType == RoleEnum.Arsonist);
-                        ((Arsonist) theArsonistTheRole)?.Wins();
-                        break;
-                    case CustomRPC.WerewolfWin:
-                        var theWerewolfTheRole = Role.AllRoles.FirstOrDefault(x => x.RoleType == RoleEnum.Werewolf);
-                        ((Werewolf)theWerewolfTheRole)?.Wins();
-                        break;
-                    case CustomRPC.PlaguebearerWin:
-                        var thePlaguebearerTheRole = Role.AllRoles.FirstOrDefault(x => x.RoleType == RoleEnum.Plaguebearer);
-                        ((Plaguebearer)thePlaguebearerTheRole)?.Wins();
-                        break;
                     case CustomRPC.Infect:
                         var pb = Role.GetRole<Plaguebearer>(Utils.PlayerById(reader.ReadByte()));
                         pb.SpreadInfection(Utils.PlayerById(reader.ReadByte()), Utils.PlayerById(reader.ReadByte()));
                         break;
                     case CustomRPC.TurnPestilence:
                         Role.GetRole<Plaguebearer>(Utils.PlayerById(reader.ReadByte())).TurnPestilence();
-                        break;
-                    case CustomRPC.PestilenceWin:
-                        var thePestilenceTheRole = Role.AllRoles.FirstOrDefault(x => x.RoleType == RoleEnum.Pestilence);
-                        ((Pestilence)thePestilenceTheRole)?.Wins();
                         break;
                     case CustomRPC.SyncCustomSettings:
                         CustomOption.CustomOption.ReceiveRpc(reader.ReadByte(), reader);
@@ -1108,17 +1064,14 @@ namespace TownOfUs
                         phantomPlayer.Exiled();
                         break;
                     case CustomRPC.PhantomWin:
-                        var phantomWinner = Role.GetRole<Phantom>(Utils.PlayerById(reader.ReadByte()));
-                        phantomWinner.CompletedTasks = true;
                         if (!CustomGameOptions.NeutralEvilWinEndsGame)
                         {
+                            var phantomWinner = Role.GetRole<Phantom>(Utils.PlayerById(reader.ReadByte()));
                             phantomWinner.Caught = true;
                             if (!PlayerControl.LocalPlayer.Is(RoleEnum.Phantom) || !CustomGameOptions.PhantomSpook || MeetingHud.Instance) return;
                             byte[] toKill = MeetingHud.Instance.playerStates.Where(x => !Utils.PlayerById(x.TargetPlayerId).Is(RoleEnum.Pestilence)).Select(x => x.TargetPlayerId).ToArray();
-                            Role.GetRole(PlayerControl.LocalPlayer).PauseEndCrit = true;
                             var pk = new PunishmentKill((x) => {
                                 Utils.RpcMultiMurderPlayer(PlayerControl.LocalPlayer, x);
-                                Role.GetRole(PlayerControl.LocalPlayer).PauseEndCrit = false;
                             }, (y) => {
                                 return toKill.Contains(y.PlayerId);
                             });
@@ -1225,9 +1178,6 @@ namespace TownOfUs
                 }
                 else ShowRoundOneShield.FirstRoundShielded = null;
                 ShowRoundOneShield.DiedFirst = "";
-                Role.NobodyWins = false;
-                Role.SurvOnlyWins = false;
-                Role.VampireWins = false;
                 ExileControllerPatch.lastExiled = null;
                 PatchKillTimer.GameStarted = false;
                 StartImitate.ImitatingPlayer = null;

@@ -93,6 +93,12 @@ namespace TownOfUs
             return player.Is(ModifierEnum.Lover);
         }
 
+        public static bool IsLover(byte playerId)
+        {
+            PlayerControl player = PlayerById(playerId);
+            return player.Is(ModifierEnum.Lover);
+        }
+
         public static bool Is(this PlayerControl player, RoleEnum roleType)
         {
             return Role.GetRole(player)?.RoleType == roleType;

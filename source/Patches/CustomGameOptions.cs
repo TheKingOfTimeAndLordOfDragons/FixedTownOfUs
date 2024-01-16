@@ -367,5 +367,11 @@ namespace TownOfUs
         public static float ReviveCooldown => Generate.ReviveCooldown.GetFloat();
         public static float IncreasedCooldownPerRevive => Generate.IncreasedCooldownPerRevive.GetFloat();
         public static int MaxReveals => Mathf.RoundToInt(Generate.MaxReveals.GetFloat());
+        public static bool BlockGameEnd => Generate.BlockGameEnd.GetBool();
+        public static bool SheriffBlockGameEnd => Generate.SheriffBlockGameEnd.GetBool();
+        public static bool VeteranBlockGameEnd => Generate.VeteranBlockGameEnd.GetBool();
+        public static bool MayorBlockGameEnd => Generate.MayorBlockGameEnd.GetBool();
+        public static bool SwapperBlockGameEnd => Generate.SwapperBlockGameEnd.GetBool();
+        public static bool TiebreakerBlockGameEnd => Generate.TiebreakerBlockGameEnd.GetBool();
     }
 }

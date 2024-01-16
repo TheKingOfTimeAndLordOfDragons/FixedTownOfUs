@@ -38,7 +38,7 @@ namespace TownOfUs.NeutralRoles.ExecutionerMod
             if (role.target && role.target.nameText() && !CamouflageUnCamouflage.IsCamoed) role.target.nameText().text += "<color=#8C4005FF> X</color>";
 
             if (!role.target.Data.IsDead && !role.target.Data.Disconnected && !role.target.Is(RoleEnum.Vampire)) return;
-            if (role.TargetVotedOut) return;
+            if (Executioner.TargetVotedOut) return;
 
             Utils.Rpc(CustomRPC.ExecutionerToJester, PlayerControl.LocalPlayer.PlayerId);
 
