@@ -23,6 +23,9 @@ namespace TownOfUs.Patches {
         internal class PlayerRoleInfo
         {
             public string PlayerName { get; set; }
+            public bool Loved { get; set; }
+            public bool ExeTarget { get; set; }
+            public bool GATarget { get; set; }
             public string Role { get; set; }
         }
 
@@ -42,9 +45,16 @@ namespace TownOfUs.Patches {
             if (CameraEffect.singleton) CameraEffect.singleton.materials.Clear();
             AdditionalTempData.clear();
             var playerRole = "";
+            bool loved = false;
+            bool exeTarget = false;
+            bool gaTarget = false;
             // Theres a better way of doing this e.g. switch statement or dictionary. But this works for now.
             foreach (var playerControl in PlayerControl.AllPlayerControls)
             {
+                loved = playerControl.IsLover();
+                exeTarget = playerControl.IsExeTarget();
+                gaTarget = playerControl.IsGATarget();
+
                 playerRole = "";
                 foreach (var role in Role.RoleHistory.Where(x => x.Key == playerControl.PlayerId))
                 {
@@ -205,7 +215,7 @@ namespace TownOfUs.Patches {
                 {
                     playerRole += " |<color=#" + Patches.Colors.Impostor.ToHtmlStringRGBA() + $"> Incorrect Guesses: {player.IncorrectAssassinKills}</color>";
                 }
-                AdditionalTempData.playerRoles.Add(new AdditionalTempData.PlayerRoleInfo() { PlayerName = playerControl.Data.PlayerName, Role = playerRole });
+                AdditionalTempData.playerRoles.Add(new AdditionalTempData.PlayerRoleInfo() { PlayerName = playerControl.Data.PlayerName, Loved = loved, ExeTarget = exeTarget, GATarget = gaTarget, Role = playerRole });
             }
 
             if (!CustomGameOptions.NeutralEvilWinEndsGame)
@@ -255,7 +265,10 @@ namespace TownOfUs.Patches {
             roleSummaryText.AppendLine("End game summary:");
             foreach(var data in AdditionalTempData.playerRoles) {
                 var role = string.Join(" ", data.Role);
-                roleSummaryText.AppendLine($"{data.PlayerName} - {role}");
+                string loved = data.Loved ? " <color=#FF66CCFF>♥</color>" : "";
+                string exeTarget = data.ExeTarget ? " <color=#8C4005FF>X</color>" : "";
+                string gaTarget = data.GATarget ? " <color=#B3FFFFFF>★</color>" : "";
+                roleSummaryText.AppendLine($"{data.PlayerName}{loved}{exeTarget}{gaTarget} - {role}");
             }
 
             if (AdditionalTempData.otherWinners.Count != 0)

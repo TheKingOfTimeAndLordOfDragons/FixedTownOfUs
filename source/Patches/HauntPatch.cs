@@ -18,8 +18,9 @@ namespace TownOfUs
             var role = Role.GetRole(__instance.HauntTarget);
             var modifier = Modifier.GetModifier(__instance.HauntTarget);
 
-            __instance.FilterText.text = modifier != null ? $"{role.Name} - {modifier.Name}"
-                                                          : $"{role.Name}";
+            if (CustomGameOptions.DeadSeeRoles) __instance.FilterText.text = modifier != null ? $"{role.Name} - {modifier.Name}" : $"{role.Name}";
+            else __instance.FilterText.text = "";
+            
             return false;
         }
     }

@@ -1,25 +1,21 @@
-﻿using System;
+﻿using System.Collections.Generic;
+using System.Linq;
 using HarmonyLib;
 using Reactor.Utilities;
-using Reactor.Utilities.Extensions;
-using TMPro;
+using TownOfUs.Extensions;
 using TownOfUs.Roles;
 using TownOfUs.Roles.Modifiers;
 using UnityEngine;
-using UnityEngine.UI;
-using Object = UnityEngine.Object;
 
 namespace TownOfUs.NeutralRoles.DoomsayerMod
 {
-    [HarmonyPatch(typeof(MeetingHud), nameof(MeetingHud.Start))]
+    [HarmonyPatch]
     public class AddButton
     {
-        private static Sprite CycleBackSprite => TownOfUs.CycleBackSprite;
-        private static Sprite CycleForwardSprite => TownOfUs.CycleForwardSprite;
-
-        private static Sprite GuessSprite => TownOfUs.GuessSprite;
-
-        private static bool IsExempt(PlayerVoteArea voteArea)
+        public static GameObject doomsayerUI;
+        public static PassiveButton doomsayerUIExitButton;
+        public static byte doomsayerCurrentTarget;
+        public static bool IsExempt(PlayerVoteArea voteArea)
         {
             if (voteArea.AmDead) return true;
             var player = Utils.PlayerById(voteArea.TargetPlayerId);
@@ -32,159 +28,103 @@ namespace TownOfUs.NeutralRoles.DoomsayerMod
             return role != null && role.Criteria();
         }
 
+        public static void doomsayerOnClick(int buttonTarget, MeetingHud __instance) {
+            var role = Role.GetRole<Doomsayer>(PlayerControl.LocalPlayer);
+            if (doomsayerUI != null || !(__instance.state == MeetingHud.VoteStates.Voted || __instance.state == MeetingHud.VoteStates.NotVoted)) return;
+            __instance.playerStates.ToList().ForEach(x => x.gameObject.SetActive(false));
 
-        public static void GenButton(Doomsayer role, PlayerVoteArea voteArea)
-        {
-            var targetId = voteArea.TargetPlayerId;
-            if (IsExempt(voteArea))
-            {
-                role.Buttons[targetId] = (null, null, null, null);
-                return;
-            }
+            Transform PhoneUI = UnityEngine.Object.FindObjectsOfType<Transform>().FirstOrDefault(x => x.name == "PhoneUI");
+            Transform container = UnityEngine.Object.Instantiate(PhoneUI, __instance.transform);
+            container.transform.localPosition = new Vector3(0, 0, -5f);
+            doomsayerUI = container.gameObject;
 
-            var confirmButton = voteArea.Buttons.transform.GetChild(0).gameObject;
-            var parent = confirmButton.transform.parent.parent;
+            int i = 0;
+            var buttonTemplate = __instance.playerStates[0].transform.FindChild("votePlayerBase");
+            var maskTemplate = __instance.playerStates[0].transform.FindChild("MaskArea");
+            var smallButtonTemplate = __instance.playerStates[0].Buttons.transform.Find("CancelButton");
+            var textTemplate = __instance.playerStates[0].NameText;
 
-            var nameText = Object.Instantiate(voteArea.NameText, voteArea.transform);
-            voteArea.NameText.transform.localPosition = new Vector3(0.55f, 0.12f, -0.1f);
-            nameText.transform.localPosition = new Vector3(0.55f, -0.12f, -0.1f);
-            nameText.text = "Guess";
+            doomsayerCurrentTarget = __instance.playerStates[buttonTarget].TargetPlayerId;
 
-            var cycleBack = Object.Instantiate(confirmButton, voteArea.transform);
-            var cycleRendererBack = cycleBack.GetComponent<SpriteRenderer>();
-            cycleRendererBack.sprite = CycleBackSprite;
-            cycleBack.transform.localPosition = new Vector3(-0.5f, 0.15f, -2f);
-            cycleBack.transform.localScale = new Vector3(0.8f, 0.8f, 0.8f);
-            cycleBack.layer = 5;
-            cycleBack.transform.parent = parent;
-            var cycleEventBack = new Button.ButtonClickedEvent();
-            cycleEventBack.AddListener(Cycle(role, voteArea, nameText, false));
-            cycleBack.GetComponent<PassiveButton>().OnClick = cycleEventBack;
-            var cycleColliderBack = cycleBack.GetComponent<BoxCollider2D>();
-            cycleColliderBack.size = cycleRendererBack.sprite.bounds.size;
-            cycleColliderBack.offset = Vector2.zero;
-            cycleBack.transform.GetChild(0).gameObject.Destroy();
+            Transform exitButtonParent = (new GameObject()).transform;
+            exitButtonParent.SetParent(container);
+            Transform exitButton = UnityEngine.Object.Instantiate(buttonTemplate.transform, exitButtonParent);
+            Transform exitButtonMask = UnityEngine.Object.Instantiate(maskTemplate, exitButtonParent);
+            exitButton.gameObject.GetComponent<SpriteRenderer>().sprite = smallButtonTemplate.GetComponent<SpriteRenderer>().sprite;
+            exitButtonParent.transform.localPosition = new Vector3(2.725f, 2.1f, -5);
+            exitButtonParent.transform.localScale = new Vector3(0.217f, 0.9f, 1);
+            doomsayerUIExitButton = exitButton.GetComponent<PassiveButton>();
+            doomsayerUIExitButton.OnClick.RemoveAllListeners();
+            doomsayerUIExitButton.OnClick.AddListener((System.Action)(() => {
+                __instance.playerStates.ToList().ForEach(x => {
+                    x.gameObject.SetActive(true);
+                    if (PlayerControl.LocalPlayer.Data.IsDead && x.transform.FindChild("ShootButton") != null) UnityEngine.Object.Destroy(x.transform.FindChild("ShootButton").gameObject);
+                });
+                UnityEngine.Object.Destroy(container.gameObject);
+            }));
 
-            var cycleForward = Object.Instantiate(confirmButton, voteArea.transform);
-            var cycleRendererForward = cycleForward.GetComponent<SpriteRenderer>();
-            cycleRendererForward.sprite = CycleForwardSprite;
-            cycleForward.transform.localPosition = new Vector3(-0.2f, 0.15f, -2f);
-            cycleForward.transform.localScale = new Vector3(0.8f, 0.8f, 0.8f);
-            cycleForward.layer = 5;
-            cycleForward.transform.parent = parent;
-            var cycleEventForward = new Button.ButtonClickedEvent();
-            cycleEventForward.AddListener(Cycle(role, voteArea, nameText, true));
-            cycleForward.GetComponent<PassiveButton>().OnClick = cycleEventForward;
-            var cycleColliderForward = cycleForward.GetComponent<BoxCollider2D>();
-            cycleColliderForward.size = cycleRendererForward.sprite.bounds.size;
-            cycleColliderForward.offset = Vector2.zero;
-            cycleForward.transform.GetChild(0).gameObject.Destroy();
+            List<Transform> buttons = new List<Transform>();
+            Transform selectedButton = null;
 
-            var guess = Object.Instantiate(confirmButton, voteArea.transform);
-            var guessRenderer = guess.GetComponent<SpriteRenderer>();
-            guessRenderer.sprite = GuessSprite;
-            guess.transform.localPosition = new Vector3(-0.35f, -0.15f, -2f);
-            guess.transform.localScale = new Vector3(0.8f, 0.8f, 0.8f);
-            guess.layer = 5;
-            guess.transform.parent = parent;
-            var guessEvent = new Button.ButtonClickedEvent();
-            guessEvent.AddListener(Guess(role, voteArea));
-            guess.GetComponent<PassiveButton>().OnClick = guessEvent;
-            var bounds = guess.GetComponent<SpriteRenderer>().bounds;
-            bounds.size = new Vector3(0.52f, 0.3f, 0.16f);
-            var guessCollider = guess.GetComponent<BoxCollider2D>();
-            guessCollider.size = guessRenderer.sprite.bounds.size;
-            guessCollider.offset = Vector2.zero;
-            guess.transform.GetChild(0).gameObject.Destroy();
+            foreach (var pair in role.SortedColorMapping) {
+                Transform buttonParent = (new GameObject()).transform;
+                buttonParent.SetParent(container);
+                Transform button = UnityEngine.Object.Instantiate(buttonTemplate, buttonParent);
+                Transform buttonMask = UnityEngine.Object.Instantiate(maskTemplate, buttonParent);
+                TMPro.TextMeshPro label = UnityEngine.Object.Instantiate(textTemplate, button);
+                button.GetComponent<SpriteRenderer>().sprite = ShipStatus.Instance.CosmeticsCache.GetNameplate("nameplate_NoPlate").Image;
+                buttons.Add(button);
+                int row = i/5, col = i%5;
+                buttonParent.localPosition = new Vector3(-3.47f + 1.75f * col, 1.5f - 0.45f * row, -5);
+                buttonParent.localScale = new Vector3(0.55f, 0.55f, 1f);
+                label.text = Utils.cs(pair.Value, pair.Key);
+                label.alignment = TMPro.TextAlignmentOptions.Center;
+                label.transform.localPosition = new Vector3(0, 0, label.transform.localPosition.z);
+                label.transform.localScale *= 1.7f;
+                int copiedIndex = i;
 
-            role.Guesses.Add(targetId, "None");
-            role.Buttons[targetId] = (cycleBack, cycleForward, guess, nameText);
-        }
+                button.GetComponent<PassiveButton>().OnClick.RemoveAllListeners();
+                if (!PlayerControl.LocalPlayer.Data.IsDead && !Utils.PlayerById((byte)__instance.playerStates[buttonTarget].TargetPlayerId).Data.IsDead) button.GetComponent<PassiveButton>().OnClick.AddListener((System.Action)(() => {
+                    if (selectedButton != button) {
+                        selectedButton = button;
+                        buttons.ForEach(x => x.GetComponent<SpriteRenderer>().color = x == selectedButton ? Color.red : Color.white);
+                    } else {
+                        PlayerControl focusedTarget = Utils.PlayerById((byte)__instance.playerStates[buttonTarget].TargetPlayerId);
+                        if (!(__instance.state == MeetingHud.VoteStates.Voted || __instance.state == MeetingHud.VoteStates.NotVoted) || focusedTarget == null) return;
 
-        private static Action Cycle(Doomsayer role, PlayerVoteArea voteArea, TextMeshPro nameText, bool forwardsCycle = true)
-        {
-            void Listener()
-            {
-                if (MeetingHud.Instance.state == MeetingHud.VoteStates.Discussion) return;
-                var currentGuess = role.Guesses[voteArea.TargetPlayerId];
-                var guessIndex = currentGuess == "None"
-                    ? -1
-                    : role.PossibleGuesses.IndexOf(currentGuess);
-                if (forwardsCycle)
-                {
-                    if (++guessIndex >= role.PossibleGuesses.Count)
-                        guessIndex = 0;
-                }
-                else
-                {
-                    if (--guessIndex < 0)
-                        guessIndex = role.PossibleGuesses.Count - 1;
-                }
+                        var mainRoleInfo = Role.GetRole(focusedTarget);
+                        var modRoleInfo = Modifier.GetModifier(focusedTarget);
 
-                var newGuess = role.Guesses[voteArea.TargetPlayerId] = role.PossibleGuesses[guessIndex];
+                        PlayerControl dyingTarget = (mainRoleInfo.Name == pair.Key) ? focusedTarget : PlayerControl.LocalPlayer;
+                        if (modRoleInfo != null)
+                            dyingTarget = (mainRoleInfo.Name == pair.Key || modRoleInfo.Name == pair.Key) ? focusedTarget : PlayerControl.LocalPlayer;
+                        
+                        // Reset the GUI
+                        __instance.playerStates.ToList().ForEach(x => x.gameObject.SetActive(true));
+                        UnityEngine.Object.Destroy(container.gameObject);
+                        __instance.playerStates.ToList().ForEach(x => { if (x.TargetPlayerId == dyingTarget.PlayerId && x.transform.FindChild("ShootButton") != null) UnityEngine.Object.Destroy(x.transform.FindChild("ShootButton").gameObject); });
 
-                nameText.text = newGuess == "None"
-                    ? "Guess"
-                    : $"<color=#{role.SortedColorMapping[newGuess].ToHtmlStringRGBA()}>{newGuess}</color>";
-            }
-
-            return Listener;
-        }
-
-        private static Action Guess(Doomsayer role, PlayerVoteArea voteArea)
-        {
-            void Listener()
-            {
-                if (
-                    MeetingHud.Instance.state == MeetingHud.VoteStates.Discussion ||
-                    IsExempt(voteArea) || PlayerControl.LocalPlayer.Data.IsDead
-                ) return;
-                var targetId = voteArea.TargetPlayerId;
-                var currentGuess = role.Guesses[targetId];
-                if (currentGuess == "None") return;
-
-                var playerRole = Role.GetRole(voteArea);
-                var playerModifier = Modifier.GetModifier(voteArea);
-
-                var toDie = playerRole.Name == currentGuess ? playerRole.Player : role.Player;
-
-                if (toDie == playerRole.Player)
-                {
-                    DoomsayerKill.RpcMurderPlayer(toDie, PlayerControl.LocalPlayer);
-                    ShowHideButtonsDoom.HideSingle(role, targetId, toDie == role.Player);
-                    if (toDie.IsLover() && CustomGameOptions.BothLoversDie)
-                    {
-                        var lover = ((Lover)playerModifier).OtherLover.Player;
-                        if (!lover.Is(RoleEnum.Pestilence)) ShowHideButtonsDoom.HideSingle(role, lover.PlayerId, false);
+                        // Shoot player
+                        if (dyingTarget == focusedTarget)
+                        {
+                            DoomsayerKill.RpcMurderPlayer(role, dyingTarget, PlayerControl.LocalPlayer);
+                            if (dyingTarget.IsLover() && CustomGameOptions.BothLoversDie)
+                            {
+                                var lover = ((Lover)modRoleInfo).OtherLover.Player;
+                                if (!lover.Is(RoleEnum.Pestilence))
+                                    __instance.playerStates.ToList().ForEach(x => { if (x.TargetPlayerId == lover.PlayerId && x.transform.FindChild("ShootButton") != null) UnityEngine.Object.Destroy(x.transform.FindChild("ShootButton").gameObject); });
+                            }
+                        }
+                        else
+                        {
+                            __instance.playerStates.ToList().ForEach(x => { if (x.transform.FindChild("ShootButton") != null) UnityEngine.Object.Destroy(x.transform.FindChild("ShootButton").gameObject); });
+                            Coroutines.Start(Utils.FlashCoroutine(role.Color));
+                        }
                     }
-                }
-                else
-                {
-                    ShowHideButtonsDoom.HideButtonsDoom(role);
-                    Coroutines.Start(Utils.FlashCoroutine(Color.red));
-                }
+                }));
+                i++;
             }
-
-            return Listener;
-        }
-
-        public static void Postfix(MeetingHud __instance)
-        {
-            foreach (var role in Role.GetRoles(RoleEnum.Doomsayer))
-            {
-                var doomsayer = (Doomsayer)role;
-                doomsayer.Guesses.Clear();
-                doomsayer.Buttons.Clear();
-            }
-
-            if (PlayerControl.LocalPlayer.Data.IsDead) return;
-            if (!PlayerControl.LocalPlayer.Is(RoleEnum.Doomsayer)) return;
-
-            var doomsayerRole = Role.GetRole<Doomsayer>(PlayerControl.LocalPlayer);
-            foreach (var voteArea in __instance.playerStates)
-            {
-                GenButton(doomsayerRole, voteArea);
-            }
+            container.transform.localScale *= 0.75f;
         }
     }
 }

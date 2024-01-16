@@ -17,7 +17,6 @@ namespace TownOfUs
             }
             else if (GameOptionsManager.Instance.currentNormalGameOptions.AnonymousVotes && (!CustomGameOptions.DeadSeeRoles || !PlayerControl.LocalPlayer.Data.IsDead))
             {
-                //PlayerControl.SetPlayerMaterialColors(Palette.DisabledGrey, spriteRenderer);
                 PlayerMaterial.SetColors(Palette.DisabledGrey, spriteRenderer);
             }
             else
@@ -27,11 +26,6 @@ namespace TownOfUs
             }
             spriteRenderer.transform.SetParent(parent);
             spriteRenderer.transform.localScale = Vector3.zero;
-            var component = parent.GetComponent<PlayerVoteArea>();
-            if (component != null)
-            {
-                spriteRenderer.material.SetInt(PlayerMaterial.MaskLayer, component.MaskLayer);
-            }
 
             var Base = __instance as MonoBehaviour;
             Base.StartCoroutine(Effects.Bloop((float)index * 0.3f, spriteRenderer.transform, 1f, 0.5f));

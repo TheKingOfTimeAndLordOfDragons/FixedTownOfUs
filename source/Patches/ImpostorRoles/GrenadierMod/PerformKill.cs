@@ -1,3 +1,4 @@
+using System.Linq;
 using HarmonyLib;
 using TownOfUs.Roles;
 
@@ -18,7 +19,9 @@ namespace TownOfUs.ImpostorRoles.GrenadierMod
                 if (__instance.isCoolingDown) return false;
                 if (!__instance.isActiveAndEnabled) return false;
                 var system = ShipStatus.Instance.Systems[SystemTypes.Sabotage].Cast<SabotageSystemType>();
-                var sabActive = system.AnyActive;
+                var specials = system.specials.ToArray();
+                var dummyActive = system.dummy.IsActive;
+                var sabActive = specials.Any(s => s.IsActive);
                 if (sabActive) return false;
                 if (role.FlashTimer() != 0) return false;
 

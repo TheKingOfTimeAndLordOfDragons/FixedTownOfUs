@@ -26,6 +26,8 @@ using TownOfUs.CrewmateRoles.ImitatorMod;
 using TownOfUs.CrewmateRoles.AurialMod;
 using Reactor.Networking;
 using Reactor.Networking.Extensions;
+using System.Reflection;
+using System.IO;
 
 namespace TownOfUs
 {
@@ -34,6 +36,7 @@ namespace TownOfUs
     {
         internal static bool ShowDeadBodies = false;
         private static GameData.PlayerInfo voteTarget = null;
+        public static Dictionary<byte, PoolablePlayer> playerIcons = new Dictionary<byte, PoolablePlayer>();
 
         public static void Morph(PlayerControl player, PlayerControl MorphedPlayer, bool resetAnim = false)
         {
@@ -156,6 +159,15 @@ namespace TownOfUs
             });
         }
 
+        public static bool IsGATarget(this PlayerControl player)
+        {
+            return Role.GetRoles(RoleEnum.GuardianAngel).Any(role =>
+            {
+                var gaTarget = ((GuardianAngel)role).target;
+                return gaTarget != null && player.PlayerId == gaTarget.PlayerId;
+            });
+        }
+
         public static bool IsShielded(this PlayerControl player)
         {
             return Role.GetRoles(RoleEnum.Medic).Any(role =>
@@ -211,20 +223,16 @@ namespace TownOfUs
             });
         }
 
-        public static List<bool> Interact(PlayerControl player, PlayerControl target, bool toKill = false)
+        public static InteractionData Interact(PlayerControl player, PlayerControl target, bool toKill = false)
         {
-            bool fullCooldownReset = false;
-            bool gaReset = false;
-            bool survReset = false;
-            bool zeroSecReset = false;
-            bool abilityUsed = false;
+            InteractionData data = new(false, false, false, false, false);
             if (target.IsInfected() || player.IsInfected())
             {
                 foreach (var pb in Role.GetRoles(RoleEnum.Plaguebearer)) ((Plaguebearer)pb).RpcSpreadInfection(target, player);
             }
             if (target == ShowRoundOneShield.FirstRoundShielded && toKill)
             {
-                zeroSecReset = true;
+                data.ZeroSecReset = true;
             }
             else if (target.Is(RoleEnum.Pestilence))
             {
@@ -233,29 +241,32 @@ namespace TownOfUs
                     var medic = player.GetMedic().Player.PlayerId;
                     Rpc(CustomRPC.AttemptSound, medic, player.PlayerId);
 
-                    if (CustomGameOptions.ShieldBreaks) fullCooldownReset = true;
-                    else zeroSecReset = true;
+                    if (CustomGameOptions.ShieldBreaks) data.FullCooldownReset = true;
+                    else data.ZeroSecReset = true;
 
                     StopKill.BreakShield(medic, player.PlayerId, CustomGameOptions.ShieldBreaks);
                 }
-                else if (player.IsProtected()) gaReset = true;
+                else if (player.IsProtected()) data.GaReset = true;
+                else if (player == ShowRoundOneShield.FirstRoundShielded) data.ZeroSecReset = true;
                 else RpcMurderPlayer(target, player);
             }
             else if (target.IsOnAlert())
             {
-                if (player.Is(RoleEnum.Pestilence)) zeroSecReset = true;
+                if (player.Is(RoleEnum.Pestilence)) data.ZeroSecReset = true;
                 else if (player.IsShielded())
                 {
                     var medic = player.GetMedic().Player.PlayerId;
                     Rpc(CustomRPC.AttemptSound, medic, player.PlayerId);
 
-                    if (CustomGameOptions.ShieldBreaks) fullCooldownReset = true;
-                    else zeroSecReset = true;
+                    if (CustomGameOptions.ShieldBreaks) data.FullCooldownReset = true;
+                    else data.ZeroSecReset = true;
 
                     StopKill.BreakShield(medic, player.PlayerId, CustomGameOptions.ShieldBreaks);
                 }
-                else if (player.IsProtected()) gaReset = true;
+                else if (player.IsProtected()) data.GaReset = true;
+                else if (player == ShowRoundOneShield.FirstRoundShielded) data.ZeroSecReset = true;
                 else RpcMurderPlayer(target, player);
+
                 if (toKill && CustomGameOptions.KilledOnAlert)
                 {
                     if (target.IsShielded())
@@ -263,12 +274,13 @@ namespace TownOfUs
                         var medic = target.GetMedic().Player.PlayerId;
                         Rpc(CustomRPC.AttemptSound, medic, target.PlayerId);
 
-                        if (CustomGameOptions.ShieldBreaks) fullCooldownReset = true;
-                        else zeroSecReset = true;
+                        if (CustomGameOptions.ShieldBreaks) data.FullCooldownReset = true;
+                        else data.ZeroSecReset = true;
 
                         StopKill.BreakShield(medic, target.PlayerId, CustomGameOptions.ShieldBreaks);
                     }
-                    else if (target.IsProtected()) gaReset = true;
+                    else if (target.IsProtected()) data.GaReset = true;
+                    else if (target == ShowRoundOneShield.FirstRoundShielded) data.ZeroSecReset = true;
                     else
                     {
                         if (player.Is(RoleEnum.Glitch))
@@ -303,10 +315,10 @@ namespace TownOfUs
                             ww.LastKilled = DateTime.UtcNow;
                         }
                         RpcMurderPlayer(player, target);
-                        abilityUsed = true;
-                        fullCooldownReset = true;
-                        gaReset = false;
-                        zeroSecReset = false;
+                        data.AbilityUsed = true;
+                        data.FullCooldownReset = true;
+                        data.GaReset = false;
+                        data.ZeroSecReset = false;
                     }
                 }
             }
@@ -315,17 +327,17 @@ namespace TownOfUs
                 Rpc(CustomRPC.AttemptSound, target.GetMedic().Player.PlayerId, target.PlayerId);
 
                 System.Console.WriteLine(CustomGameOptions.ShieldBreaks + "- shield break");
-                if (CustomGameOptions.ShieldBreaks) fullCooldownReset = true;
-                else zeroSecReset = true;
+                if (CustomGameOptions.ShieldBreaks) data.FullCooldownReset = true;
+                else data.ZeroSecReset = true;
                 StopKill.BreakShield(target.GetMedic().Player.PlayerId, target.PlayerId, CustomGameOptions.ShieldBreaks);
             }
             else if (target.IsVesting() && toKill)
             {
-                survReset = true;
+                data.SurvReset = true;
             }
             else if (target.IsProtected() && toKill)
             {
-                gaReset = true;
+                data.GaReset = true;
             }
             else if (toKill)
             {
@@ -361,21 +373,15 @@ namespace TownOfUs
                     ww.LastKilled = DateTime.UtcNow;
                 }
                 RpcMurderPlayer(player, target);
-                abilityUsed = true;
-                fullCooldownReset = true;
+                data.AbilityUsed = true;
+                data.FullCooldownReset = true;
             }
             else
             {
-                abilityUsed = true;
-                fullCooldownReset = true;
+                data.AbilityUsed = true;
+                data.FullCooldownReset = true;
             }
-            var reset = new List<bool>();
-            reset.Add(fullCooldownReset);
-            reset.Add(gaReset);
-            reset.Add(survReset);
-            reset.Add(zeroSecReset);
-            reset.Add(abilityUsed);
-            return reset;
+            return data;
         }
 
         public static Il2CppSystem.Collections.Generic.List<PlayerControl> GetClosestPlayers(Vector2 truePosition, float radius, bool includeDead)
@@ -956,7 +962,7 @@ namespace TownOfUs
                         GameOptionsManager.Instance.currentNormalGameOptions.MapId == 4))
                         normalPlayerTask.taskStep = 1;
                     if (updateArrow)
-                        normalPlayerTask.UpdateArrowAndLocation();
+                        normalPlayerTask.UpdateArrow();
 
                     var taskInfo = player.Data.FindTaskById(task.Id);
                     taskInfo.Complete = false;
@@ -1356,5 +1362,66 @@ namespace TownOfUs
             }
             #endregion
         }
+
+        public static string cs(Color c, string s) {
+            return string.Format("<color=#{0:X2}{1:X2}{2:X2}{3:X2}>{4}</color>", ToByte(c.r), ToByte(c.g), ToByte(c.b), ToByte(c.a), s);
+        }
+
+        private static byte ToByte(float f) {
+            f = Mathf.Clamp01(f);
+            return (byte)(f * 255);
+        }
+
+        public static Dictionary<string, Sprite> CachedSprites = new();
+        public static Sprite loadSpriteFromResources(string path, float pixelsPerUnit, bool cache=true) {
+            try
+            {
+                if (cache && CachedSprites.TryGetValue(path + pixelsPerUnit, out var sprite)) return sprite;
+                Texture2D texture = loadTextureFromResources(path);
+                sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), new Vector2(0.5f, 0.5f), pixelsPerUnit);
+                if (cache) sprite.hideFlags |= HideFlags.HideAndDontSave | HideFlags.DontSaveInEditor;
+                if (!cache) return sprite;
+                return CachedSprites[path + pixelsPerUnit] = sprite;
+            } catch {
+                TownOfUs.Logger.LogError("Error loading sprite from path: " + path);
+            }
+            return null;
+        }
+        public static Sprite loadSpriteFromResources(Texture2D texture, float pixelsPerUnit, Rect textureRect)
+        {
+            return Sprite.Create(texture, textureRect, new Vector2(0.5f, 0.5f), pixelsPerUnit);
+        }
+        public static unsafe Texture2D loadTextureFromResources(string path) {
+            try {
+                Texture2D texture = new Texture2D(2, 2, TextureFormat.ARGB32, true);
+                Assembly assembly = Assembly.GetExecutingAssembly();
+                Stream stream = assembly.GetManifestResourceStream(path);
+                var length = stream.Length;
+                var byteTexture = new Il2CppStructArray<byte>(length);
+                stream.Read(new Span<byte>(IntPtr.Add(byteTexture.Pointer, IntPtr.Size * 4).ToPointer(), (int) length));
+                ImageConversion.LoadImage(texture, byteTexture, false);
+                return texture;
+            } catch {
+                TownOfUs.Logger.LogError("Error loading texture from resources: " + path);
+            }
+            return null;
+        }
+
+        public static float CycleFloat(float max, float min, float currentVal, bool increment, float change = 1f)
+        {
+            var value = change * (increment ? 1 : -1);
+            currentVal += value;
+
+            if (currentVal > max)
+                currentVal = min;
+            else if (currentVal < min)
+                currentVal = max;
+
+            return currentVal;
+        }
+
+        public static int CycleInt(int max, int min, int currentVal, bool increment, int change = 1) => (int)CycleFloat(max, min, currentVal, increment, change);
+
+        public static byte CycleByte(int max, int min, int currentVal, bool increment, int change = 1) => (byte)CycleInt(max, min, currentVal, increment, change);
     }
 }

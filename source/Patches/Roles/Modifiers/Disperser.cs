@@ -25,9 +25,6 @@ namespace TownOfUs.Roles.Modifiers
             Color = Patches.Colors.Impostor;
             StartingCooldown = DateTime.UtcNow;
             ModifierType = ModifierEnum.Disperser;
-
-            Logger<TownOfUs>.Info("DISPERSER -==-=-=-=-=-=-=-=-=----------");
-            if (PlayerControl.LocalPlayer == player) Logger<TownOfUs>.Info("ME -==-=-=-=-=-=-=-=-=----------");
         }
         public float StartTimer()
         {

@@ -20,7 +20,7 @@ namespace TownOfUs.NeutralRoles.ExecutionerMod
         {
             foreach (var player in __instance.playerStates)
                 if (player.TargetPlayerId == role.target.PlayerId)
-                    player.NameText.color = Color.black;
+                    player.NameText.text += "<color=#8C4005FF> X</color>";
         }
 
         private static void Postfix(HudManager __instance)
@@ -35,7 +35,7 @@ namespace TownOfUs.NeutralRoles.ExecutionerMod
 
             if (MeetingHud.Instance != null) UpdateMeeting(MeetingHud.Instance, role);
 
-            if (role.target && role.target.nameText()) role.target.nameText().color = Color.black;
+            if (role.target && role.target.nameText() && !CamouflageUnCamouflage.IsCamoed) role.target.nameText().text += "<color=#8C4005FF> X</color>";
 
             if (!role.target.Data.IsDead && !role.target.Data.Disconnected && !role.target.Is(RoleEnum.Vampire)) return;
             if (role.TargetVotedOut) return;

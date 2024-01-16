@@ -13,9 +13,7 @@ namespace TownOfUs.Roles
         public bool Faded;
 
         public List<ArrowBehaviour> ImpArrows = new List<ArrowBehaviour>();
-
         public List<PlayerControl> HaunterTargets = new List<PlayerControl>();
-
         public List<ArrowBehaviour> HaunterArrows = new List<ArrowBehaviour>();
 
         public Haunter(PlayerControl player) : base(player)

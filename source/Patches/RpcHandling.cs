@@ -421,7 +421,7 @@ namespace TownOfUs
                 Utils.Rpc(CustomRPC.SetHaunter, byte.MaxValue);
             }
 
-            var toChooseFromNeut = PlayerControl.AllPlayerControls.ToArray().Where(x => (x.Is(Faction.NeutralBenign) || x.Is(Faction.NeutralEvil) || x.Is(Faction.NeutralKilling)) && !x.Is(ModifierEnum.Lover)).ToList();
+            var toChooseFromNeut = PlayerControl.AllPlayerControls.ToArray().Where(x => (x.Is(Faction.NeutralBenign) || x.Is(Faction.NeutralEvil) || x.Is(Faction.NeutralKilling)) && !x.Is(ModifierEnum.Lover) && !x.Is(RoleEnum.Vampire)).ToList();
             if (PhantomOn && toChooseFromNeut.Count != 0)
             {
                 var rand = Random.RandomRangeInt(0, toChooseFromNeut.Count);
@@ -436,7 +436,7 @@ namespace TownOfUs
                 Utils.Rpc(CustomRPC.SetPhantom, byte.MaxValue);
             }
 
-            var exeTargets = PlayerControl.AllPlayerControls.ToArray().Where(x => x.Is(Faction.Crewmates) && !x.Is(ModifierEnum.Lover) && !x.Is(RoleEnum.Mayor) && !x.Is(RoleEnum.Swapper) && !x.Is(RoleEnum.Vigilante) && x != SetTraitor.WillBeTraitor).ToList();
+            var exeTargets = PlayerControl.AllPlayerControls.ToArray().Where(x => x.Is(Faction.Crewmates) && !x.Is(ModifierEnum.Lover) && !x.Is(RoleEnum.Sheriff) && !x.Is(RoleEnum.Prosecutor) && !x.Is(RoleEnum.Mayor) && !x.Is(RoleEnum.Swapper) && !x.Is(RoleEnum.Vigilante) && x != SetTraitor.WillBeTraitor).ToList();
             foreach (var role in Role.GetRoles(RoleEnum.Executioner))
             {
                 var exe = (Executioner)role;
@@ -725,11 +725,8 @@ namespace TownOfUs
 
                         break;
                     case CustomRPC.EngineerFix:
-                        if (ShipStatus.Instance.Systems.ContainsKey(SystemTypes.MushroomMixupSabotage))
-                        {
-                            var mushroom = ShipStatus.Instance.Systems[SystemTypes.MushroomMixupSabotage].Cast<MushroomMixupSabotageSystem>();
-                            if (mushroom.IsActive) mushroom.currentSecondsUntilHeal = 0.1f;
-                        }
+                        var engineer = Utils.PlayerById(reader.ReadByte());
+                        Role.GetRole<Engineer>(engineer).UsesLeft -= 1;
                         break;
 
                     case CustomRPC.FixLights:
@@ -823,21 +820,24 @@ namespace TownOfUs
                         break;
                     case CustomRPC.AssassinKill:
                         var toDie = Utils.PlayerById(reader.ReadByte());
-                        var assassin = Utils.PlayerById(reader.ReadByte());
-                        AssassinKill.MurderPlayer(toDie);
-                        AssassinKill.AssassinKillCount(toDie, assassin);
+                        var assassin = Ability.GetAbilityValue<Assassin>(AbilityEnum.Assassin);
+                        var assassinPlayer = Utils.PlayerById(reader.ReadByte());
+                        AssassinKill.MurderPlayer(assassin, toDie);
+                        AssassinKill.AssassinKillCount(toDie, assassinPlayer);
                         break;
                     case CustomRPC.VigilanteKill:
                         var toDie2 = Utils.PlayerById(reader.ReadByte());
-                        var vigi = Utils.PlayerById(reader.ReadByte());
-                        VigilanteKill.MurderPlayer(toDie2);
-                        VigilanteKill.VigiKillCount(toDie2, vigi);
+                        var vigilante = Role.GetRoleValue<Vigilante>(RoleEnum.Vigilante);
+                        var vigilantePlayer = Utils.PlayerById(reader.ReadByte());
+                        VigilanteKill.MurderPlayer(vigilante, toDie2);
+                        VigilanteKill.VigiKillCount(toDie2, vigilantePlayer);
                         break;
                     case CustomRPC.DoomsayerKill:
                         var toDie3 = Utils.PlayerById(reader.ReadByte());
-                        var doom = Utils.PlayerById(reader.ReadByte());
-                        DoomsayerKill.DoomKillCount(toDie3, doom);
-                        DoomsayerKill.MurderPlayer(toDie3);
+                        var doomsayer = Role.GetRoleValue<Doomsayer>(RoleEnum.Doomsayer);
+                        var doomsayerPlayer = Utils.PlayerById(reader.ReadByte());
+                        DoomsayerKill.MurderPlayer(doomsayer, toDie3);
+                        DoomsayerKill.DoomKillCount(toDie3, doomsayerPlayer);
                         break;
                     case CustomRPC.SetMimic:
                         var glitchPlayer = Utils.PlayerById(reader.ReadByte());
@@ -1007,7 +1007,7 @@ namespace TownOfUs
                         ((Pestilence)thePestilenceTheRole)?.Wins();
                         break;
                     case CustomRPC.SyncCustomSettings:
-                        Rpc.ReceiveRpc(reader);
+                        CustomOption.CustomOption.ReceiveRpc(reader.ReadByte(), reader);
                         break;
                     case CustomRPC.AltruistRevive:
                         readByte1 = reader.ReadByte();

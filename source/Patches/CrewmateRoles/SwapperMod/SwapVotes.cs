@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using HarmonyLib;
 using Reactor.Utilities;
@@ -37,9 +36,6 @@ namespace TownOfUs.CrewmateRoles.SwapperMod
         {
             public static void Postfix(MeetingHud __instance)
             {
-                PluginSingleton<TownOfUs>.Instance.Log.LogMessage(Swap1 == null ? "null" : Swap1.ToString());
-                PluginSingleton<TownOfUs>.Instance.Log.LogMessage(Swap2 == null ? "null" : Swap2.ToString());
-
                 if (PlayerControl.LocalPlayer.Is(RoleEnum.Swapper))
                 {
                     var swapper = Role.GetRole<Swapper>(PlayerControl.LocalPlayer);
@@ -66,10 +62,6 @@ namespace TownOfUs.CrewmateRoles.SwapperMod
                 var background1 = Swap1.Background.transform;
                 var mask1 = Swap1.MaskArea.transform;
 
-                List<Transform> votes1 = new List<Transform>();
-                for (var childI = 0; childI < Swap1.transform.childCount; childI++)
-                    if (Swap1.transform.GetChild(childI).gameObject.name == "playerVote(Clone)") votes1.Add(Swap1.transform.GetChild(childI));
-
                 var whiteBackground1 = Swap1.PlayerButton.transform;
                 
                 var pooldest1 = (Vector2) pool1.position;
@@ -85,10 +77,6 @@ namespace TownOfUs.CrewmateRoles.SwapperMod
                 var background2 = Swap2.Background.transform;
                 var mask2 = Swap2.MaskArea.transform;
 
-                List<Transform> votes2 = new List<Transform>();
-                for (var childI = 0; childI < Swap1.transform.childCount; childI++)
-                    if (Swap1.transform.GetChild(childI).gameObject.name == "playerVote(Clone)") votes2.Add(Swap1.transform.GetChild(childI));
-
                 var whiteBackground2 = Swap2.PlayerButton.transform;
 
                 var pooldest2 = (Vector2) pool2.position;
@@ -97,15 +85,6 @@ namespace TownOfUs.CrewmateRoles.SwapperMod
                 var maskdest2 = (Vector2)mask2.position;
 
                 var whiteBackgroundDest2 = (Vector2) whiteBackground2.position;
-
-                foreach (var vote in votes2)
-                {
-                    vote.GetComponent<SpriteRenderer>().material.SetInt(PlayerMaterial.MaskLayer, Swap1.MaskLayer);
-                }
-                foreach (var vote in votes1)
-                {
-                    vote.GetComponent<SpriteRenderer>().material.SetInt(PlayerMaterial.MaskLayer, Swap2.MaskLayer);
-                }
 
                 Coroutines.Start(Slide2D(pool1, pooldest1, pooldest2, 2f));
                 Coroutines.Start(Slide2D(pool2, pooldest2, pooldest1, 2f));

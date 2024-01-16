@@ -128,8 +128,6 @@ namespace TownOfUs.ImpostorRoles.TraitorMod
             RoleManager.Instance.SetRole(player, RoleTypes.Impostor);
             player.SetKillTimer(GameOptionsManager.Instance.currentNormalGameOptions.KillCooldown);
 
-            System.Console.WriteLine("PROOF I AM IMP VANILLA ROLE: " + player.Data.Role.IsImpostor);
-
             foreach (var player2 in PlayerControl.AllPlayerControls)
             {
                 if (player2.Data.IsImpostor() && PlayerControl.LocalPlayer.Data.IsImpostor())
@@ -195,7 +193,7 @@ namespace TownOfUs.ImpostorRoles.TraitorMod
         [HarmonyPatch(typeof(Object), nameof(Object.Destroy), new System.Type[] { typeof(GameObject) })]
         public static void Prefix(GameObject obj)
         {
-            if (!SubmergedCompatibility.Loaded || GameOptionsManager.Instance?.currentNormalGameOptions?.MapId != 6) return;
+            if (!SubmergedCompatibility.Loaded || GameOptionsManager.Instance?.currentNormalGameOptions?.MapId != 5) return;
             if (obj.name?.Contains("ExileCutscene") == true) ExileControllerPostfix(ExileControllerPatch.lastExiled);
         }
     }

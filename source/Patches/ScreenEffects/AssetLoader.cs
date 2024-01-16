@@ -53,7 +53,9 @@ namespace TownOfUs.Patches.ScreenEffects
             return name.Split('/').Last().Split('.').First();
         }
 
+#nullable enable
         private T? LoadAsset<T>(AssetBundle assetBundle, string name) where T : UnityObject
+#nullable disable
         {
             var asset = assetBundle.LoadAsset(name, Il2CppType.Of<T>())?.Cast<T>().DontUnload();
             loadedObjects.Add(name, asset);

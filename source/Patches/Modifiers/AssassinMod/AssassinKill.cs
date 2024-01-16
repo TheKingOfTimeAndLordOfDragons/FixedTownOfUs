@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Hazel;
 using TownOfUs.Roles;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,31 +14,33 @@ using TownOfUs.Extensions;
 using TownOfUs.CrewmateRoles.ImitatorMod;
 using TownOfUs.Patches;
 using Reactor.Utilities.Extensions;
+using Assets.CoreScripts;
+using System;
 
 namespace TownOfUs.Modifiers.AssassinMod
 {
     public class AssassinKill
     {
-        public static void RpcMurderPlayer(PlayerControl player, PlayerControl assassin)
+        public static void RpcMurderPlayer(Assassin assassinP, PlayerControl player, PlayerControl assassin)
         {
             PlayerVoteArea voteArea = MeetingHud.Instance.playerStates.First(
                 x => x.TargetPlayerId == player.PlayerId
             );
-            RpcMurderPlayer(voteArea, player, assassin);
+            RpcMurderPlayer(assassinP, voteArea, player,  assassin);
         }
-        public static void RpcMurderPlayer(PlayerVoteArea voteArea, PlayerControl player, PlayerControl assassin)
+        public static void RpcMurderPlayer(Assassin assassinP, PlayerVoteArea voteArea, PlayerControl player, PlayerControl assassin)
         {
-            MurderPlayer(voteArea, player);
+            MurderPlayer(assassinP, voteArea, player);
             AssassinKillCount(player, assassin);
             Utils.Rpc(CustomRPC.AssassinKill, player.PlayerId, assassin.PlayerId);
         }
 
-        public static void MurderPlayer(PlayerControl player, bool checkLover = true)
+        public static void MurderPlayer(Assassin assassinP, PlayerControl player, bool checkLover = true)
         {
             PlayerVoteArea voteArea = MeetingHud.Instance.playerStates.First(
                 x => x.TargetPlayerId == player.PlayerId
             );
-            MurderPlayer(voteArea, player, checkLover);
+            MurderPlayer(assassinP, voteArea, player,  checkLover);
         }
         public static void AssassinKillCount(PlayerControl player, PlayerControl assassin)
         {
@@ -46,17 +49,29 @@ namespace TownOfUs.Modifiers.AssassinMod
             else assassinPlayer.CorrectAssassinKills += 1;
         }
         public static void MurderPlayer(
+            Assassin assassinP, 
             PlayerVoteArea voteArea,
             PlayerControl player,
             bool checkLover = true
         )
         {
             var hudManager = DestroyableSingleton<HudManager>.Instance;
+            var assassinPlayer = assassinP.Player;
+
             if (checkLover)
             {
-                SoundManager.Instance.PlaySound(player.KillSfx, false, 0.8f);
-                hudManager.KillOverlay.ShowKillAnimation(player.Data, player.Data);
+                try
+                {
+                    SoundManager.Instance.PlaySound(PlayerControl.LocalPlayer.KillSfx, false, 1f);
+                } catch {}
+                if (PlayerControl.LocalPlayer == player) {
+                    hudManager.KillOverlay.ShowKillAnimation(assassinPlayer.Data, player.Data);
+                    if (CrewmateRoles.VigilanteMod.AddButton.vigilanteUI != null) CrewmateRoles.VigilanteMod.AddButton.vigilanteUIExitButton.OnClick.Invoke();
+                    if (Modifiers.AssassinMod.AddButton.assassinUI != null) Modifiers.AssassinMod.AddButton.assassinUIExitButton.OnClick.Invoke();
+                    if (NeutralRoles.DoomsayerMod.AddButton.doomsayerUI != null) NeutralRoles.DoomsayerMod.AddButton.doomsayerUIExitButton.OnClick.Invoke();
+                }
             }
+
             var amOwner = player.AmOwner;
             if (amOwner)
             {
@@ -72,7 +87,7 @@ namespace TownOfUs.Modifiers.AssassinMod
                     {
                         PlayerTask playerTask = player.myTasks.ToArray()[i];
                         playerTask.OnRemove();
-                        Object.Destroy(playerTask.gameObject);
+                        UnityEngine.Object.Destroy(playerTask.gameObject);
                     }
 
                     player.myTasks.Clear();
@@ -120,24 +135,6 @@ namespace TownOfUs.Modifiers.AssassinMod
                     }
                 }
 
-                if (player.Is(RoleEnum.Vigilante))
-                {
-                    var retributionist = Role.GetRole<Vigilante>(PlayerControl.LocalPlayer);
-                    ShowHideButtonsVigi.HideButtonsVigi(retributionist);
-                }
-
-                if (player.Is(AbilityEnum.Assassin))
-                {
-                    var assassin = Ability.GetAbility<Assassin>(PlayerControl.LocalPlayer);
-                    ShowHideButtons.HideButtons(assassin);
-                }
-
-                if (player.Is(RoleEnum.Doomsayer))
-                {
-                    var doomsayer = Role.GetRole<Doomsayer>(PlayerControl.LocalPlayer);
-                    ShowHideButtonsDoom.HideButtonsDoom(doomsayer);
-                }
-
                 if (player.Is(RoleEnum.Mayor))
                 {
                     var mayor = Role.GetRole<Mayor>(PlayerControl.LocalPlayer);
@@ -148,7 +145,7 @@ namespace TownOfUs.Modifiers.AssassinMod
             if (checkLover && player.IsLover() && CustomGameOptions.BothLoversDie)
             {
                 var otherLover = Modifier.GetModifier<Lover>(player).OtherLover.Player;
-                if (!otherLover.Is(RoleEnum.Pestilence)) MurderPlayer(otherLover, false);
+                if (!otherLover.Is(RoleEnum.Pestilence)) MurderPlayer(assassinP, otherLover,  false);
             }
 
             var deadPlayer = new DeadPlayer
@@ -188,24 +185,6 @@ namespace TownOfUs.Modifiers.AssassinMod
                             voteArea.XMark.transform.localPosition.z);
                     }
                 }
-            }
-
-            if (PlayerControl.LocalPlayer.Is(RoleEnum.Vigilante) && !PlayerControl.LocalPlayer.Data.IsDead)
-            {
-                var vigi = Role.GetRole<Vigilante>(PlayerControl.LocalPlayer);
-                ShowHideButtonsVigi.HideTarget(vigi, voteArea.TargetPlayerId);
-            }
-
-            if (PlayerControl.LocalPlayer.Is(AbilityEnum.Assassin) && !PlayerControl.LocalPlayer.Data.IsDead)
-            {
-                var assassin = Ability.GetAbility<Assassin>(PlayerControl.LocalPlayer);
-                ShowHideButtons.HideTarget(assassin, voteArea.TargetPlayerId);
-            }
-
-            if (PlayerControl.LocalPlayer.Is(RoleEnum.Doomsayer) && !PlayerControl.LocalPlayer.Data.IsDead)
-            {
-                var doom = Role.GetRole<Doomsayer>(PlayerControl.LocalPlayer);
-                ShowHideButtonsDoom.HideTarget(doom, voteArea.TargetPlayerId);
             }
 
             if (PlayerControl.LocalPlayer.Is(RoleEnum.Swapper) && !PlayerControl.LocalPlayer.Data.IsDead)

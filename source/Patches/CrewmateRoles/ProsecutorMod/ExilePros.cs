@@ -25,7 +25,7 @@ namespace TownOfUs.CrewmateRoles.ProsecutorMod
                 if (pros.ProsecuteThisMeeting)
                 {
                     var exiled = __instance.exiled?.Object;
-                    if (exiled != null && exiled.Is(Faction.Crewmates) && !exiled.IsLover() && CustomGameOptions.ProsDiesOnIncorrectPros)
+                    if (exiled != null && exiled.Is(Faction.Crewmates) && CustomGameOptions.ProsDiesOnIncorrectPros)
                     {
                         KillButtonTarget.DontRevive = pros.Player.PlayerId;
                         pros.Player.Exiled();
@@ -40,7 +40,7 @@ namespace TownOfUs.CrewmateRoles.ProsecutorMod
         [HarmonyPatch(typeof(Object), nameof(Object.Destroy), new Type[] { typeof(GameObject) })]
         public static void Prefix(GameObject obj)
         {
-            if (!SubmergedCompatibility.Loaded || GameOptionsManager.Instance?.currentNormalGameOptions?.MapId != 6) return;
+            if (!SubmergedCompatibility.Loaded || GameOptionsManager.Instance?.currentNormalGameOptions?.MapId != 5) return;
             if (obj.name?.Contains("ExileCutscene") == true) ExileControllerPostfix(ExileControllerPatch.lastExiled);
         }
     }

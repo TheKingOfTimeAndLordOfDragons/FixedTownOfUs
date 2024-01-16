@@ -20,6 +20,7 @@ using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TownOfUs.Patches.ScreenEffects;
+using TownOfUs.MCI;
 
 namespace TownOfUs
 {
@@ -29,9 +30,15 @@ namespace TownOfUs
     [ReactorModFlags(Reactor.Networking.ModFlags.RequireOnAllClients)]
     public class TownOfUs : BasePlugin
     {
-        public const string Id = "com.slushiegoose.townofus";
+        public const string Id = "com.edonnes124.townofus";
         public const string VersionString = "5.0.3";
+
         public static System.Version Version = System.Version.Parse(VersionString);
+        internal static BepInEx.Logging.ManualLogSource Logger;
+
+        public Harmony Harmony { get; } = new Harmony(Id);
+        public static TownOfUs Instance;
+        public static int optionsPage = 1;
 
         public static AssetLoader bundledAssets;
 
@@ -97,6 +104,7 @@ namespace TownOfUs
         public static Sprite HackSprite;
         public static Sprite MimicSprite;
         public static Sprite LockSprite;
+        public static Sprite TargetIcon;
 
         public static Sprite SettingsButtonSprite;
         public static Sprite CrewSettingsButtonSprite;
@@ -110,27 +118,26 @@ namespace TownOfUs
         public static Sprite ZoomPlusButton;
         public static Sprite ZoomMinusButton;
 
-        public static Vector3 ButtonPosition { get; private set; } = new Vector3(2.6f, 0.7f, -9f);
+        #pragma warning disable
+        public static bool LobbyCapped = true;
+        public static bool Persistence = true;
+        public static bool MCIActive = false;
+        public static DebuggerBehaviour Debugger;
+        #pragma warning restore
 
         private static DLoadImage _iCallLoadImage;
 
-
-        private Harmony _harmony;
-
         public ConfigEntry<string> Ip { get; set; }
-
         public ConfigEntry<ushort> Port { get; set; }
 
         public override void Load()
         {
-            System.Console.WriteLine("000.000.000.000/000000000000000000");
-
-            _harmony = new Harmony("com.slushiegoose.townofus");
+            Logger = Log;
+            Instance = this;
 
             Generate.GenerateAll();
 
             bundledAssets = new();
-
             JanitorClean = CreateSprite("TownOfUs.Resources.Janitor.png");
             EngineerFix = CreateSprite("TownOfUs.Resources.Engineer.png");
             SwapperSwitch = CreateSprite("TownOfUs.Resources.SwapperSwitch.png");
@@ -193,6 +200,7 @@ namespace TownOfUs
             HackSprite = CreateSprite("TownOfUs.Resources.Hack.png");
             MimicSprite = CreateSprite("TownOfUs.Resources.Mimic.png");
             LockSprite = CreateSprite("TownOfUs.Resources.Lock.png");
+            TargetIcon = CreateSprite("TownOfUs.Resources.TargetIcon.png", 150f);
 
             SettingsButtonSprite = CreateSprite("TownOfUs.Resources.SettingsButton.png");
             CrewSettingsButtonSprite = CreateSprite("TownOfUs.Resources.Crewmate.png");
@@ -231,14 +239,17 @@ namespace TownOfUs
                 try { ModManager.Instance.ShowModStamp(); }
                 catch { }
             }));
+            
+            AddComponent<DebuggerBehaviour>();
+            ClassInjector.RegisterTypeInIl2Cpp<DebuggerBehaviour>();
 
-            _harmony.PatchAll();
+            Harmony.PatchAll();
+            AddComponent<ModUpdateBehaviour>();
             SubmergedCompatibility.Initialize();
         }
 
-        public static Sprite CreateSprite(string name)
+        public static Sprite CreateSprite(string name, float pixelsPerUnit = 100f)
         {
-            var pixelsPerUnit = 100f;
             var pivot = new Vector2(0.5f, 0.5f);
 
             var assembly = Assembly.GetExecutingAssembly();

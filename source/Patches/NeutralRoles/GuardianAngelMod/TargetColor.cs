@@ -21,7 +21,7 @@ namespace TownOfUs.NeutralRoles.GuardianAngelMod
             if (CustomGameOptions.GAKnowsTargetRole) return;
             foreach (var player in __instance.playerStates)
                 if (player.TargetPlayerId == role.target.PlayerId)
-                    player.NameText.color = new Color(1f, 0.85f, 0f, 1f);
+                    player.NameText.text += "<color=#B3FFFFFF> ★</color>";
         }
 
         private static void Postfix(HudManager __instance)
@@ -36,7 +36,7 @@ namespace TownOfUs.NeutralRoles.GuardianAngelMod
 
             if (MeetingHud.Instance != null) UpdateMeeting(MeetingHud.Instance, role);
 
-            if (!CustomGameOptions.GAKnowsTargetRole) role.target.nameText().color = new Color(1f, 0.85f, 0f, 1f);
+            if (!CustomGameOptions.GAKnowsTargetRole && !CamouflageUnCamouflage.IsCamoed) role.target.nameText().text += "<color=#B3FFFFFF> ★</color>";
 
             if (!role.target.Data.IsDead && !role.target.Data.Disconnected) return;
 

@@ -162,8 +162,14 @@ namespace TownOfUs.NeutralRoles.AmnesiacMod
                 }
                 else
                 {
-                    var survivor = new Survivor(other);
-                    survivor.RegenTask();
+                    if (role != RoleEnum.Vampire) {
+                        var survivor = new Survivor(other);
+                        survivor.RegenTask();
+                    }
+                    if (role == RoleEnum.Vampire) {
+                        var vampire = new Vampire(other);
+                        vampire.RegenTask();
+                    }
                     if (role == RoleEnum.Arsonist || role == RoleEnum.Glitch || role == RoleEnum.Plaguebearer ||
                             role == RoleEnum.Pestilence || role == RoleEnum.Werewolf || role == RoleEnum.Juggernaut
                              || role == RoleEnum.Vampire)

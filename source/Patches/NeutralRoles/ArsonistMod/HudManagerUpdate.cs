@@ -19,17 +19,6 @@ namespace TownOfUs.NeutralRoles.ArsonistMod
             if (!PlayerControl.LocalPlayer.Is(RoleEnum.Arsonist)) return;
             var role = Role.GetRole<Arsonist>(PlayerControl.LocalPlayer);
 
-            foreach (var playerId in role.DousedPlayers)
-            {
-                var player = Utils.PlayerById(playerId);
-                var data = player?.Data;
-                if (data == null || data.Disconnected || data.IsDead || PlayerControl.LocalPlayer.Data.IsDead)
-                    continue;
-
-                player.myRend().material.SetColor("_VisorColor", role.Color);
-                player.nameText().color = Color.black;
-            }
-
             if (role.IgniteButton == null)
             {
                 role.IgniteButton = Object.Instantiate(__instance.KillButton, __instance.KillButton.transform.parent);

@@ -203,5 +203,18 @@ namespace TownOfUs.Roles.Modifiers
         {
             return AllAbilities.Where(x => x.AbilityType == abilitytype);
         }
+
+        public static Ability GetAbilityValue(AbilityEnum abilityEnum)
+        {
+            foreach (var ability in AllAbilities)
+            {
+                if (ability.AbilityType == abilityEnum)
+                    return ability;
+            }
+
+            return null;
+        }
+
+        public static T GetAbilityValue<T>(AbilityEnum abilityEnum) where T : Ability => GetAbilityValue(abilityEnum) as T;
     }
 }

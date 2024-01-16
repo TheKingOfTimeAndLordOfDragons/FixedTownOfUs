@@ -2,31 +2,38 @@ using HarmonyLib;
 
 namespace TownOfUs.Patches
 {
-    [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.SetRole))]
-    public class NoButtons
-    {
-        public static void Postfix()
-        {
-            if (!CustomGameOptions.JesterButton)
-                if (PlayerControl.LocalPlayer.Is(RoleEnum.Jester)) PlayerControl.LocalPlayer.RemainingEmergencies = 0;
-            if (!CustomGameOptions.ExecutionerButton)
-                if (PlayerControl.LocalPlayer.Is(RoleEnum.Executioner)) PlayerControl.LocalPlayer.RemainingEmergencies = 0;
-            if (!CustomGameOptions.SwapperButton)
-                if (PlayerControl.LocalPlayer.Is(RoleEnum.Swapper)) PlayerControl.LocalPlayer.RemainingEmergencies = 0;
-        }
-    }
+    [HarmonyPatch(typeof(EmergencyMinigame), nameof(EmergencyMinigame.Update))]
+    class EmergencyMinigameUpdatePatch {
+        static void Postfix(EmergencyMinigame __instance) {
+            var roleCanCallEmergency = true;
+            var statusText = "";
 
-    [HarmonyPatch(typeof(PlayerControl), nameof(PlayerControl.Start))]
-    public class NoButtonsHost
-    {
-        public static void Postfix()
-        {
-            if (!CustomGameOptions.JesterButton) 
-                if (PlayerControl.LocalPlayer.Is(RoleEnum.Jester)) PlayerControl.LocalPlayer.RemainingEmergencies = 0;
-            if (!CustomGameOptions.ExecutionerButton)
-                if (PlayerControl.LocalPlayer.Is(RoleEnum.Executioner)) PlayerControl.LocalPlayer.RemainingEmergencies = 0;
-            if (!CustomGameOptions.SwapperButton)
-                if (PlayerControl.LocalPlayer.Is(RoleEnum.Swapper)) PlayerControl.LocalPlayer.RemainingEmergencies = 0;
+            // Deactivate emergency button for Swapper
+            if (PlayerControl.LocalPlayer.Is(RoleEnum.Swapper) && !CustomGameOptions.SwapperButton) {
+                roleCanCallEmergency = false;
+                statusText = "The Swapper can't start an emergency meeting";
+            }
+
+            // Potentially deactivate emergency button for Jester
+            if (PlayerControl.LocalPlayer.Is(RoleEnum.Jester) && !CustomGameOptions.JesterButton) {
+                roleCanCallEmergency = false;
+                statusText = "The Jester can't start an emergency meeting";
+            }
+
+            // Potentially deactivate emergency button for Executioner
+            if (PlayerControl.LocalPlayer.Is(RoleEnum.Executioner) && !CustomGameOptions.ExecutionerButton) {
+                roleCanCallEmergency = false;
+                statusText = "The Executioner can't start an emergency meeting";
+            }
+
+            if (!roleCanCallEmergency) {
+                __instance.StatusText.text = statusText;
+                __instance.NumberText.text = string.Empty;
+                __instance.ClosedLid.gameObject.SetActive(true);
+                __instance.OpenLid.gameObject.SetActive(false);
+                __instance.ButtonActive = false;
+                return;
+            }
         }
     }
 }

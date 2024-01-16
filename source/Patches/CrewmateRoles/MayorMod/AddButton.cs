@@ -54,43 +54,39 @@ namespace TownOfUs.CrewmateRoles.MayorMod
                 x => x.TargetPlayerId == mayor.Player.PlayerId);
             if (PlayerControl.LocalPlayer.Is(AbilityEnum.Assassin))
             {
-                var assassin = Ability.GetAbility<Assassin>(PlayerControl.LocalPlayer);
-                ShowHideButtons.HideTarget(assassin, voteArea.TargetPlayerId);
-                voteArea.NameText.transform.localPosition += new Vector3(-0.2f, -0.1f, 0f);
+                if (AddButton.assassinUI != null)
+                {
+                    if (AddButton.assassinCurrentTarget == mayor.Player.PlayerId) 
+                    {
+                        AddButton.assassinUIExitButton.OnClick.Invoke();
+                        MeetingHud.Instance.playerStates.ToList().ForEach(x => { if (x.TargetPlayerId == mayor.Player.PlayerId && x.transform.FindChild("ShootButton") != null) UnityEngine.Object.Destroy(x.transform.FindChild("ShootButton").gameObject); });
+                    }
+                    MeetingHud.Instance.playerStates.ToList().ForEach(x => { if (x.TargetPlayerId == mayor.Player.PlayerId && x.transform.FindChild("ShootButton") != null) UnityEngine.Object.Destroy(x.transform.FindChild("ShootButton").gameObject); });
+                }
             }
             else if (PlayerControl.LocalPlayer.Is(RoleEnum.Doomsayer))
             {
-                var doomsayer = Role.GetRole<Doomsayer>(PlayerControl.LocalPlayer);
-                var (cycleBack, cycleForward, guess, guessText) = doomsayer.Buttons[voteArea.TargetPlayerId];
-                if (cycleBack == null || cycleForward == null) return;
-                cycleBack.SetActive(false);
-                cycleForward.SetActive(false);
-                guess.SetActive(false);
-                guessText.gameObject.SetActive(false);
-
-                cycleBack.GetComponent<PassiveButton>().OnClick = new Button.ButtonClickedEvent();
-                cycleForward.GetComponent<PassiveButton>().OnClick = new Button.ButtonClickedEvent();
-                guess.GetComponent<PassiveButton>().OnClick = new Button.ButtonClickedEvent();
-                doomsayer.Buttons[voteArea.TargetPlayerId] = (null, null, null, null);
-                doomsayer.Guesses.Remove(voteArea.TargetPlayerId);
-                voteArea.NameText.transform.localPosition += new Vector3(-0.2f, -0.1f, 0f);
+                if (NeutralRoles.DoomsayerMod.AddButton.doomsayerUI != null)
+                {
+                    if (NeutralRoles.DoomsayerMod.AddButton.doomsayerCurrentTarget == mayor.Player.PlayerId) 
+                    {
+                        NeutralRoles.DoomsayerMod.AddButton.doomsayerUIExitButton.OnClick.Invoke();
+                        MeetingHud.Instance.playerStates.ToList().ForEach(x => { if (x.TargetPlayerId == mayor.Player.PlayerId && x.transform.FindChild("ShootButton") != null) UnityEngine.Object.Destroy(x.transform.FindChild("ShootButton").gameObject); });
+                    }
+                    MeetingHud.Instance.playerStates.ToList().ForEach(x => { if (x.TargetPlayerId == mayor.Player.PlayerId && x.transform.FindChild("ShootButton") != null) UnityEngine.Object.Destroy(x.transform.FindChild("ShootButton").gameObject); });
+                }
             }
             else if (PlayerControl.LocalPlayer.Is(RoleEnum.Vigilante))
             {
-                var vigilante = Role.GetRole<Vigilante>(PlayerControl.LocalPlayer);
-                var (cycleBack, cycleForward, guess, guessText) = vigilante.Buttons[voteArea.TargetPlayerId];
-                if (cycleBack == null || cycleForward == null) return;
-                cycleBack.SetActive(false);
-                cycleForward.SetActive(false);
-                guess.SetActive(false);
-                guessText.gameObject.SetActive(false);
-
-                cycleBack.GetComponent<PassiveButton>().OnClick = new Button.ButtonClickedEvent();
-                cycleForward.GetComponent<PassiveButton>().OnClick = new Button.ButtonClickedEvent();
-                guess.GetComponent<PassiveButton>().OnClick = new Button.ButtonClickedEvent();
-                vigilante.Buttons[voteArea.TargetPlayerId] = (null, null, null, null);
-                vigilante.Guesses.Remove(voteArea.TargetPlayerId);
-                voteArea.NameText.transform.localPosition += new Vector3(-0.2f, -0.1f, 0f);
+                if (VigilanteMod.AddButton.vigilanteUI != null)
+                {
+                    if (VigilanteMod.AddButton.vigilanteCurrentTarget == mayor.Player.PlayerId) 
+                    {
+                        VigilanteMod.AddButton.vigilanteUIExitButton.OnClick.Invoke();
+                        MeetingHud.Instance.playerStates.ToList().ForEach(x => { if (x.TargetPlayerId == mayor.Player.PlayerId && x.transform.FindChild("ShootButton") != null) UnityEngine.Object.Destroy(x.transform.FindChild("ShootButton").gameObject); });
+                    }
+                    MeetingHud.Instance.playerStates.ToList().ForEach(x => { if (x.TargetPlayerId == mayor.Player.PlayerId && x.transform.FindChild("ShootButton") != null) UnityEngine.Object.Destroy(x.transform.FindChild("ShootButton").gameObject); });
+                }
             }
             return;
         }
