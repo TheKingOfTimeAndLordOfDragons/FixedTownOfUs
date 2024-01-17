@@ -8,6 +8,7 @@
 <p align="center">
   <a href="https://github.com/TheKingOfTimeAndLordOfDragons/FixedTownOfUs/releases/"><img src="https://badgen.net//github/releases/thekingoftimeandlordofdragons/fixedtownofus"></a> <!--Releases-->
   <a href="https://github.com/TheKingOfTimeAndLordOfDragons/FixedTownOfUs/stargazers"><img src="https://badgen.net/github/stars/thekingoftimeandlordofdragons/fixedtownofus"></a> <!--Stars-->
+  <a href="https://github.com/TheKingOfTimeAndLordOfDragons/FixedTownOfUs/releases/"><img src="https://badgen.net/github/assets-dl/thekingoftimeandlordofdragons/fixedtownofus"></a> <!--Downloads-->
 </p>
 
 **Town Of Us** is a mod for [Among Us](https://store.steampowered.com/app/945360/Among_Us) which adds many new Roles, Game Modes, new Map Settings and new Custom Hats to the game.
