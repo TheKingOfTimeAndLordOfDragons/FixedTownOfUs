@@ -119,6 +119,27 @@ namespace TownOfUs.Modifiers.AssassinMod
                         PlayerControl dyingTarget = (mainRoleInfo.Name == pair.Key) ? focusedTarget : PlayerControl.LocalPlayer;
                         if (modRoleInfo != null)
                             dyingTarget = (mainRoleInfo.Name == pair.Key || modRoleInfo.Name == pair.Key) ? focusedTarget : PlayerControl.LocalPlayer;
+                        
+                        if (PlayerControl.LocalPlayer.Is(ModifierEnum.DoubleShot)) {
+                            dyingTarget = (mainRoleInfo.Name == pair.Key) ? focusedTarget : PlayerControl.LocalPlayer;
+                            if (modRoleInfo != null)
+                                dyingTarget = (mainRoleInfo.Name == pair.Key || modRoleInfo.Name == pair.Key) ? focusedTarget : PlayerControl.LocalPlayer;
+                            
+                            var modifier = Modifier.GetModifier<DoubleShot>(PlayerControl.LocalPlayer);
+                            if (dyingTarget == PlayerControl.LocalPlayer)
+                            {
+                                if (!modifier.LifeUsed) {
+                                    dyingTarget = null;
+                                    Coroutines.Start(Utils.FlashCoroutine(Color.red));
+                                    modifier.LifeUsed = true;
+                                    __instance.playerStates.ToList().ForEach(x => { if (x.TargetPlayerId == focusedTarget.PlayerId && x.transform.FindChild("ShootButton") != null) UnityEngine.Object.Destroy(x.transform.FindChild("ShootButton").gameObject); });
+                                }
+                                else {
+                                    dyingTarget = PlayerControl.LocalPlayer;
+                                }
+                            }
+                        }
+
                         // Reset the GUI
                         __instance.playerStates.ToList().ForEach(x => x.gameObject.SetActive(true));
                         UnityEngine.Object.Destroy(container.gameObject);
@@ -130,37 +151,13 @@ namespace TownOfUs.Modifiers.AssassinMod
                         // Shoot player
                         if (!dyingTarget.Is(RoleEnum.Pestilence) || PlayerControl.LocalPlayer.Is(RoleEnum.Pestilence))
                         {
-                            if (PlayerControl.LocalPlayer.Is(ModifierEnum.DoubleShot) && dyingTarget == PlayerControl.LocalPlayer)
+                            AssassinKill.RpcMurderPlayer(ability, dyingTarget, PlayerControl.LocalPlayer);
+                            ability.RemainingKills--;
+                            if (dyingTarget.IsLover() && CustomGameOptions.BothLoversDie)
                             {
-                                var modifier = Modifier.GetModifier<DoubleShot>(PlayerControl.LocalPlayer);
-                                if (modifier.LifeUsed == false)
-                                {
-                                    modifier.LifeUsed = true;
-                                    Coroutines.Start(Utils.FlashCoroutine(Color.red, 1f));
-                                    __instance.playerStates.ToList().ForEach(x => { if (x.TargetPlayerId == dyingTarget.PlayerId && x.transform.FindChild("ShootButton") != null) UnityEngine.Object.Destroy(x.transform.FindChild("ShootButton").gameObject); });
-                                }
-                                else
-                                {
-                                    AssassinKill.RpcMurderPlayer(ability, dyingTarget, PlayerControl.LocalPlayer);
-                                    ability.RemainingKills--;
-                                    if (dyingTarget.IsLover() && CustomGameOptions.BothLoversDie)
-                                    {
-                                        var lover = ((Lover)modRoleInfo).OtherLover.Player;
-                                        if (!lover.Is(RoleEnum.Pestilence)) 
-                                            __instance.playerStates.ToList().ForEach(x => { if (x.TargetPlayerId == lover.PlayerId && x.transform.FindChild("ShootButton") != null) UnityEngine.Object.Destroy(x.transform.FindChild("ShootButton").gameObject); });
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                AssassinKill.RpcMurderPlayer(ability, dyingTarget, PlayerControl.LocalPlayer);
-                                ability.RemainingKills--;
-                                if (dyingTarget.IsLover() && CustomGameOptions.BothLoversDie)
-                                {
-                                    var lover = ((Lover)modRoleInfo).OtherLover.Player;
-                                    if (!lover.Is(RoleEnum.Pestilence))
-                                        __instance.playerStates.ToList().ForEach(x => { if (x.TargetPlayerId == lover.PlayerId && x.transform.FindChild("ShootButton") != null) UnityEngine.Object.Destroy(x.transform.FindChild("ShootButton").gameObject); });
-                                }
+                                var lover = ((Lover)modRoleInfo).OtherLover.Player;
+                                if (!lover.Is(RoleEnum.Pestilence))
+                                    __instance.playerStates.ToList().ForEach(x => { if (x.TargetPlayerId == lover.PlayerId && x.transform.FindChild("ShootButton") != null) UnityEngine.Object.Destroy(x.transform.FindChild("ShootButton").gameObject); });
                             }
                         }
                     }

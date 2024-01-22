@@ -19,6 +19,7 @@ namespace TownOfUs.Roles
             RoleType = RoleEnum.Phantom;
             AddToRoleHistory(RoleType);
             Faction = Faction.NeutralEvil;
+            CompletedTasks = false;
         }
 
         public void Fade()

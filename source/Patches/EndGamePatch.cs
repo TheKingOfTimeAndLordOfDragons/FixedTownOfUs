@@ -23,9 +23,7 @@ namespace TownOfUs.Patches
         WerewolfWin = 18,
         DoomsayerWin = 19,
         VampireWin = 20,
-        LoversWin = 21,
-        SurvivorOnlyWin = 22,
-        NobodyWins = 23,
+        LoversWin = 21
     }
 
     enum WinCondition {
@@ -43,7 +41,6 @@ namespace TownOfUs.Patches
         VampireWin,
         LoversTeamWin,
         LoversSoloWin,
-        SurvivorOnlyWin,
         AdditionalGABonusWin,
         AdditionalAliveSurvivorBonusWin,
     }
@@ -370,15 +367,7 @@ namespace TownOfUs.Patches
                 if (notWinners.Any(x => x.Data.PlayerName == winner.PlayerName)) winnersToRemove.Add(winner);
             }
             foreach (var winner in winnersToRemove) TempData.winners.Remove(winner);
-
-            bool nobodyWins = gameOverReason == (GameOverReason)CustomGameOverReason.NobodyWins;
             
-            bool survivorOnlyWin = false;
-            foreach (var role in Role.GetRoles(RoleEnum.Survivor))
-            {
-                var surv = (Survivor)role;
-                survivorOnlyWin = surv.Player != null && gameOverReason == (GameOverReason)CustomGameOverReason.SurvivorOnlyWin;
-            }
             bool loversWin = Lover.existingAndAlive() && (gameOverReason == (GameOverReason)CustomGameOverReason.LoversWin || (GameManager.Instance.DidHumansWin(gameOverReason) && !Lover.existingWithKiller()));
             bool jesterWin = false;
             foreach (var role in Role.GetRoles(RoleEnum.Jester)) {
@@ -437,29 +426,18 @@ namespace TownOfUs.Patches
                 vampireWin = vampire.Player != null && gameOverReason == (GameOverReason)CustomGameOverReason.VampireWin;
             }
 
-            if (nobodyWins) {
-                TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
-            }
-            else if (survivorOnlyWin) {
-                AdditionalTempData.winCondition = WinCondition.SurvivorOnlyWin;
-                TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
-                foreach (var role in Role.GetRoles(RoleEnum.Survivor))
-                {
-                    var surv = (Survivor)role;
-                    WinningPlayerData wpd = new WinningPlayerData(surv.Player.Data);
-                    TempData.winners.Add(wpd);
-                }
-            }
-            else if (loversWin) {
+            if (loversWin) {
                 if (!Lover.existingWithKiller()) {
                     AdditionalTempData.winCondition = WinCondition.LoversTeamWin;
-                    TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
                     foreach (var modifier in Modifier.GetModifiers(ModifierEnum.Lover))
                     {
+                        TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
                         var lover = (Lover)modifier;
                         foreach (PlayerControl p in PlayerControl.AllPlayerControls) {
                             if (p == null) continue;
                             if (p == lover.Player || p == lover.OtherLover.Player)
+                                TempData.winners.Add(new WinningPlayerData(p.Data));
+                            else if (p.Is(RoleEnum.Survivor) && !p.Data.IsDead)
                                 TempData.winners.Add(new WinningPlayerData(p.Data));
                             else if (p.Is(Faction.Crewmates))
                                 TempData.winners.Add(new WinningPlayerData(p.Data));
@@ -470,8 +448,8 @@ namespace TownOfUs.Patches
                     AdditionalTempData.winCondition = WinCondition.LoversSoloWin;
                     foreach (var modifier in Modifier.GetModifiers(ModifierEnum.Lover))
                     {
-                        var lover = (Lover)modifier;
                         TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
+                        var lover = (Lover)modifier;
                         TempData.winners.Add(new WinningPlayerData(lover.Player.Data));
                         TempData.winners.Add(new WinningPlayerData(lover.OtherLover.Player.Data));
                     }
@@ -598,7 +576,7 @@ namespace TownOfUs.Patches
             foreach (var role in Role.GetRoles(RoleEnum.Survivor))
             {
                 var surv = (Survivor)role;
-                if (surv.Player != null && !surv.Player.Data.IsDead && AdditionalTempData.winCondition != WinCondition.SurvivorOnlyWin) {
+                if (surv.Player != null && !surv.Player.Data.IsDead) {
                     if (!TempData.winners.ToArray().Any(x => x.PlayerName == surv.Player.Data.PlayerName))
                         TempData.winners.Add(new WinningPlayerData(surv.Player.Data));
                     AdditionalTempData.additionalWinConditions.Add(WinCondition.AdditionalAliveSurvivorBonusWin); // The Survivor wins if alive
@@ -742,17 +720,12 @@ namespace TownOfUs.Patches
                 textRenderer.color = Colors.Lovers;
                 __instance.BackgroundBar.material.SetColor("_Color", Colors.Lovers);
             }
-            if (AdditionalTempData.winCondition == WinCondition.SurvivorOnlyWin) {
-                textRenderer.text = "Survivor Only Wins";
-                textRenderer.color = Colors.Survivor;
-                __instance.BackgroundBar.material.SetColor("_Color", Colors.Survivor);
-            }
 
             foreach (WinCondition cond in AdditionalTempData.additionalWinConditions) {
                 if (cond == WinCondition.AdditionalGABonusWin)
-                    textRenderer.text += $"\n{Utils.cs(Colors.GuardianAngel, "The Guardian Angel wins with the client")}";
+                    textRenderer.text += $"\n{Utils.cs(Colors.GuardianAngel, "The Guardian Angel wins with the target")}";
                 if (cond == WinCondition.AdditionalAliveSurvivorBonusWin)
-                    textRenderer.text += $"\n{Utils.cs(Colors.Survivor, "The Survivors alive")}";
+                    textRenderer.text += $"\n{Utils.cs(Colors.Survivor, "The Survivor alive")}";
             }
 
             var position = Camera.main.ViewportToWorldPoint(new Vector3(0f, 1f, Camera.main.nearClipPlane));
@@ -819,7 +792,6 @@ namespace TownOfUs.Patches
             if (CheckAndEndGameForWerewolfWin(__instance, statistics)) return false;
             if (CheckAndEndGameForVampireWin(__instance, statistics)) return false;
             if (CheckAndEndGameForLoversWin(__instance, statistics)) return false;
-            if (CheckAndEndGameForSurvivorOnlyWin(__instance, statistics)) return false;
             return false;
         }
 
@@ -966,12 +938,6 @@ namespace TownOfUs.Patches
             }
             return false;   
         }
-        private static bool CheckAndEndGameForSurvivorOnlyWin(ShipStatus __instance, PlayerStatistics statistics) {
-            if (statistics.TotalAlive - statistics.TeamSurvivorAlive == 0 && !(statistics.TeamSurvivorHasAliveLover && statistics.TeamLoversAlive == 2)) {
-                GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.SurvivorOnlyWin, false);
-            }
-            return false;   
-        }
     }
 
     internal class PlayerStatistics {
@@ -985,7 +951,6 @@ namespace TownOfUs.Patches
         public int TeamPestilenceAlive {get;set;}
         public int TeamWerewolfAlive {get;set;}
         public int TeamVampireAlive {get;set;}
-        public int TeamSurvivorAlive {get;set;}
         public int TeamPowerCrewAlive {get;set;}
 
         public bool TeamImpostorsHasAliveLover {get;set;}
@@ -996,7 +961,6 @@ namespace TownOfUs.Patches
         public bool TeamPestilenceHasAliveLover {get;set;}
         public bool TeamWerewolfHasAliveLover {get;set;}
         public bool TeamVampireHasAliveLover {get;set;}
-        public bool TeamSurvivorHasAliveLover {get;set;}
 
         public PlayerStatistics(ShipStatus __instance) {
             GetPlayerCounts();
@@ -1017,7 +981,6 @@ namespace TownOfUs.Patches
             int teamPestilenceAlive = 0;
             int teamWerewolfAlive = 0;
             int teamVampireAlive = 0;
-            int teamSurvivorAlive = 0;
             int teamPowerCrewAlive = 0;
 
             bool teamImpostorsHasAliveLover = false;
@@ -1028,7 +991,6 @@ namespace TownOfUs.Patches
             bool teamPestilenceHasAliveLover = false;
             bool teamWerewolfHasAliveLover = false;
             bool teamVampireHasAliveLover = false;
-            bool teamSurvivorHasAliveLover = false;
 
             foreach (var playerInfo in GameData.Instance.AllPlayers.GetFastEnumerator()) {
                 if (!playerInfo.Disconnected) {
@@ -1106,15 +1068,6 @@ namespace TownOfUs.Patches
                                 if (lover) teamVampireHasAliveLover = true;
                             }
                         }
-                        
-                        foreach (var role in Role.GetRoles(RoleEnum.Survivor))
-                        {
-                            var Survivor = (Survivor)role;
-                            if (Survivor.Player != null && Survivor.Player.PlayerId == playerInfo.PlayerId) {
-                                teamSurvivorAlive++;
-                                if (lover) teamSurvivorHasAliveLover = true;
-                            }
-                        }
 
                         foreach (var role in Role.GetRoles(RoleEnum.Sheriff))
                         {
@@ -1169,7 +1122,6 @@ namespace TownOfUs.Patches
             TeamPestilenceAlive = teamPestilenceAlive;
             TeamWerewolfAlive = teamWerewolfAlive;
             TeamVampireAlive = teamVampireAlive;
-            TeamSurvivorAlive = teamSurvivorAlive;
             TeamPowerCrewAlive = teamPowerCrewAlive;
 
             TeamImpostorsHasAliveLover = teamImpostorsHasAliveLover;
@@ -1180,7 +1132,6 @@ namespace TownOfUs.Patches
             TeamPestilenceHasAliveLover = teamPestilenceHasAliveLover;
             TeamWerewolfHasAliveLover = teamWerewolfHasAliveLover;
             TeamVampireHasAliveLover = teamVampireHasAliveLover;
-            TeamSurvivorHasAliveLover = teamSurvivorHasAliveLover;
         }
     }
 }

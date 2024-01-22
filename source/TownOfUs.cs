@@ -31,7 +31,7 @@ namespace TownOfUs
     public class TownOfUs : BasePlugin
     {
         public const string Id = "com.edonnes124.townofus";
-        public const string VersionString = "5.0.3";
+        public const string VersionString = "5.0.4";
 
         public static System.Version Version = System.Version.Parse(VersionString);
         internal static BepInEx.Logging.ManualLogSource Logger;

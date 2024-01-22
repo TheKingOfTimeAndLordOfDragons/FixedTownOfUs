@@ -168,9 +168,7 @@ namespace TownOfUs.Roles
         protected virtual string NameText(bool revealTasks, bool revealRole, bool revealModifier, bool revealLover, PlayerVoteArea player = null)
         {
             if (CamouflageUnCamouflage.IsCamoed && player == null) return "";
-
             if (Player == null) return "";
-
             String PlayerName = Player.GetDefaultOutfit().PlayerName;
 
             foreach (var role in GetRoles(RoleEnum.GuardianAngel))
@@ -471,12 +469,6 @@ namespace TownOfUs.Roles
                 {
                     player.ColorBlindName.transform.localPosition = new Vector3(-0.93f, -0.2f, -0.1f);
 
-                    if (Utils.PlayerById(player.TargetPlayerId).Data != null && Utils.PlayerById(player.TargetPlayerId).Data.IsImpostor() && PlayerControl.LocalPlayer.Data.IsImpostor())
-                    {
-                        player.NameText.text = player.name;
-                        player.NameText.color = Palette.ImpostorRed;
-                    }
-
                     var role = GetRole(player);
                     if (role != null && role.Criteria())
                     {
@@ -525,12 +517,6 @@ namespace TownOfUs.Roles
                     {
                         player.nameText().text = player.name;
                         player.nameText().color = Color.white;
-                    }
-
-                    if (player.Data != null && player.Data.IsImpostor() && PlayerControl.LocalPlayer.Data.IsImpostor())
-                    {
-                        player.nameText().text = player.name;
-                        player.nameText().color = Palette.ImpostorRed;
                     }
 
                     var role = GetRole(player);

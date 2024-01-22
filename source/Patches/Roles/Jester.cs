@@ -17,6 +17,7 @@ namespace TownOfUs.Roles
             RoleType = RoleEnum.Jester;
             AddToRoleHistory(RoleType);
             Faction = Faction.NeutralEvil;
+            VotedOut = false;
         }
     }
 }

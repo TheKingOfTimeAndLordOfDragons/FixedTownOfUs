@@ -23,9 +23,7 @@ namespace TownOfUs.NeutralRoles.PhantomMod
                 Phantom.CompletedTasks = true;
                 if (AmongUsClient.Instance.AmHost)
                 {
-                    Utils.Rpc(CustomRPC.PhantomWin, role.Player.PlayerId);
-                    if (CustomGameOptions.NeutralEvilWinEndsGame) Utils.EndGame();
-                    else
+                    if (!CustomGameOptions.NeutralEvilWinEndsGame)
                     {
                         role.Caught = true;
                         if (!PlayerControl.LocalPlayer.Is(RoleEnum.Phantom) || !CustomGameOptions.PhantomSpook) return;

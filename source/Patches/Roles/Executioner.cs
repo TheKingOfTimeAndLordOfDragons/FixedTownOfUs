@@ -21,6 +21,7 @@ namespace TownOfUs.Roles
             AddToRoleHistory(RoleType);
             Faction = Faction.NeutralEvil;
             Scale = 1.4f;
+            TargetVotedOut = false;
         }
     }
 }

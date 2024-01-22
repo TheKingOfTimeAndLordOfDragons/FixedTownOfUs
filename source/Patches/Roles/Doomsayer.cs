@@ -29,6 +29,7 @@ namespace TownOfUs.Roles
             LastObserved = DateTime.UtcNow;
             AddToRoleHistory(RoleType);
             Faction = Faction.NeutralEvil;
+            WonByGuessing = false;
 
             if (CustomGameOptions.GameMode == GameMode.Classic || CustomGameOptions.GameMode == GameMode.AllAny)
             {
@@ -111,6 +112,6 @@ namespace TownOfUs.Roles
         }
 
         public int GuessedCorrectly = 0;
-        public static bool WonByGuessing = false;
+        public static bool WonByGuessing;
     }
 }
