@@ -11,16 +11,23 @@ namespace TownOfUs.CrewmateRoles.MedicMod
     {
         public static void BreakShield(byte medicId, byte playerId, bool flag)
         {
-            if (PlayerControl.LocalPlayer.PlayerId == playerId &&
-                CustomGameOptions.NotificationShield == NotificationOptions.Shielded)
+            if (PlayerControl.LocalPlayer.PlayerId == playerId && CustomGameOptions.NotificationShield == NotificationOptions.Shielded) 
+            {
                 Coroutines.Start(Utils.FlashCoroutine(new Color(0f, 0.5f, 0f, 1f)));
+                SoundEffectsManager.play("murderAttempt");
+            }
 
-            if (PlayerControl.LocalPlayer.PlayerId == medicId &&
-                CustomGameOptions.NotificationShield == NotificationOptions.Medic)
+            if (PlayerControl.LocalPlayer.PlayerId == medicId && CustomGameOptions.NotificationShield == NotificationOptions.Medic) 
+            {
                 Coroutines.Start(Utils.FlashCoroutine(new Color(0f, 0.5f, 0f, 1f)));
+                SoundEffectsManager.play("murderAttempt");
+            }
 
-            if (CustomGameOptions.NotificationShield == NotificationOptions.Everyone)
+            if (CustomGameOptions.NotificationShield == NotificationOptions.Everyone) 
+            {
                 Coroutines.Start(Utils.FlashCoroutine(new Color(0f, 0.5f, 0f, 1f)));
+                SoundEffectsManager.play("murderAttempt");
+            }
 
             if (!flag)
                 return;

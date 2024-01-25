@@ -2,6 +2,7 @@ using System;
 using HarmonyLib;
 using TownOfUs.Roles;
 using AmongUs.GameOptions;
+using TownOfUs.Extensions;
 
 namespace TownOfUs.NeutralRoles.PlaguebearerMod
 {
@@ -24,6 +25,7 @@ namespace TownOfUs.NeutralRoles.PlaguebearerMod
                         GameOptionsData.KillDistances[GameOptionsManager.Instance.currentNormalGameOptions.KillDistance];
             if (!flag3) return false;
             var interact = Utils.Interact(PlayerControl.LocalPlayer, role.ClosestPlayer);
+            SoundEffectsManager.play("plaguebearerInfect");
             if (interact.FullCooldownReset)
             {
                 role.LastInfected = DateTime.UtcNow;

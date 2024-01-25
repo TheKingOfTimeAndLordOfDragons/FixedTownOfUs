@@ -3,6 +3,7 @@ using Reactor.Utilities;
 using TownOfUs.Roles;
 using UnityEngine;
 using AmongUs.GameOptions;
+using TownOfUs.Extensions;
 
 namespace TownOfUs.ImpostorRoles.JanitorMod
 {
@@ -36,6 +37,7 @@ namespace TownOfUs.ImpostorRoles.JanitorMod
                 Utils.Rpc(CustomRPC.JanitorClean, PlayerControl.LocalPlayer.PlayerId, playerId);
 
                 Coroutines.Start(Coroutine.CleanCoroutine(role.CurrentTarget, role));
+                SoundEffectsManager.play("janitorClean");
                 return false;
             }
 

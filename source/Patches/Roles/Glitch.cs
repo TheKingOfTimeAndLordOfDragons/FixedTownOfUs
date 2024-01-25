@@ -403,6 +403,7 @@ namespace TownOfUs.Roles
                 Utils.Rpc(CustomRPC.SetMimic, PlayerControl.LocalPlayer.PlayerId, mimicPlayer.PlayerId);
 
                 Utils.Morph(__instance.Player, mimicPlayer, true);
+                SoundEffectsManager.play("morphlingMorph");
 
                 var mimicActivation = DateTime.UtcNow;
                 var mimicText = new GameObject("_Player").AddComponent<ImportantTextTask>();
@@ -432,6 +433,7 @@ namespace TownOfUs.Roles
                         __instance.IsUsingMimic = false;
                         __instance.MimicTarget = null;
                         Utils.Unmorph(__instance.Player);
+                        SoundEffectsManager.play("morphlingMorph");
 
                         Utils.Rpc(CustomRPC.RpcResetAnim, PlayerControl.LocalPlayer.PlayerId, mimicPlayer.PlayerId);
                         yield break;
@@ -562,6 +564,7 @@ namespace TownOfUs.Roles
                     if (interact.AbilityUsed)
                     {
                         __gInstance.RpcSetHacked(__gInstance.HackTarget);
+                        SoundEffectsManager.play("glitchHack");
                     }
                     if (interact.FullCooldownReset)
                     {

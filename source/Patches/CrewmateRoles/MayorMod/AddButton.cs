@@ -61,8 +61,8 @@ namespace TownOfUs.CrewmateRoles.MayorMod
                         AddButton.assassinUIExitButton.OnClick.Invoke();
                         MeetingHud.Instance.playerStates.ToList().ForEach(x => { if (x.TargetPlayerId == mayor.Player.PlayerId && x.transform.FindChild("ShootButton") != null) UnityEngine.Object.Destroy(x.transform.FindChild("ShootButton").gameObject); });
                     }
-                    MeetingHud.Instance.playerStates.ToList().ForEach(x => { if (x.TargetPlayerId == mayor.Player.PlayerId && x.transform.FindChild("ShootButton") != null) UnityEngine.Object.Destroy(x.transform.FindChild("ShootButton").gameObject); });
                 }
+                MeetingHud.Instance.playerStates.ToList().ForEach(x => { if (x.TargetPlayerId == mayor.Player.PlayerId && x.transform.FindChild("ShootButton") != null) UnityEngine.Object.Destroy(x.transform.FindChild("ShootButton").gameObject); });
             }
             else if (PlayerControl.LocalPlayer.Is(RoleEnum.Doomsayer))
             {
@@ -73,8 +73,8 @@ namespace TownOfUs.CrewmateRoles.MayorMod
                         NeutralRoles.DoomsayerMod.AddButton.doomsayerUIExitButton.OnClick.Invoke();
                         MeetingHud.Instance.playerStates.ToList().ForEach(x => { if (x.TargetPlayerId == mayor.Player.PlayerId && x.transform.FindChild("ShootButton") != null) UnityEngine.Object.Destroy(x.transform.FindChild("ShootButton").gameObject); });
                     }
-                    MeetingHud.Instance.playerStates.ToList().ForEach(x => { if (x.TargetPlayerId == mayor.Player.PlayerId && x.transform.FindChild("ShootButton") != null) UnityEngine.Object.Destroy(x.transform.FindChild("ShootButton").gameObject); });
                 }
+                MeetingHud.Instance.playerStates.ToList().ForEach(x => { if (x.TargetPlayerId == mayor.Player.PlayerId && x.transform.FindChild("ShootButton") != null) UnityEngine.Object.Destroy(x.transform.FindChild("ShootButton").gameObject); });
             }
             else if (PlayerControl.LocalPlayer.Is(RoleEnum.Vigilante))
             {
@@ -85,8 +85,8 @@ namespace TownOfUs.CrewmateRoles.MayorMod
                         VigilanteMod.AddButton.vigilanteUIExitButton.OnClick.Invoke();
                         MeetingHud.Instance.playerStates.ToList().ForEach(x => { if (x.TargetPlayerId == mayor.Player.PlayerId && x.transform.FindChild("ShootButton") != null) UnityEngine.Object.Destroy(x.transform.FindChild("ShootButton").gameObject); });
                     }
-                    MeetingHud.Instance.playerStates.ToList().ForEach(x => { if (x.TargetPlayerId == mayor.Player.PlayerId && x.transform.FindChild("ShootButton") != null) UnityEngine.Object.Destroy(x.transform.FindChild("ShootButton").gameObject); });
                 }
+                MeetingHud.Instance.playerStates.ToList().ForEach(x => { if (x.TargetPlayerId == mayor.Player.PlayerId && x.transform.FindChild("ShootButton") != null) UnityEngine.Object.Destroy(x.transform.FindChild("ShootButton").gameObject); });
             }
             return;
         }

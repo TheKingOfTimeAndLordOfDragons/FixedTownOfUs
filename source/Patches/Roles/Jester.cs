@@ -4,7 +4,7 @@ namespace TownOfUs.Roles
 {
     public class Jester : Role
     {
-        public static bool VotedOut;
+        public static bool VotedOut {get;set;} = false;
         public bool SpawnedAs = true;
 
 
@@ -17,7 +17,6 @@ namespace TownOfUs.Roles
             RoleType = RoleEnum.Jester;
             AddToRoleHistory(RoleType);
             Faction = Faction.NeutralEvil;
-            VotedOut = false;
         }
     }
 }

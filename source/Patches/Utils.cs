@@ -1074,6 +1074,9 @@ namespace TownOfUs
         class StartMeetingPatch {
             public static void Prefix(PlayerControl __instance, [HarmonyArgument(0)]GameData.PlayerInfo meetingTarget) {
                 voteTarget = meetingTarget;
+
+                // Stop all playing sounds
+                SoundEffectsManager.stopAll();
             }
         }
 
@@ -1237,6 +1240,11 @@ namespace TownOfUs
             {
                 var chameleon = Role.GetRole<Chameleon>(PlayerControl.LocalPlayer);
                 chameleon.LastSwooped = DateTime.UtcNow;
+            }
+            if (PlayerControl.LocalPlayer.Is(RoleEnum.Lighter))
+            {
+                var lighter = Role.GetRole<Lighter>(PlayerControl.LocalPlayer);
+                lighter.LastUsed = DateTime.UtcNow;
             }
             #endregion
             #region NeutralRoles
@@ -1429,5 +1437,11 @@ namespace TownOfUs
         public static int CycleInt(int max, int min, int currentVal, bool increment, int change = 1) => (int)CycleFloat(max, min, currentVal, increment, change);
 
         public static byte CycleByte(int max, int min, int currentVal, bool increment, int change = 1) => (byte)CycleInt(max, min, currentVal, increment, change);
+
+        public static bool isCrewmate(byte playerId)
+        {
+            PlayerControl player = PlayerById(playerId);
+            return player.Is(Faction.Crewmates);
+        }
     }
 }

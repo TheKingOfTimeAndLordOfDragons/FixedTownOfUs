@@ -3,6 +3,7 @@ using System;
 using TownOfUs.ImpostorRoles.BomberMod;
 using TownOfUs.CrewmateRoles.MedicMod;
 using TownOfUs.Patches;
+using TownOfUs.Extensions;
 
 namespace TownOfUs.Roles
 {
@@ -64,6 +65,7 @@ namespace TownOfUs.Roles
         public void DetonateKillStart()
         {
             Detonated = true;
+            SoundEffectsManager.play("bomberDetonate");
             var playersToDie = Utils.GetClosestPlayers(DetonatePoint, CustomGameOptions.DetonateRadius, false);
             playersToDie = Shuffle(playersToDie);
             while (playersToDie.Count > CustomGameOptions.MaxKillsInDetonation) playersToDie.Remove(playersToDie[playersToDie.Count - 1]);

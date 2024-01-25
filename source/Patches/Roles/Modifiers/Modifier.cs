@@ -111,6 +111,12 @@ namespace TownOfUs.Roles.Modifiers
                 .FirstOrDefault(x => x.PlayerId == area.TargetPlayerId);
             return player == null ? null : GetModifier(player);
         }
+
+        public static Modifier GetModifier(byte playerId)
+        {
+            var player = Utils.PlayerById(playerId);
+            return player == null ? null : GetModifier(player);
+        }
     }
 
     public abstract class Ability

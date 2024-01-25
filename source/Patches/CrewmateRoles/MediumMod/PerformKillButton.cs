@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TownOfUs.CrewmateRoles.MedicMod;
 using System;
+using TownOfUs.Extensions;
 
 namespace TownOfUs.CrewmateRoles.MediumMod
 {
@@ -33,6 +34,7 @@ namespace TownOfUs.CrewmateRoles.MediumMod
                     if (CustomGameOptions.DeadRevealed != DeadRevealed.All) return false;
                 }
             }
+            SoundEffectsManager.play("seerReveal");
 
             return false;
         }

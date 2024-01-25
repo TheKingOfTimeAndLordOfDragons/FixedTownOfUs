@@ -5,6 +5,7 @@ using UnityEngine;
 using TownOfUs.CrewmateRoles.MedicMod;
 using Reactor.Utilities;
 using AmongUs.GameOptions;
+using TownOfUs.Extensions;
 
 namespace TownOfUs.CrewmateRoles.DetectiveMod
 {
@@ -33,6 +34,7 @@ namespace TownOfUs.CrewmateRoles.DetectiveMod
                 {
                     if (role.DetectedKillers.Contains(role.ClosestPlayer.PlayerId) || (CustomGameOptions.CanDetectLastKiller && role.LastKiller == role.ClosestPlayer)) Coroutines.Start(Utils.FlashCoroutine(Color.red));
                     else Coroutines.Start(Utils.FlashCoroutine(Color.green));
+                    SoundEffectsManager.play("seerReveal");
                 }
                 if (interact.FullCooldownReset)
                 {
@@ -64,6 +66,7 @@ namespace TownOfUs.CrewmateRoles.DetectiveMod
                 {
                     if (deadPlayer.PlayerId == playerId) role.DetectedKillers.Add(deadPlayer.KillerId);
                 }
+                SoundEffectsManager.play("detectiveInspect");
                 return false;
             }
         }

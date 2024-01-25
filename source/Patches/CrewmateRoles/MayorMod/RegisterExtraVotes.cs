@@ -151,8 +151,7 @@ namespace TownOfUs.CrewmateRoles.MayorMod
                                 {
                                     if (playerInfo == null)
                                     {
-                                        Debug.LogError(string.Format("Couldn't find player info for voter: {0}",
-                                            voteState.VoterId));
+                                        Debug.LogError(string.Format("Couldn't find player info for voter: {0}", voteState.VoterId));
                                         prosRole.Prosecuted = true;
                                     }
                                     else if (i == 0 && voteState.SkippedVote)

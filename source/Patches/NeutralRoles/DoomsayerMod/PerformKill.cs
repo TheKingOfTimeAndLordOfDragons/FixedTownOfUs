@@ -2,6 +2,7 @@ using System;
 using HarmonyLib;
 using TownOfUs.Roles;
 using AmongUs.GameOptions;
+using TownOfUs.Extensions;
 
 namespace TownOfUs.NeutralRoles.DoomsayerMod
 {
@@ -26,6 +27,7 @@ namespace TownOfUs.NeutralRoles.DoomsayerMod
             if (interact.AbilityUsed)
             {
                 role.LastObservedPlayer = role.ClosestPlayer;
+                SoundEffectsManager.play("seerReveal");
             }
             if (interact.FullCooldownReset)
             {

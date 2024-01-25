@@ -2,6 +2,7 @@
 using HarmonyLib;
 using TownOfUs.Roles;
 using AmongUs.GameOptions;
+using TownOfUs.Extensions;
 
 namespace TownOfUs.NeutralRoles.WerewolfMod
 {
@@ -24,6 +25,7 @@ namespace TownOfUs.NeutralRoles.WerewolfMod
 
                 role.TimeRemaining = CustomGameOptions.RampageDuration;
                 role.Rampage();
+                SoundEffectsManager.play("werewolfRampage");
                 return false;
             }
 

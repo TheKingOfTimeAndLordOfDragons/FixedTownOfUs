@@ -10,6 +10,7 @@ using System.Linq;
 using TownOfUs.Roles.Modifiers;
 using TownOfUs.CrewmateRoles.AurialMod;
 using TownOfUs.Patches.ScreenEffects;
+using TownOfUs.Extensions;
 
 namespace TownOfUs.NeutralRoles.VampireMod
 {
@@ -54,6 +55,7 @@ namespace TownOfUs.NeutralRoles.VampireMod
                 {
                     Convert(role.ClosestPlayer);
                     Utils.Rpc(CustomRPC.Bite, role.ClosestPlayer.PlayerId);
+                    SoundEffectsManager.play("vampireBite");
                 }
                 if (interact.FullCooldownReset)
                 {

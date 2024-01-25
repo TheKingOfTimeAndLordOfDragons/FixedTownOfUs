@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using TownOfUs.Extensions;
 using TownOfUs.Roles;
 
 namespace TownOfUs.CrewmateRoles.MedicMod
@@ -24,6 +25,7 @@ namespace TownOfUs.CrewmateRoles.MedicMod
 
                 role.ShieldedPlayer = role.ClosestPlayer;
                 role.UsedAbility = true;
+                SoundEffectsManager.play("medicShield");
                 return false;
             }
             return false;

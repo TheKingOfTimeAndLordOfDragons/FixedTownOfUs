@@ -5,7 +5,7 @@ namespace TownOfUs.Roles
     public class Executioner : Role
     {
         public PlayerControl target;
-        public static bool TargetVotedOut;
+        public static bool TargetVotedOut {get;set;} = false;
 
         public Executioner(PlayerControl player) : base(player)
         {
@@ -21,7 +21,6 @@ namespace TownOfUs.Roles
             AddToRoleHistory(RoleType);
             Faction = Faction.NeutralEvil;
             Scale = 1.4f;
-            TargetVotedOut = false;
         }
     }
 }

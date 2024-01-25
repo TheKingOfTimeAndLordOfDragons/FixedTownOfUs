@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using HarmonyLib;
+using TownOfUs.Extensions;
 using TownOfUs.Patches;
 using TownOfUs.Roles;
 using UnityEngine;
@@ -29,6 +30,7 @@ namespace TownOfUs.ImpostorRoles.MinerMod
                 var id = GetAvailableId();
                 Utils.Rpc(CustomRPC.Mine, id, PlayerControl.LocalPlayer.PlayerId, position, position.z + 0.001f);
                 SpawnVent(id, role, position, position.z + 0.001f);
+                SoundEffectsManager.play("minerMine");
                 return false;
             }
 

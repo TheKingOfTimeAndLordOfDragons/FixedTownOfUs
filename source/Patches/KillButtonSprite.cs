@@ -40,6 +40,7 @@ namespace TownOfUs
         private static Sprite Stake => TownOfUs.StakeSprite;
         private static Sprite Confess => TownOfUs.ConfessSprite;
         private static Sprite Radiate => TownOfUs.RadiateSprite;
+        private static Sprite Lighter => TownOfUs.LighterButton;
 
         private static Sprite Kill;
 
@@ -154,6 +155,11 @@ namespace TownOfUs
             else if (PlayerControl.LocalPlayer.Is(RoleEnum.Aurial))
             {
                 __instance.KillButton.graphic.sprite = Radiate;
+                flag = true;
+            }
+            else if (PlayerControl.LocalPlayer.Is(RoleEnum.Lighter))
+            {
+                __instance.KillButton.graphic.sprite = Lighter;
                 flag = true;
             }
             else

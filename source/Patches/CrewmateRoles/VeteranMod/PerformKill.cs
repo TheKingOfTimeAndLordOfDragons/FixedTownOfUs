@@ -1,4 +1,5 @@
 using HarmonyLib;
+using TownOfUs.Extensions;
 using TownOfUs.Roles;
 
 namespace TownOfUs.CrewmateRoles.VeteranMod
@@ -24,6 +25,7 @@ namespace TownOfUs.CrewmateRoles.VeteranMod
                 role.UsesLeft--;
                 role.Alert();
                 Utils.Rpc(CustomRPC.Alert, PlayerControl.LocalPlayer.PlayerId);
+                SoundEffectsManager.play("veteranAlert");
                 return false;
             }
 

@@ -29,7 +29,6 @@ namespace TownOfUs.Roles
             LastObserved = DateTime.UtcNow;
             AddToRoleHistory(RoleType);
             Faction = Faction.NeutralEvil;
-            WonByGuessing = false;
 
             if (CustomGameOptions.GameMode == GameMode.Classic || CustomGameOptions.GameMode == GameMode.AllAny)
             {
@@ -40,6 +39,7 @@ namespace TownOfUs.Roles
                 if (CustomGameOptions.EngineerOn > 0) ColorMapping.Add("Engineer", Colors.Engineer);
                 if (CustomGameOptions.ImitatorOn > 0) ColorMapping.Add("Imitator", Colors.Imitator);
                 if (CustomGameOptions.InvestigatorOn > 0) ColorMapping.Add("Investigator", Colors.Investigator);
+                if (CustomGameOptions.LighterOn > 0) ColorMapping.Add("Lighter", Colors.Lighter);
                 if (CustomGameOptions.MayorOn > 0) ColorMapping.Add("Mayor", Colors.Mayor);
                 if (CustomGameOptions.MedicOn > 0) ColorMapping.Add("Medic", Colors.Medic);
                 if (CustomGameOptions.MediumOn > 0) ColorMapping.Add("Medium", Colors.Medium);
@@ -112,6 +112,6 @@ namespace TownOfUs.Roles
         }
 
         public int GuessedCorrectly = 0;
-        public static bool WonByGuessing;
+        public static bool WonByGuessing {get;set;} = false;
     }
 }

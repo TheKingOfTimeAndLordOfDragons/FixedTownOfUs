@@ -46,9 +46,9 @@ namespace TownOfUs.Patches
     }
 
     static class AdditionalTempData {
+        // Should be implemented using a proper GameOverReason in the future
         public static WinCondition winCondition = WinCondition.Default;
         public static List<WinCondition> additionalWinConditions = new List<WinCondition>();
-
         public static List<PlayerRoleInfo> playerRoles = new List<PlayerRoleInfo>();
         public static List<Winners> otherWinners = new List<Winners>();
 
@@ -86,16 +86,12 @@ namespace TownOfUs.Patches
             if (CameraEffect.singleton) CameraEffect.singleton.materials.Clear();
             AdditionalTempData.clear();
 
-            var playerRole = "";
-            bool loved = false;
-            bool exeTarget = false;
-            bool gaTarget = false;
             foreach (var playerControl in PlayerControl.AllPlayerControls) {
-                loved = playerControl.IsLover();
-                exeTarget = playerControl.IsExeTarget();
-                gaTarget = playerControl.IsGATarget();
+                string playerRole = "";
+                bool loved = playerControl.IsLover();
+                bool exeTarget = playerControl.IsExeTarget();
+                bool gaTarget = playerControl.IsGATarget();
 
-                playerRole = "";
                 foreach (var role in Role.RoleHistory.Where(x => x.Key == playerControl.PlayerId))
                 {
                     if (role.Value == RoleEnum.Crewmate) { playerRole += "<color=#" + Patches.Colors.Crewmate.ToHtmlStringRGBA() + ">Crewmate</color> > "; }
@@ -153,6 +149,7 @@ namespace TownOfUs.Patches
                     else if (role.Value == RoleEnum.Oracle) { playerRole += "<color=#" + Patches.Colors.Oracle.ToHtmlStringRGBA() + ">Oracle</color> > "; }
                     else if (role.Value == RoleEnum.Venerer) { playerRole += "<color=#" + Patches.Colors.Impostor.ToHtmlStringRGBA() + ">Venerer</color> > "; }
                     else if (role.Value == RoleEnum.Aurial) { playerRole += "<color=#" + Patches.Colors.Aurial.ToHtmlStringRGBA() + ">Aurial</color> > "; }
+                    else if (role.Value == RoleEnum.Lighter) { playerRole += "<color=#" + Patches.Colors.Lighter.ToHtmlStringRGBA() + ">Lighter</color> > "; }
                     if (CustomGameOptions.GameMode == GameMode.Cultist && playerControl.Data.IsImpostor())
                     {
                         if (role.Value == RoleEnum.Engineer) { playerRole += "<color=#" + Patches.Colors.Impostor.ToHtmlStringRGBA() + ">Demolitionist</color> > "; }
@@ -163,8 +160,8 @@ namespace TownOfUs.Patches
                         else if (role.Value == RoleEnum.Vigilante) { playerRole += "<color=#" + Patches.Colors.Impostor.ToHtmlStringRGBA() + ">Assassin</color> > "; }
                     }
                 }
-                playerRole = playerRole.Remove(playerRole.Length - 3);
-
+                if (!string.IsNullOrEmpty(playerRole)) playerRole = playerRole.Remove(playerRole.Length - 3);
+                
                 if (playerControl.Is(ModifierEnum.Giant))
                 {
                     playerRole += " (<color=#" + Patches.Colors.Giant.ToHtmlStringRGBA() + ">Giant</color>)";
@@ -228,6 +225,14 @@ namespace TownOfUs.Patches
                 else if (playerControl.Is(ModifierEnum.Frosty))
                 {
                     playerRole += " (<color=#" + Patches.Colors.Frosty.ToHtmlStringRGBA() + ">Frosty</color>)";
+                }
+                else if (playerControl.Is(ModifierEnum.Drunk)) 
+                {
+                    playerRole += " (<color=#" + Patches.Colors.Drunk.ToHtmlStringRGBA() + ">Drunk</color>)";
+                }
+                else if (playerControl.Is(ModifierEnum.Blind))
+                {
+                    playerRole += " (<color=#" + Patches.Colors.Blind.ToHtmlStringRGBA() + ">Blind</color>)";
                 }
                 var player = Role.GetRole(playerControl);
                 if (playerControl.Is(RoleEnum.Phantom) || playerControl.Is(Faction.Crewmates))
@@ -294,72 +299,72 @@ namespace TownOfUs.Patches
             foreach (var role in Role.GetRoles(RoleEnum.Amnesiac))
             {
                 var amne = (Amnesiac)role;
-                notWinners.Add(amne.Player);
+                if (amne.Player != null) notWinners.Add(amne.Player);
             }
             foreach (var role in Role.GetRoles(RoleEnum.GuardianAngel))
             {
                 var ga = (GuardianAngel)role;
-                notWinners.Add(ga.Player);
+                if (ga.Player != null) notWinners.Add(ga.Player);
             }
             foreach (var role in Role.GetRoles(RoleEnum.Survivor))
             {
                 var surv = (Survivor)role;
-                notWinners.Add(surv.Player);
+                if (surv.Player != null) notWinners.Add(surv.Player);
             }
             foreach (var role in Role.GetRoles(RoleEnum.Doomsayer))
             {
                 var doom = (Doomsayer)role;
-                notWinners.Add(doom.Player);
+                if (doom.Player != null) notWinners.Add(doom.Player);
             }
             foreach (var role in Role.GetRoles(RoleEnum.Executioner))
             {
                 var exe = (Executioner)role;
-                notWinners.Add(exe.Player);
+                if (exe.Player != null) notWinners.Add(exe.Player);
             }
             foreach (var role in Role.GetRoles(RoleEnum.Jester))
             {
                 var jest = (Jester)role;
-                notWinners.Add(jest.Player);
+                if (jest.Player != null) notWinners.Add(jest.Player);
             }
             foreach (var role in Role.GetRoles(RoleEnum.Phantom))
             {
                 var phan = (Phantom)role;
-                notWinners.Add(phan.Player);
+                if (phan.Player != null) notWinners.Add(phan.Player);
             }
             foreach (var role in Role.GetRoles(RoleEnum.Arsonist))
             {
                 var arso = (Arsonist)role;
-                notWinners.Add(arso.Player);
+                if (arso.Player != null) notWinners.Add(arso.Player);
             }
             foreach (var role in Role.GetRoles(RoleEnum.Juggernaut))
             {
                 var jugg = (Juggernaut)role;
-                notWinners.Add(jugg.Player);
+                if (jugg.Player != null) notWinners.Add(jugg.Player);
             }
             foreach (var role in Role.GetRoles(RoleEnum.Pestilence))
             {
                 var pest = (Pestilence)role;
-                notWinners.Add(pest.Player);
+                if (pest.Player != null) notWinners.Add(pest.Player);
             }
             foreach (var role in Role.GetRoles(RoleEnum.Plaguebearer))
             {
                 var pb = (Plaguebearer)role;
-                notWinners.Add(pb.Player);
+                if (pb.Player != null) notWinners.Add(pb.Player);
             }
             foreach (var role in Role.GetRoles(RoleEnum.Glitch))
             {
                 var glitch = (Glitch)role;
-                notWinners.Add(glitch.Player);
+                if (glitch.Player != null) notWinners.Add(glitch.Player);
             }
             foreach (var role in Role.GetRoles(RoleEnum.Vampire))
             {
                 var vamp = (Vampire)role;
-                notWinners.Add(vamp.Player);
+                if (vamp.Player != null) notWinners.Add(vamp.Player);
             }
             foreach (var role in Role.GetRoles(RoleEnum.Werewolf))
             {
                 var ww = (Werewolf)role;
-                notWinners.Add(ww.Player);
+                if (ww.Player != null) notWinners.Add(ww.Player);
             }
 
             List<WinningPlayerData> winnersToRemove = new List<WinningPlayerData>();
@@ -367,7 +372,7 @@ namespace TownOfUs.Patches
                 if (notWinners.Any(x => x.Data.PlayerName == winner.PlayerName)) winnersToRemove.Add(winner);
             }
             foreach (var winner in winnersToRemove) TempData.winners.Remove(winner);
-            
+
             bool loversWin = Lover.existingAndAlive() && (gameOverReason == (GameOverReason)CustomGameOverReason.LoversWin || (GameManager.Instance.DidHumansWin(gameOverReason) && !Lover.existingWithKiller()));
             bool jesterWin = false;
             foreach (var role in Role.GetRoles(RoleEnum.Jester)) {
@@ -389,7 +394,6 @@ namespace TownOfUs.Patches
                 var doomsayer = (Doomsayer)role;
                 doomsayerWin = doomsayer.Player != null && gameOverReason == (GameOverReason)CustomGameOverReason.DoomsayerWin;
             }
-
             bool glitchWin = false;
             foreach (var role in Role.GetRoles(RoleEnum.Glitch)) {
                 var glitch = (Glitch)role;
@@ -426,12 +430,13 @@ namespace TownOfUs.Patches
                 vampireWin = vampire.Player != null && gameOverReason == (GameOverReason)CustomGameOverReason.VampireWin;
             }
 
+            // Lovers win conditions
             if (loversWin) {
+                // Double win for lovers, crewmates also win
                 if (!Lover.existingWithKiller()) {
                     AdditionalTempData.winCondition = WinCondition.LoversTeamWin;
-                    foreach (var modifier in Modifier.GetModifiers(ModifierEnum.Lover))
-                    {
-                        TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
+                    TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
+                    foreach (var modifier in Modifier.GetModifiers(ModifierEnum.Lover)) {
                         var lover = (Lover)modifier;
                         foreach (PlayerControl p in PlayerControl.AllPlayerControls) {
                             if (p == null) continue;
@@ -444,59 +449,63 @@ namespace TownOfUs.Patches
                         }
                     }
                 }
+                // Lovers solo win
                 else {
                     AdditionalTempData.winCondition = WinCondition.LoversSoloWin;
-                    foreach (var modifier in Modifier.GetModifiers(ModifierEnum.Lover))
-                    {
-                        TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
+                    TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
+                    foreach (var modifier in Modifier.GetModifiers(ModifierEnum.Lover)) {
                         var lover = (Lover)modifier;
                         TempData.winners.Add(new WinningPlayerData(lover.Player.Data));
                         TempData.winners.Add(new WinningPlayerData(lover.OtherLover.Player.Data));
                     }
                 }
             }
+            // Jester win
             else if (jesterWin) {
-                AdditionalTempData.winCondition = WinCondition.JesterWin;
                 foreach (var role in Role.GetRoles(RoleEnum.Jester))
                 {
                     TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
                     var jest = (Jester)role;
                     WinningPlayerData wpd = new WinningPlayerData(jest.Player.Data);
                     TempData.winners.Add(wpd);
+                    AdditionalTempData.winCondition = WinCondition.JesterWin;
                 }
             }
+            // Executioner win
             else if (executionerWin) {
-                AdditionalTempData.winCondition = WinCondition.ExecutionerWin;
                 foreach (var role in Role.GetRoles(RoleEnum.Executioner))
                 {
                     TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
                     var exe = (Executioner)role;
                     WinningPlayerData wpd = new WinningPlayerData(exe.Player.Data);
                     TempData.winners.Add(wpd);
+                    AdditionalTempData.winCondition = WinCondition.ExecutionerWin;
                 }
             }
+            // Phantom win
             else if (phantomWin) {
-                AdditionalTempData.winCondition = WinCondition.PhantomWin;
                 foreach (var role in Role.GetRoles(RoleEnum.Phantom))
                 {
                     TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
                     var phantom = (Phantom)role;
                     WinningPlayerData wpd = new WinningPlayerData(phantom.Player.Data);
                     TempData.winners.Add(wpd);
+                    AdditionalTempData.winCondition = WinCondition.PhantomWin;
                 }
             }
+            // Doomsayer win
             else if (doomsayerWin) {
-                AdditionalTempData.winCondition = WinCondition.DoomsayerWin;
                 foreach (var role in Role.GetRoles(RoleEnum.Doomsayer))
                 {
                     TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
                     var doom = (Doomsayer)role;
                     WinningPlayerData wpd = new WinningPlayerData(doom.Player.Data);
                     TempData.winners.Add(wpd);
+                    AdditionalTempData.winCondition = WinCondition.DoomsayerWin;
                 }
             }
+            // Glitch win
             else if (glitchWin) {
-                AdditionalTempData.winCondition = WinCondition.GlitchWin;
                 foreach (var role in Role.GetRoles(RoleEnum.Glitch))
                 {
                     TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
@@ -504,10 +513,11 @@ namespace TownOfUs.Patches
                     WinningPlayerData wpd = new WinningPlayerData(glitch.Player.Data);
                     wpd.IsImpostor = false;
                     TempData.winners.Add(wpd);
+                    AdditionalTempData.winCondition = WinCondition.GlitchWin;
                 }
             }
+            // Arsonist win
             else if (arsonistWin) {
-                AdditionalTempData.winCondition = WinCondition.ArsonistWin;
                 foreach (var role in Role.GetRoles(RoleEnum.Arsonist))
                 {
                     TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
@@ -515,10 +525,11 @@ namespace TownOfUs.Patches
                     WinningPlayerData wpd = new WinningPlayerData(arso.Player.Data);
                     wpd.IsImpostor = false;
                     TempData.winners.Add(wpd);
+                    AdditionalTempData.winCondition = WinCondition.ArsonistWin;
                 }
             }
+            // Juggernaut win
             else if (juggernautWin) {
-                AdditionalTempData.winCondition = WinCondition.JuggernautWin;
                 foreach (var role in Role.GetRoles(RoleEnum.Juggernaut))
                 {
                     TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
@@ -526,10 +537,11 @@ namespace TownOfUs.Patches
                     WinningPlayerData wpd = new WinningPlayerData(jugg.Player.Data);
                     wpd.IsImpostor = false;
                     TempData.winners.Add(wpd);
+                    AdditionalTempData.winCondition = WinCondition.JuggernautWin;
                 }
             }
+            // Plaguebearer win
             else if (plaguebearerWin) {
-                AdditionalTempData.winCondition = WinCondition.PlaguebearerWin;
                 foreach (var role in Role.GetRoles(RoleEnum.Plaguebearer))
                 {
                     TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
@@ -537,10 +549,11 @@ namespace TownOfUs.Patches
                     WinningPlayerData wpd = new WinningPlayerData(plag.Player.Data);
                     wpd.IsImpostor = false;
                     TempData.winners.Add(wpd);
+                    AdditionalTempData.winCondition = WinCondition.PlaguebearerWin;
                 }
             }
+            // Pestilence win
             else if (pestilenceWin) {
-                AdditionalTempData.winCondition = WinCondition.PestilenceWin;
                 foreach (var role in Role.GetRoles(RoleEnum.Pestilence))
                 {
                     TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
@@ -548,10 +561,11 @@ namespace TownOfUs.Patches
                     WinningPlayerData wpd = new WinningPlayerData(pest.Player.Data);
                     wpd.IsImpostor = false;
                     TempData.winners.Add(wpd);
+                    AdditionalTempData.winCondition = WinCondition.PestilenceWin;
                 }
             }
+            // Werewolf win
             else if (werewolfWin) {
-                AdditionalTempData.winCondition = WinCondition.WerewolfWin;
                 foreach (var role in Role.GetRoles(RoleEnum.Werewolf))
                 {
                     TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
@@ -559,10 +573,11 @@ namespace TownOfUs.Patches
                     WinningPlayerData wpd = new WinningPlayerData(were.Player.Data);
                     wpd.IsImpostor = false;
                     TempData.winners.Add(wpd);
+                    AdditionalTempData.winCondition = WinCondition.WerewolfWin;
                 }
             }
+            // Vampire win
             else if (vampireWin) {
-                AdditionalTempData.winCondition = WinCondition.VampireWin;
                 foreach (var role in Role.GetRoles(RoleEnum.Vampire))
                 {
                     TempData.winners = new Il2CppSystem.Collections.Generic.List<WinningPlayerData>();
@@ -570,6 +585,7 @@ namespace TownOfUs.Patches
                     WinningPlayerData wpd = new WinningPlayerData(vamp.Player.Data);
                     wpd.IsImpostor = false;
                     TempData.winners.Add(wpd);
+                    AdditionalTempData.winCondition = WinCondition.VampireWin;
                 }
             }
 
@@ -581,6 +597,14 @@ namespace TownOfUs.Patches
                         TempData.winners.Add(new WinningPlayerData(surv.Player.Data));
                     AdditionalTempData.additionalWinConditions.Add(WinCondition.AdditionalAliveSurvivorBonusWin); // The Survivor wins if alive
                 }
+            }
+
+            foreach (var role in Role.GetRoles(RoleEnum.Vampire))
+            {
+                var vamp = (Vampire)role;
+                if (vamp.Player != null && AdditionalTempData.winCondition == WinCondition.VampireWin)
+                    if (!TempData.winners.ToArray().Any(x => x.PlayerName == vamp.Player.Data.PlayerName))
+                        TempData.winners.Add(new WinningPlayerData(vamp.Player.Data));
             }
 
             foreach (var role in Role.GetRoles(RoleEnum.GuardianAngel))
@@ -630,13 +654,13 @@ namespace TownOfUs.Patches
                 float num7 = Mathf.Lerp(1f, 0.65f, num4) * 0.9f;
                 Vector3 vector = new Vector3(num7, num7, 1f);
                 poolablePlayer.transform.localScale = vector;
+                poolablePlayer.UpdateFromPlayerOutfit((GameData.PlayerOutfit) winningPlayerData2, PlayerMaterial.MaskType.ComplexUI, winningPlayerData2.IsDead, true);
                 if (winningPlayerData2.IsDead) {
-                    poolablePlayer.SetBodyAsGhost();
+                    poolablePlayer.cosmetics.currentBodySprite.BodySprite.sprite = poolablePlayer.cosmetics.currentBodySprite.GhostSprite;
                     poolablePlayer.SetDeadFlipX(i % 2 == 0);
                 } else {
                     poolablePlayer.SetFlipX(i % 2 == 0);
                 }
-                poolablePlayer.UpdateFromPlayerOutfit(winningPlayerData2, PlayerMaterial.MaskType.None, winningPlayerData2.IsDead, true);
 
                 poolablePlayer.cosmetics.nameText.color = Color.white;
                 poolablePlayer.cosmetics.nameText.transform.localScale = new Vector3(1f / vector.x, 1f / vector.y, 1f / vector.z);
@@ -659,26 +683,31 @@ namespace TownOfUs.Patches
                 textRenderer.text = "Jester Wins";
                 textRenderer.color = Colors.Jester;
                 __instance.BackgroundBar.material.SetColor("_Color", Colors.Jester);
+                SoundEffectsManager.play("jesterWin");
             }
             if (AdditionalTempData.winCondition == WinCondition.ExecutionerWin) {
                 textRenderer.text = "Executioner Wins";
                 textRenderer.color = Colors.Executioner;
                 __instance.BackgroundBar.material.SetColor("_Color", Colors.Executioner);
+                SoundEffectsManager.play("executionerWin");
             }
             if (AdditionalTempData.winCondition == WinCondition.GlitchWin) {
                 textRenderer.text = "Glitch Wins";
                 textRenderer.color = Colors.Glitch;
                 __instance.BackgroundBar.material.SetColor("_Color", Colors.Glitch);
+                SoundEffectsManager.play("glitchWin");
             }
             if (AdditionalTempData.winCondition == WinCondition.ArsonistWin) {
                 textRenderer.text = "Arsonist Wins";
                 textRenderer.color = Colors.Arsonist;
                 __instance.BackgroundBar.material.SetColor("_Color", Colors.Arsonist);
+                SoundEffectsManager.play("arsonistWin");
             }
             if (AdditionalTempData.winCondition == WinCondition.PhantomWin) {
                 textRenderer.text = "Phantom Wins";
                 textRenderer.color = Colors.Phantom;
                 __instance.BackgroundBar.material.SetColor("_Color", Colors.Phantom);
+                SoundEffectsManager.play("phantomWin");
             }
             if (AdditionalTempData.winCondition == WinCondition.JuggernautWin) {
                 textRenderer.text = "Juggernaut Wins";
@@ -689,26 +718,31 @@ namespace TownOfUs.Patches
                 textRenderer.text = "Plaguebearer Wins";
                 textRenderer.color = Colors.Plaguebearer;
                 __instance.BackgroundBar.material.SetColor("_Color", Colors.Plaguebearer);
+                SoundEffectsManager.play("plaguebearerWin");
             }
             if (AdditionalTempData.winCondition == WinCondition.PestilenceWin) {
                 textRenderer.text = "Pestilence Wins";
                 textRenderer.color = Colors.Pestilence;
                 __instance.BackgroundBar.material.SetColor("_Color", Colors.Pestilence);
+                SoundEffectsManager.play("plaguebearerWin");
             }
             if (AdditionalTempData.winCondition == WinCondition.WerewolfWin) {
                 textRenderer.text = "Werewolf Wins";
                 textRenderer.color = Colors.Werewolf;
                 __instance.BackgroundBar.material.SetColor("_Color", Colors.Werewolf);
+                SoundEffectsManager.play("werewolfWin");
             }
             if (AdditionalTempData.winCondition == WinCondition.DoomsayerWin) {
                 textRenderer.text = "Doomsayer Wins";
                 textRenderer.color = Colors.Doomsayer;
                 __instance.BackgroundBar.material.SetColor("_Color", Colors.Doomsayer);
+                SoundEffectsManager.play("doomsayerWin");
             }
             if (AdditionalTempData.winCondition == WinCondition.VampireWin) {
                 textRenderer.text = "Vampire Wins";
                 textRenderer.color = Colors.Vampire;
                 __instance.BackgroundBar.material.SetColor("_Color", Colors.Vampire);
+                SoundEffectsManager.play("vampireWin");
             }
             if (AdditionalTempData.winCondition == WinCondition.LoversTeamWin) {
                 textRenderer.text = "Lovers And Crewmates Win";
@@ -891,50 +925,58 @@ namespace TownOfUs.Patches
             return false;
         }
         private static bool CheckAndEndGameForGlitchWin(ShipStatus __instance, PlayerStatistics statistics) {
-            if (statistics.TotalAlive - statistics.TeamGlitchAlive <= statistics.TeamGlitchAlive && statistics.TeamImpostorsAlive == 0 && statistics.TeamArsonistAlive == 0 && statistics.TeamJuggernautAlive == 0 && statistics.TeamPlaguebearerAlive == 0 && statistics.TeamPestilenceAlive == 0 && statistics.TeamWerewolfAlive == 0 && statistics.TeamVampireAlive == 0 && statistics.TeamPowerCrewAlive == 0 && !(statistics.TeamGlitchHasAliveLover && statistics.TeamLoversAlive == 2)) {
+            if (statistics.TeamGlitchAlive >= statistics.TotalAlive - statistics.TeamGlitchAlive && statistics.TeamImpostorsAlive == 0 && statistics.TeamArsonistAlive == 0 && statistics.TeamJuggernautAlive == 0 && statistics.TeamPlaguebearerAlive == 0 && statistics.TeamPestilenceAlive == 0 && statistics.TeamWerewolfAlive == 0 && statistics.TeamVampireAlive == 0 && statistics.TeamPowerCrewAlive == 0 && !(statistics.TeamGlitchHasAliveLover && statistics.TeamLoversAlive == 2)) {
                 GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.GlitchWin, false);
+                return true;
             }
             return false;   
         }
         private static bool CheckAndEndGameForArsonistWin(ShipStatus __instance, PlayerStatistics statistics) {
-            if (statistics.TotalAlive - statistics.TeamArsonistAlive <= statistics.TeamArsonistAlive && statistics.TeamGlitchAlive == 0 && statistics.TeamImpostorsAlive == 0 && statistics.TeamJuggernautAlive == 0 && statistics.TeamPlaguebearerAlive == 0 && statistics.TeamPestilenceAlive == 0 && statistics.TeamWerewolfAlive == 0 && statistics.TeamVampireAlive == 0 && statistics.TeamPowerCrewAlive == 0 && !(statistics.TeamArsonistHasAliveLover && statistics.TeamLoversAlive == 2)) {
+            if (statistics.TeamArsonistAlive >= statistics.TotalAlive - statistics.TeamArsonistAlive && statistics.TeamGlitchAlive == 0 && statistics.TeamImpostorsAlive == 0 && statistics.TeamJuggernautAlive == 0 && statistics.TeamPlaguebearerAlive == 0 && statistics.TeamPestilenceAlive == 0 && statistics.TeamWerewolfAlive == 0 && statistics.TeamVampireAlive == 0 && statistics.TeamPowerCrewAlive == 0 && !(statistics.TeamArsonistHasAliveLover && statistics.TeamLoversAlive == 2)) {
                 GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.ArsonistWin, false);
+                return true;
             }
             return false;   
         }
         private static bool CheckAndEndGameForJuggernautWin(ShipStatus __instance, PlayerStatistics statistics) {
-            if (statistics.TotalAlive - statistics.TeamJuggernautAlive <= statistics.TeamJuggernautAlive && statistics.TeamGlitchAlive == 0 && statistics.TeamArsonistAlive == 0 && statistics.TeamImpostorsAlive == 0 && statistics.TeamPlaguebearerAlive == 0 && statistics.TeamPestilenceAlive == 0 && statistics.TeamWerewolfAlive == 0 && statistics.TeamVampireAlive == 0 && statistics.TeamPowerCrewAlive == 0 && !(statistics.TeamJuggernautHasAliveLover && statistics.TeamLoversAlive == 2)) {
+            if (statistics.TeamJuggernautAlive >= statistics.TotalAlive - statistics.TeamJuggernautAlive && statistics.TeamGlitchAlive == 0 && statistics.TeamArsonistAlive == 0 && statistics.TeamImpostorsAlive == 0 && statistics.TeamPlaguebearerAlive == 0 && statistics.TeamPestilenceAlive == 0 && statistics.TeamWerewolfAlive == 0 && statistics.TeamVampireAlive == 0 && statistics.TeamPowerCrewAlive == 0 && !(statistics.TeamJuggernautHasAliveLover && statistics.TeamLoversAlive == 2)) {
                 GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.JuggernautWin, false);
+                return true;
             }
             return false;   
         }
         private static bool CheckAndEndGameForPlaguebearerWin(ShipStatus __instance, PlayerStatistics statistics) {
-            if (statistics.TotalAlive - statistics.TeamPlaguebearerAlive <= statistics.TeamPlaguebearerAlive && statistics.TeamGlitchAlive == 0 && statistics.TeamArsonistAlive == 0 && statistics.TeamJuggernautAlive == 0 && statistics.TeamImpostorsAlive == 0 && statistics.TeamPestilenceAlive == 0 && statistics.TeamWerewolfAlive == 0 && statistics.TeamVampireAlive == 0 && statistics.TeamPowerCrewAlive == 0 && !(statistics.TeamPlaguebearerHasAliveLover && statistics.TeamLoversAlive == 2)) {
+            if (statistics.TeamPlaguebearerAlive >= statistics.TotalAlive - statistics.TeamPlaguebearerAlive && statistics.TeamGlitchAlive == 0 && statistics.TeamArsonistAlive == 0 && statistics.TeamJuggernautAlive == 0 && statistics.TeamImpostorsAlive == 0 && statistics.TeamPestilenceAlive == 0 && statistics.TeamWerewolfAlive == 0 && statistics.TeamVampireAlive == 0 && statistics.TeamPowerCrewAlive == 0 && !(statistics.TeamPlaguebearerHasAliveLover && statistics.TeamLoversAlive == 2)) {
                 GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.PlaguebearerWin, false);
+                return true;
             }
             return false;   
         }
         private static bool CheckAndEndGameForPestilenceWin(ShipStatus __instance, PlayerStatistics statistics) {
-            if (statistics.TotalAlive - statistics.TeamPestilenceAlive <= statistics.TeamPestilenceAlive && statistics.TeamGlitchAlive == 0 && statistics.TeamArsonistAlive == 0 && statistics.TeamJuggernautAlive == 0 && statistics.TeamPlaguebearerAlive == 0 && statistics.TeamImpostorsAlive == 0 && statistics.TeamWerewolfAlive == 0 && statistics.TeamVampireAlive == 0 && statistics.TeamPowerCrewAlive == 0 && !(statistics.TeamPestilenceHasAliveLover && statistics.TeamLoversAlive == 2)) {
+            if (statistics.TeamPestilenceAlive >= statistics.TotalAlive - statistics.TeamPestilenceAlive && statistics.TeamGlitchAlive == 0 && statistics.TeamArsonistAlive == 0 && statistics.TeamJuggernautAlive == 0 && statistics.TeamPlaguebearerAlive == 0 && statistics.TeamImpostorsAlive == 0 && statistics.TeamWerewolfAlive == 0 && statistics.TeamVampireAlive == 0 && statistics.TeamPowerCrewAlive == 0 && !(statistics.TeamPestilenceHasAliveLover && statistics.TeamLoversAlive == 2)) {
                 GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.PestilenceWin, false);
+                return true;
             }
             return false;   
         }
         private static bool CheckAndEndGameForWerewolfWin(ShipStatus __instance, PlayerStatistics statistics) {
-            if (statistics.TotalAlive - statistics.TeamWerewolfAlive <= statistics.TeamWerewolfAlive && statistics.TeamGlitchAlive == 0 && statistics.TeamArsonistAlive == 0 && statistics.TeamJuggernautAlive == 0 && statistics.TeamPlaguebearerAlive == 0 && statistics.TeamPestilenceAlive == 0 && statistics.TeamImpostorsAlive == 0 && statistics.TeamVampireAlive == 0 && statistics.TeamPowerCrewAlive == 0 && !(statistics.TeamWerewolfHasAliveLover && statistics.TeamLoversAlive == 2)) {
+            if (statistics.TeamWerewolfAlive >= statistics.TotalAlive - statistics.TeamWerewolfAlive && statistics.TeamGlitchAlive == 0 && statistics.TeamArsonistAlive == 0 && statistics.TeamJuggernautAlive == 0 && statistics.TeamPlaguebearerAlive == 0 && statistics.TeamPestilenceAlive == 0 && statistics.TeamImpostorsAlive == 0 && statistics.TeamVampireAlive == 0 && statistics.TeamPowerCrewAlive == 0 && !(statistics.TeamWerewolfHasAliveLover && statistics.TeamLoversAlive == 2)) {
                 GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.WerewolfWin, false);
+                return true;
             }
             return false;   
         }
         private static bool CheckAndEndGameForVampireWin(ShipStatus __instance, PlayerStatistics statistics) {
-            if (statistics.TotalAlive - statistics.TeamVampireAlive <= statistics.TeamVampireAlive && statistics.TeamGlitchAlive == 0 && statistics.TeamArsonistAlive == 0 && statistics.TeamJuggernautAlive == 0 && statistics.TeamPlaguebearerAlive == 0 && statistics.TeamPestilenceAlive == 0 && statistics.TeamWerewolfAlive == 0 && statistics.TeamImpostorsAlive == 0 && statistics.TeamPowerCrewAlive == 0 && !(statistics.TeamVampireHasAliveLover && statistics.TeamLoversAlive == 2)) {
+            if (statistics.TeamVampireAlive >= statistics.TotalAlive - statistics.TeamVampireAlive && statistics.TeamGlitchAlive == 0 && statistics.TeamArsonistAlive == 0 && statistics.TeamJuggernautAlive == 0 && statistics.TeamPlaguebearerAlive == 0 && statistics.TeamPestilenceAlive == 0 && statistics.TeamWerewolfAlive == 0 && statistics.TeamImpostorsAlive == 0 && statistics.TeamPowerCrewAlive == 0 && statistics.TeamVampireHunterAlive == 0 && !(statistics.TeamVampireHasAliveLover && statistics.TeamLoversAlive == 2)) {
                 GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.VampireWin, false);
+                return true;
             }
             return false;   
         }
         private static bool CheckAndEndGameForLoversWin(ShipStatus __instance, PlayerStatistics statistics) {
             if (statistics.TeamLoversAlive == 2 && statistics.TotalAlive <= 3) {
                 GameManager.Instance.RpcEndGame((GameOverReason)CustomGameOverReason.LoversWin, false);
+                return true;
             }
             return false;   
         }
@@ -952,6 +994,7 @@ namespace TownOfUs.Patches
         public int TeamWerewolfAlive {get;set;}
         public int TeamVampireAlive {get;set;}
         public int TeamPowerCrewAlive {get;set;}
+        public int TeamVampireHunterAlive {get;set;}
 
         public bool TeamImpostorsHasAliveLover {get;set;}
         public bool TeamGlitchHasAliveLover {get;set;}
@@ -982,6 +1025,7 @@ namespace TownOfUs.Patches
             int teamWerewolfAlive = 0;
             int teamVampireAlive = 0;
             int teamPowerCrewAlive = 0;
+            int teamVampireHunterAlive = 0;
 
             bool teamImpostorsHasAliveLover = false;
             bool teamGlitchHasAliveLover = false;
@@ -1004,7 +1048,6 @@ namespace TownOfUs.Patches
                             teamImpostorsAlive++;
                             if (lover) teamImpostorsHasAliveLover = true;
                         }
-
                         
                         foreach (var role in Role.GetRoles(RoleEnum.Glitch))
                         {
@@ -1101,6 +1144,30 @@ namespace TownOfUs.Patches
                             }
                         }
 
+                        foreach (var role in Role.GetRoles(RoleEnum.Prosecutor))
+                        {
+                            var prosecutor = (Prosecutor)role;
+                            if (prosecutor.Player != null && prosecutor.Player.PlayerId == playerInfo.PlayerId && !prosecutor.Prosecuted) {
+                                if (CustomGameOptions.BlockGameEnd && CustomGameOptions.ProsecutorBlockGameEnd) teamPowerCrewAlive++;
+                            }
+                        }
+
+                        foreach (var role in Role.GetRoles(RoleEnum.Vigilante))
+                        {
+                            var vigilante = (Vigilante)role;
+                            if (vigilante.Player != null && vigilante.Player.PlayerId == playerInfo.PlayerId && vigilante.RemainingKills > 0) {
+                                if (CustomGameOptions.BlockGameEnd && CustomGameOptions.VigilanteBlockGameEnd) teamPowerCrewAlive++;
+                            }
+                        }
+
+                        foreach (var role in Role.GetRoles(RoleEnum.VampireHunter))
+                        {
+                            var vampireHunter = (VampireHunter)role;
+                            if (vampireHunter.Player != null && vampireHunter.Player.PlayerId == playerInfo.PlayerId) {
+                                if (CustomGameOptions.BlockGameEnd && CustomGameOptions.VampireHunterBlockGameEnd) teamVampireHunterAlive++;
+                            }
+                        }
+
                         foreach (var modifier in Modifier.GetModifiers(ModifierEnum.Tiebreaker))
                         {
                             var tiebreaker = (Tiebreaker)modifier;
@@ -1123,6 +1190,7 @@ namespace TownOfUs.Patches
             TeamWerewolfAlive = teamWerewolfAlive;
             TeamVampireAlive = teamVampireAlive;
             TeamPowerCrewAlive = teamPowerCrewAlive;
+            TeamVampireHunterAlive = teamVampireHunterAlive;
 
             TeamImpostorsHasAliveLover = teamImpostorsHasAliveLover;
             TeamGlitchHasAliveLover = teamGlitchHasAliveLover;

@@ -12,6 +12,7 @@ using TownOfUs.Roles.Modifiers;
 using TownOfUs.ImpostorRoles.BomberMod;
 using TownOfUs.CrewmateRoles.AurialMod;
 using TownOfUs.Patches.ScreenEffects;
+using TownOfUs.NeutralRoles.PhantomMod;
 
 namespace TownOfUs.NeutralRoles.AmnesiacMod
 {
@@ -48,6 +49,7 @@ namespace TownOfUs.NeutralRoles.AmnesiacMod
             Utils.Rpc(CustomRPC.Remember, PlayerControl.LocalPlayer.PlayerId, playerId);
 
             Remember(role, player);
+            SoundEffectsManager.play("amnesiacRemember");
             return false;
         }
 
@@ -95,6 +97,7 @@ namespace TownOfUs.NeutralRoles.AmnesiacMod
                 case RoleEnum.Prosecutor:
                 case RoleEnum.Oracle:
                 case RoleEnum.Aurial:
+                case RoleEnum.Lighter:
 
                     rememberImp = false;
                     rememberNeut = false;
@@ -139,7 +142,7 @@ namespace TownOfUs.NeutralRoles.AmnesiacMod
 
             if (role == RoleEnum.Investigator) Footprint.DestroyAll(Role.GetRole<Investigator>(other));
 
-            if (role == RoleEnum.Snitch) CompleteTask.Postfix(amnesiac);
+            if (role == RoleEnum.Snitch) CrewmateRoles.SnitchMod.CompleteTask.Postfix(amnesiac);
 
             Role.RoleDictionary.Remove(amnesiac.PlayerId);
             Role.RoleDictionary.Remove(other.PlayerId);
@@ -159,17 +162,12 @@ namespace TownOfUs.NeutralRoles.AmnesiacMod
                 if (rememberNeut == false)
                 {
                     new Crewmate(other);
+                    if (SetPhantom.WillBePhantom != null && SetPhantom.WillBePhantom == amnesiac) SetPhantom.WillBePhantom = null;
                 }
                 else
                 {
-                    if (role != RoleEnum.Vampire) {
-                        var survivor = new Survivor(other);
-                        survivor.RegenTask();
-                    }
-                    if (role == RoleEnum.Vampire) {
-                        var vampire = new Vampire(other);
-                        vampire.RegenTask();
-                    }
+                    var survivor = new Survivor(other);
+                    survivor.RegenTask();
                     if (role == RoleEnum.Arsonist || role == RoleEnum.Glitch || role == RoleEnum.Plaguebearer ||
                             role == RoleEnum.Pestilence || role == RoleEnum.Werewolf || role == RoleEnum.Juggernaut
                              || role == RoleEnum.Vampire)
@@ -181,6 +179,7 @@ namespace TownOfUs.NeutralRoles.AmnesiacMod
             }
             else if (rememberImp == true)
             {
+                if (SetPhantom.WillBePhantom != null && SetPhantom.WillBePhantom == amnesiac) SetPhantom.WillBePhantom = null;
                 new Impostor(other);
                 amnesiac.Data.Role.TeamType = RoleTeamTypes.Impostor;
                 RoleManager.Instance.SetRole(amnesiac, RoleTypes.Impostor);
@@ -201,7 +200,7 @@ namespace TownOfUs.NeutralRoles.AmnesiacMod
                 snitchRole.ImpArrows.DestroyAll();
                 snitchRole.SnitchArrows.Values.DestroyAll();
                 snitchRole.SnitchArrows.Clear();
-                CompleteTask.Postfix(amnesiac);
+                CrewmateRoles.SnitchMod.CompleteTask.Postfix(amnesiac);
                 if (other.AmOwner)
                     foreach (var player in PlayerControl.AllPlayerControls)
                         player.nameText().color = Color.white;
@@ -467,6 +466,12 @@ namespace TownOfUs.NeutralRoles.AmnesiacMod
             {
                 var bomberRole = Role.GetRole<Bomber>(amnesiac);
                 bomberRole.Bomb.ClearBomb();
+            }
+
+            else if (role == RoleEnum.Lighter)
+            {
+                var lighterRole = Role.GetRole<Lighter>(amnesiac);
+                lighterRole.LastUsed = DateTime.UtcNow;
             }
 
             else if (!(amnesiac.Is(RoleEnum.Altruist) || amnesiac.Is(RoleEnum.Amnesiac) || amnesiac.Is(Faction.Impostors)))

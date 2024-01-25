@@ -31,7 +31,7 @@ namespace TownOfUs
     public class TownOfUs : BasePlugin
     {
         public const string Id = "com.edonnes124.townofus";
-        public const string VersionString = "5.0.4";
+        public const string VersionString = "5.0.5";
 
         public static System.Version Version = System.Version.Parse(VersionString);
         internal static BepInEx.Logging.ManualLogSource Logger;
@@ -105,6 +105,7 @@ namespace TownOfUs
         public static Sprite MimicSprite;
         public static Sprite LockSprite;
         public static Sprite TargetIcon;
+        public static Sprite LighterButton;
 
         public static Sprite SettingsButtonSprite;
         public static Sprite CrewSettingsButtonSprite;
@@ -201,6 +202,7 @@ namespace TownOfUs
             MimicSprite = CreateSprite("TownOfUs.Resources.Mimic.png");
             LockSprite = CreateSprite("TownOfUs.Resources.Lock.png");
             TargetIcon = CreateSprite("TownOfUs.Resources.TargetIcon.png", 150f);
+            LighterButton = CreateSprite("TownOfUs.Resources.LighterButton.png");
 
             SettingsButtonSprite = CreateSprite("TownOfUs.Resources.SettingsButton.png");
             CrewSettingsButtonSprite = CreateSprite("TownOfUs.Resources.Crewmate.png");

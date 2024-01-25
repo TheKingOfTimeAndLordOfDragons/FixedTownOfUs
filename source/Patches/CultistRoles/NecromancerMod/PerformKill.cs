@@ -9,6 +9,7 @@ using System.Linq;
 using Object = UnityEngine.Object;
 using System;
 using AmongUs.GameOptions;
+using TownOfUs.Extensions;
 
 namespace TownOfUs.CultistRoles.NecromancerMod
 {
@@ -50,6 +51,7 @@ namespace TownOfUs.CultistRoles.NecromancerMod
                 Utils.Rpc(CustomRPC.Revive, PlayerControl.LocalPlayer.PlayerId, playerId);
 
                 Revive(role.CurrentTarget, role);
+                SoundEffectsManager.play("altruistRevive");
                 return false;
             }
 

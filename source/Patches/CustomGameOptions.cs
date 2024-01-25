@@ -96,6 +96,8 @@ namespace TownOfUs
         public static int DoubleShotOn => Mathf.RoundToInt(Generate.DoubleShotOn.GetFloat());
         public static int UnderdogOn => Mathf.RoundToInt(Generate.UnderdogOn.GetFloat());
         public static int FrostyOn => Mathf.RoundToInt(Generate.FrostyOn.GetFloat());
+        public static int DrunkOn => Mathf.RoundToInt(Generate.DrunkOn.GetFloat());
+        public static int BlindOn => Mathf.RoundToInt(Generate.BlindOn.GetFloat());
         public static float InitialCooldowns => Generate.InitialCooldowns.GetFloat();
         public static bool NeutralEvilWinEndsGame => Generate.NeutralEvilWinEndsGame.GetBool();
         public static bool PhantomSpook => Generate.PhantomSpook.GetBool();
@@ -373,5 +375,13 @@ namespace TownOfUs
         public static bool MayorBlockGameEnd => Generate.MayorBlockGameEnd.GetBool();
         public static bool SwapperBlockGameEnd => Generate.SwapperBlockGameEnd.GetBool();
         public static bool TiebreakerBlockGameEnd => Generate.TiebreakerBlockGameEnd.GetBool();
+        public static int LighterOn => Mathf.RoundToInt(Generate.LighterOn.GetFloat());
+        public static float LighterLightsOn => Generate.LighterLightsOn.GetFloat();
+        public static float LighterLightsOff => Generate.LighterLightsOff.GetFloat();
+        public static float LighterCooldown => Generate.LighterCooldown.GetFloat();
+        public static float LighterDuration => Generate.LighterDuration.GetFloat();
+        public static bool VigilanteBlockGameEnd => Generate.VigilanteBlockGameEnd.GetBool();
+        public static bool ProsecutorBlockGameEnd => Generate.ProsecutorBlockGameEnd.GetBool();
+        public static bool VampireHunterBlockGameEnd => Generate.VampireHunterBlockGameEnd.GetBool();
     }
 }

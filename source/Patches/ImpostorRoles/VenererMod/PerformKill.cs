@@ -1,4 +1,5 @@
 using HarmonyLib;
+using TownOfUs.Extensions;
 using TownOfUs.Roles;
 
 namespace TownOfUs.ImpostorRoles.VenererMod
@@ -23,6 +24,7 @@ namespace TownOfUs.ImpostorRoles.VenererMod
                 role.TimeRemaining = CustomGameOptions.AbilityDuration;
                 role.KillsAtStartAbility = role.Kills;
                 role.Ability();
+                SoundEffectsManager.play("venererAbility");
                 return false;
             }
 

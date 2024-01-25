@@ -1,4 +1,5 @@
 using HarmonyLib;
+using TownOfUs.Extensions;
 using TownOfUs.Roles;
 
 namespace TownOfUs.NeutralRoles.GuardianAngelMod
@@ -24,6 +25,7 @@ namespace TownOfUs.NeutralRoles.GuardianAngelMod
                 role.UsesLeft--;
                 role.Protect();
                 Utils.Rpc(CustomRPC.GAProtect, PlayerControl.LocalPlayer.PlayerId);
+                SoundEffectsManager.play("guardianAngelProtect");
                 return false;
             }
 

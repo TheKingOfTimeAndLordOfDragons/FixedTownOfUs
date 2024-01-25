@@ -1,4 +1,5 @@
 using System;
+using TownOfUs.Patches;
 using Gamemode = TownOfUs.GameMode;
 using Types = TownOfUs.CustomOption.CustomOption.CustomOptionType;
 
@@ -503,7 +504,20 @@ namespace TownOfUs.CustomOption
         public static CustomOption VeteranBlockGameEnd;
         public static CustomOption MayorBlockGameEnd;
         public static CustomOption SwapperBlockGameEnd;
+        public static CustomOption VigilanteBlockGameEnd;
+        public static CustomOption ProsecutorBlockGameEnd;
+        public static CustomOption VampireHunterBlockGameEnd;
         public static CustomOption TiebreakerBlockGameEnd;
+        
+        public static CustomOption DrunkOn;
+        
+        public static CustomOption BlindOn;
+        
+        public static CustomOption LighterOn;
+        public static CustomOption LighterCooldown;
+        public static CustomOption LighterDuration;
+        public static CustomOption LighterLightsOn;
+        public static CustomOption LighterLightsOff;
 
         public static Func<float, string> PercentFormat { get; } = (float value) => $"{value:0}%";
         public static Func<float, string> CooldownFormat { get; } = (float value) => $"{value:0.0#}s";
@@ -646,6 +660,12 @@ namespace TownOfUs.CustomOption
             MaxFixes = CustomOption.CreateNumber(105, Types.Crewmate, "Maximum Number Of Fixes", 5f, 1f, 15f, 1f, null, EngineerOn);
 
             ImitatorOn = CustomOption.CreateNumber(106, Types.Crewmate, "<color=#B3D94DFF>Imitator</color>", 0f, 0f, 100f, 10f, PercentFormat, CrewSupportRoles, true);
+
+            LighterOn = CustomOption.CreateNumber(455, Types.Crewmate, Utils.cs(Colors.Lighter, "Lighter"), 0f, 0f, 100f, 10f, PercentFormat, CrewSupportRoles, true);
+            LighterLightsOn = CustomOption.CreateNumber(456, Types.Crewmate, "Lighter Mode Vision On Ability On", 1.25f, 0.25f, 5f, 0.25f, MultiplierFormat, LighterOn);
+            LighterLightsOff = CustomOption.CreateNumber(457, Types.Crewmate, "Lighter Mode Vision On Ability Off", 0.75f, 0.25f, 5f, 0.25f, MultiplierFormat, LighterOn);
+            LighterCooldown = CustomOption.CreateNumber(458, Types.Crewmate, "Lighter Cooldown", 30f, 10f, 60f, 2.5f, CooldownFormat, LighterOn);
+            LighterDuration = CustomOption.CreateNumber(459, Types.Crewmate, "Lighter Duration", 10f, 5f, 15f, 0.5f, CooldownFormat, LighterOn);
 
             MayorOn = CustomOption.CreateNumber(107, Types.Crewmate, "<color=#704FA8FF>Mayor</color>", 0f, 0f, 100f, 10f, PercentFormat, CrewSupportRoles, true);
 
@@ -846,6 +866,8 @@ namespace TownOfUs.CustomOption
             BaitOn = CustomOption.CreateNumber(260, Types.Modifier, "<color=#00B3B3FF>Bait</color>", 0f, 0f, 100f, 10f, PercentFormat, CrewmateModifiers, true);
             BaitMinDelay = CustomOption.CreateNumber(261, Types.Modifier, "Minimum Delay for the Bait Report", 0f, 0f, 15f, 0.5f, CooldownFormat, BaitOn);
             BaitMaxDelay = CustomOption.CreateNumber(262, Types.Modifier, "Maximum Delay for the Bait Report", 1f, 0f, 15f, 0.5f, CooldownFormat, BaitOn);
+            
+            BlindOn = CustomOption.CreateNumber(453, Types.Modifier, "<color=#AAAAAAFF>Blind</color>", 0f, 0f, 100f, 10f, PercentFormat, CrewmateModifiers, true);
 
             DiseasedOn = CustomOption.CreateNumber(263, Types.Modifier, "<color=#808080FF>Diseased</color>", 0f, 0f, 100f, 10f, PercentFormat, CrewmateModifiers, true);
             DiseasedKillMultiplier = CustomOption.CreateNumber(264, Types.Modifier, "Diseased Kill Multiplier", 3f, 1.5f, 5f, 0.25f, MultiplierFormat, DiseasedOn);
@@ -862,6 +884,8 @@ namespace TownOfUs.CustomOption
             GlobalModifiers = CustomOption.CreateHeader(270, Types.Modifier, "Global Modifiers");
 
             ButtonBarryOn = CustomOption.CreateNumber(271, Types.Modifier, "<color=#E600FFFF>Button Barry</color>", 0f, 0f, 100f, 10f, PercentFormat, GlobalModifiers, true);
+
+            DrunkOn = CustomOption.CreateNumber(452, Types.Modifier, "<color=#758000FF>Drunk</color>", 0f, 0f, 100f, 10f, PercentFormat, GlobalModifiers, true);
 
             FlashOn = CustomOption.CreateNumber(272, Types.Modifier, "<color=#FF8080FF>Flash</color>", 0f, 0f, 100f, 10f, PercentFormat, GlobalModifiers, true);
             FlashSpeed = CustomOption.CreateNumber(273, Types.Modifier, "Flash Speed", 1.25f, 1.05f, 2.5f, 0.05f, MultiplierFormat, FlashOn);
@@ -958,6 +982,9 @@ namespace TownOfUs.CustomOption
             VeteranBlockGameEnd = CustomOption.CreateToggle(448, Types.General, "Block Game End If Veteran Is Alive", false, BlockGameEnd);
             MayorBlockGameEnd = CustomOption.CreateToggle(449, Types.General, "Block Game End If Mayor Is Alive", false, BlockGameEnd);
             SwapperBlockGameEnd = CustomOption.CreateToggle(450, Types.General, "Block Game End If Swapper Is Alive", false, BlockGameEnd);
+            VigilanteBlockGameEnd = CustomOption.CreateToggle(461, Types.General, "Block Game End If Vigilante Is Alive\nAnd He Has Shots", false, BlockGameEnd);
+            ProsecutorBlockGameEnd = CustomOption.CreateToggle(462, Types.General, "Block Game End If Prosecutor Is Alive", false, BlockGameEnd);
+            VampireHunterBlockGameEnd = CustomOption.CreateToggle(460, Types.General, "Block Game End If Vampire Hunter Is Alive\nAnd Game Has Vampires", false, BlockGameEnd);
             TiebreakerBlockGameEnd = CustomOption.CreateToggle(451, Types.General, "Block Game End If Crew Tiebreaker Is Alive", false, BlockGameEnd);
 
             TaskTrackingSettings = CustomOption.CreateHeader(355, Types.General, "Task Tracking Settings");

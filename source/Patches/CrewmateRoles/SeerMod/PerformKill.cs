@@ -3,6 +3,7 @@ using HarmonyLib;
 using TownOfUs.Roles;
 using UnityEngine;
 using AmongUs.GameOptions;
+using TownOfUs.Extensions;
 
 namespace TownOfUs.CrewmateRoles.SeerMod
 {
@@ -28,6 +29,7 @@ namespace TownOfUs.CrewmateRoles.SeerMod
             if (interact.AbilityUsed)
             {
                 role.Investigated.Add(role.ClosestPlayer.PlayerId);
+                SoundEffectsManager.play("seerReveal");
             }
             if (interact.FullCooldownReset)
             {

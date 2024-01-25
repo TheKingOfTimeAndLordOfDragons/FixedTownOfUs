@@ -40,6 +40,7 @@ namespace TownOfUs
         Prosecutor,
         Oracle,
         Aurial,
+        Lighter,
 
         Miner,
         Swooper,
@@ -84,7 +85,9 @@ namespace TownOfUs
         Multitasker,
         DoubleShot,
         Underdog,
-        Frosty
+        Frosty,
+        Drunk,
+        Blind,
     }
 
     public enum AbilityEnum

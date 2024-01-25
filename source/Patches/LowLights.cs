@@ -74,6 +74,21 @@ namespace TownOfUs
                 }
             }
 
+            if (player._object.Is(RoleEnum.Lighter))
+            {
+                var role = Role.GetRole<Lighter>(player._object);
+                if (role.IsUsingLight) {
+                    __result = Mathf.Lerp(__instance.MinLightRadius, __instance.MaxLightRadius * CustomGameOptions.LighterLightsOn, 1) *
+                       GameOptionsManager.Instance.currentNormalGameOptions.CrewLightMod;
+                    return false;
+                } 
+                if (!role.IsUsingLight) {
+                    __result = Mathf.Lerp(__instance.MinLightRadius, __instance.MaxLightRadius * CustomGameOptions.LighterLightsOff, 1) *
+                       GameOptionsManager.Instance.currentNormalGameOptions.CrewLightMod;
+                    return false;
+                }
+            }
+
             __result = Mathf.Lerp(__instance.MinLightRadius, __instance.MaxLightRadius, t) *
                        GameOptionsManager.Instance.currentNormalGameOptions.CrewLightMod;
             return false;

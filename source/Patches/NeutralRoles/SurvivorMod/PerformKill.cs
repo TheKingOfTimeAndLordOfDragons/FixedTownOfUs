@@ -1,4 +1,5 @@
 using HarmonyLib;
+using TownOfUs.Extensions;
 using TownOfUs.Roles;
 
 namespace TownOfUs.NeutralRoles.SurvivorMod
@@ -24,6 +25,7 @@ namespace TownOfUs.NeutralRoles.SurvivorMod
                 role.UsesLeft--;
                 role.Vest();
                 Utils.Rpc(CustomRPC.Vest, PlayerControl.LocalPlayer.PlayerId);
+                SoundEffectsManager.play("survivorVest");
                 return false;
             }
 

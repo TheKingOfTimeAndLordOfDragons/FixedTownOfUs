@@ -1,5 +1,6 @@
 using System.Linq;
 using HarmonyLib;
+using TownOfUs.Extensions;
 using TownOfUs.Roles;
 
 namespace TownOfUs.CrewmateRoles.EngineerMod
@@ -26,6 +27,7 @@ namespace TownOfUs.CrewmateRoles.EngineerMod
             if (!sabActive | dummyActive) return false;
             role.UsesLeft -= 1;
             Utils.Rpc(CustomRPC.EngineerFix, PlayerControl.LocalPlayer.NetId);
+            SoundEffectsManager.play("engineerFix");
             switch (GameOptionsManager.Instance.currentNormalGameOptions.MapId)
             {
                 case 0:

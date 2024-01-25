@@ -3,6 +3,7 @@ using HarmonyLib;
 using TownOfUs.Roles;
 using UnityEngine;
 using AmongUs.GameOptions;
+using TownOfUs.Extensions;
 
 namespace TownOfUs.CrewmateRoles.OracleMod
 {
@@ -53,6 +54,7 @@ namespace TownOfUs.CrewmateRoles.OracleMod
                 else if (faction == 1) role.RevealedFaction = Faction.NeutralEvil;
                 else role.RevealedFaction = Faction.Impostors;
                 Utils.Rpc(CustomRPC.Confess, PlayerControl.LocalPlayer.PlayerId, role.Confessor.PlayerId, faction);
+                SoundEffectsManager.play("seerReveal");
             }
             if (interact.FullCooldownReset)
             {

@@ -332,6 +332,12 @@ namespace TownOfUs.Roles
             return player == null ? null : GetRole(player);
         }
 
+        public static Role GetRole(byte playerId)
+        {
+            var player = Utils.PlayerById(playerId);
+            return player == null ? null : GetRole(player);
+        }
+
         public static IEnumerable<Role> GetRoles(RoleEnum roletype)
         {
             return AllRoles.Where(x => x.RoleType == roletype);

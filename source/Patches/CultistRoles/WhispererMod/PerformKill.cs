@@ -4,6 +4,7 @@ using TownOfUs.Roles.Cultist;
 using UnityEngine;
 using System.Collections.Generic;
 using System;
+using TownOfUs.Extensions;
 
 namespace TownOfUs.CultistRoles.WhispererMod
 {
@@ -44,6 +45,7 @@ namespace TownOfUs.CultistRoles.WhispererMod
                 role.WhisperCount += 1;
                 role.LastWhispered = DateTime.UtcNow;
                 CheckConversion(role);
+                SoundEffectsManager.play("whispererWhisp");
                 return false;
             }
             return true;

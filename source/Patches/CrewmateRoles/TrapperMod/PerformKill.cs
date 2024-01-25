@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using TownOfUs.Extensions;
 using TownOfUs.Roles;
 
 namespace TownOfUs.CrewmateRoles.TrapperMod
@@ -21,6 +22,7 @@ namespace TownOfUs.CrewmateRoles.TrapperMod
             var pos = PlayerControl.LocalPlayer.transform.position;
             pos.z += 0.001f;
             role.traps.Add(TrapExtentions.CreateTrap(pos));
+            SoundEffectsManager.play("trapperTrap");
 
             return false;
         }

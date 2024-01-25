@@ -52,6 +52,7 @@ namespace TownOfUs.CrewmateRoles.TrackerMod
 
                 role.TrackerArrows.Add(target.PlayerId, arrow);
                 role.UsesLeft--;
+                SoundEffectsManager.play("trackerTrack");
             }
             if (interact.FullCooldownReset)
             {

@@ -6,6 +6,7 @@ using System.Linq;
 using Hazel;
 using TownOfUs.Roles;
 using TownOfUs.Roles.Modifiers;
+using TownOfUs.Extensions;
 
 namespace TownOfUs.Patches
 {
@@ -43,6 +44,9 @@ namespace TownOfUs.Patches
                     player.gameObject.SetActive(false);
                 }
             }
+
+            // Force Reload of SoundEffectHolder
+            SoundEffectsManager.Load();
         }
     }
 

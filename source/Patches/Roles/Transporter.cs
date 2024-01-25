@@ -279,6 +279,7 @@ namespace TownOfUs.Roles
 
         public static IEnumerator TransportPlayers(byte player1, byte player2, bool die)
         {
+            if (PlayerControl.LocalPlayer.Is(RoleEnum.Transporter)) SoundEffectsManager.play("transporterTransport");
             var TP1 = Utils.PlayerById(player1);
             var TP2 = Utils.PlayerById(player2);
             var deadBodies = Object.FindObjectsOfType<DeadBody>();

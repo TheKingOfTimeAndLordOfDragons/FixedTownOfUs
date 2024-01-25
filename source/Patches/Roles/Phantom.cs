@@ -7,7 +7,7 @@ namespace TownOfUs.Roles
     {
         public RoleEnum formerRole = new RoleEnum();
         public bool Caught;
-        public static bool CompletedTasks;
+        public static bool CompletedTasks {get;set;} = false;
         public bool Faded;
 
         public Phantom(PlayerControl player) : base(player)
@@ -19,7 +19,6 @@ namespace TownOfUs.Roles
             RoleType = RoleEnum.Phantom;
             AddToRoleHistory(RoleType);
             Faction = Faction.NeutralEvil;
-            CompletedTasks = false;
         }
 
         public void Fade()

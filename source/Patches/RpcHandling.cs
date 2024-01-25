@@ -691,6 +691,9 @@ namespace TownOfUs
                         AddHauntPatch.AssassinatedPlayers.Clear();
                         HudUpdate.Zooming = false;
                         HudUpdate.ZoomStart();
+                        Jester.VotedOut = false;
+                        Executioner.TargetVotedOut = false;
+                        Phantom.CompletedTasks = false;
                         break;
 
                     case CustomRPC.JanitorClean:
@@ -922,6 +925,12 @@ namespace TownOfUs
                         veteranRole.TimeRemaining = CustomGameOptions.AlertDuration;
                         veteranRole.Alert();
                         break;
+                    case CustomRPC.Light:
+                        var lighter = Utils.PlayerById(reader.ReadByte());
+                        var lighterRole = Role.GetRole<Lighter>(lighter);
+                        lighterRole.TimeRemaining = CustomGameOptions.LighterDuration;
+                        lighterRole.Light();
+                        break;
                     case CustomRPC.Vest:
                         var surv = Utils.PlayerById(reader.ReadByte());
                         var survRole = Role.GetRole<Survivor>(surv);
@@ -1063,21 +1072,6 @@ namespace TownOfUs
                         if (PlayerControl.LocalPlayer == phantomPlayer) HudManager.Instance.AbilityButton.gameObject.SetActive(true);
                         phantomPlayer.Exiled();
                         break;
-                    case CustomRPC.PhantomWin:
-                        if (!CustomGameOptions.NeutralEvilWinEndsGame)
-                        {
-                            var phantomWinner = Role.GetRole<Phantom>(Utils.PlayerById(reader.ReadByte()));
-                            phantomWinner.Caught = true;
-                            if (!PlayerControl.LocalPlayer.Is(RoleEnum.Phantom) || !CustomGameOptions.PhantomSpook || MeetingHud.Instance) return;
-                            byte[] toKill = MeetingHud.Instance.playerStates.Where(x => !Utils.PlayerById(x.TargetPlayerId).Is(RoleEnum.Pestilence)).Select(x => x.TargetPlayerId).ToArray();
-                            var pk = new PunishmentKill((x) => {
-                                Utils.RpcMultiMurderPlayer(PlayerControl.LocalPlayer, x);
-                            }, (y) => {
-                                return toKill.Contains(y.PlayerId);
-                            });
-                            Coroutines.Start(pk.Open(1f));
-                        }
-                        break;
                     case CustomRPC.SetHaunter:
                         readByte = reader.ReadByte();
                         SetHaunter.WillBeHaunter = readByte == byte.MaxValue ? null : Utils.PlayerById(readByte);
@@ -1182,6 +1176,9 @@ namespace TownOfUs
                 PatchKillTimer.GameStarted = false;
                 StartImitate.ImitatingPlayer = null;
                 AddHauntPatch.AssassinatedPlayers.Clear();
+                Jester.VotedOut = false;
+                Executioner.TargetVotedOut = false;
+                Phantom.CompletedTasks = false;
                 CrewmateRoles.Clear();
                 NeutralBenignRoles.Clear();
                 NeutralEvilRoles.Clear();
@@ -1292,6 +1289,9 @@ namespace TownOfUs
 
                     if (CustomGameOptions.AurialOn > 0)
                         CrewmateRoles.Add((typeof(Aurial), CustomGameOptions.AurialOn, false));
+                        
+                    if (CustomGameOptions.LighterOn > 0)
+                        CrewmateRoles.Add((typeof(Lighter), CustomGameOptions.LighterOn, false));
                     #endregion
                     #region Neutral Roles
                     if (CustomGameOptions.JesterOn > 0)
@@ -1382,6 +1382,9 @@ namespace TownOfUs
 
                     if (Check(CustomGameOptions.FrostyOn))
                         CrewmateModifiers.Add((typeof(Frosty), CustomGameOptions.FrostyOn));
+                        
+                    if (Check(CustomGameOptions.BlindOn))
+                        CrewmateModifiers.Add((typeof(Blind), CustomGameOptions.BlindOn));
                     #endregion
                     #region Global Modifiers
                     if (Check(CustomGameOptions.TiebreakerOn))
@@ -1404,6 +1407,9 @@ namespace TownOfUs
 
                     if (Check(CustomGameOptions.RadarOn))
                         GlobalModifiers.Add((typeof(Radar), CustomGameOptions.RadarOn));
+                        
+                    if (Check(CustomGameOptions.DrunkOn))
+                        GlobalModifiers.Add((typeof(Drunk), CustomGameOptions.DrunkOn));
                     #endregion
                     #region Impostor Modifiers
                     if (Check(CustomGameOptions.DisperserOn))

@@ -283,6 +283,13 @@ namespace TownOfUs.Patches
                 vamp.LastBit = vamp.LastBit.AddSeconds(CustomGameOptions.InitialCooldowns - CustomGameOptions.BiteCd);
             }
 
+            if (PlayerControl.LocalPlayer.Is(RoleEnum.Lighter))
+            {
+                var lighter = Role.GetRole<Lighter>(PlayerControl.LocalPlayer);
+                lighter.LastUsed = DateTime.UtcNow;
+                lighter.LastUsed = lighter.LastUsed.AddSeconds(CustomGameOptions.InitialCooldowns - CustomGameOptions.LighterCooldown);
+            }
+
             if (PlayerControl.LocalPlayer.Is(ModifierEnum.Radar))
             {
                 var radar = Modifier.GetModifier<Radar>(PlayerControl.LocalPlayer);

@@ -2,6 +2,7 @@
 using HarmonyLib;
 using TownOfUs.Roles;
 using AmongUs.GameOptions;
+using TownOfUs.Extensions;
 
 namespace TownOfUs.NeutralRoles.ArsonistMod
 {
@@ -56,7 +57,11 @@ namespace TownOfUs.NeutralRoles.ArsonistMod
             if (!flag2) return false;
             if (role.DousedPlayers.Contains(role.ClosestPlayerDouse.PlayerId)) return false;
             var interact = Utils.Interact(PlayerControl.LocalPlayer, role.ClosestPlayerDouse);
-            if (interact.AbilityUsed) role.DousedPlayers.Add(role.ClosestPlayerDouse.PlayerId);
+            if (interact.AbilityUsed) 
+            {
+                role.DousedPlayers.Add(role.ClosestPlayerDouse.PlayerId);
+                SoundEffectsManager.play("arsonistDouse");
+            }
             if (interact.FullCooldownReset)
             {
                 role.LastDoused = DateTime.UtcNow;

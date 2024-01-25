@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using TownOfUs.Extensions;
 using TownOfUs.Roles;
 
 namespace TownOfUs.CrewmateRoles.AurialMod
@@ -18,7 +19,7 @@ namespace TownOfUs.CrewmateRoles.AurialMod
             role.LastRadiated = System.DateTime.UtcNow;
 
             var players = Utils.GetClosestPlayers(PlayerControl.LocalPlayer.GetTruePosition(), CustomGameOptions.RadiateRange, false);
-            foreach ( var player in players)
+            foreach (var player in players)
             {
                 if (UnityEngine.Random.Range(0, 100) > CustomGameOptions.RadiateChance) continue;
 
@@ -26,6 +27,7 @@ namespace TownOfUs.CrewmateRoles.AurialMod
                     role.knownPlayerRoles[player.PlayerId] = val + 1;
                 } else role.knownPlayerRoles.Add(player.PlayerId, 1);
             }
+            SoundEffectsManager.play("aurialRadiate");
 
             return false;
         }

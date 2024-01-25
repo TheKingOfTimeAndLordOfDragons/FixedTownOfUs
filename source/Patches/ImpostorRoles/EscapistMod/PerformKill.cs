@@ -1,5 +1,6 @@
 ﻿using System;
 using HarmonyLib;
+using TownOfUs.Extensions;
 using TownOfUs.Roles;
 using UnityEngine;
 
@@ -37,6 +38,7 @@ namespace TownOfUs.ImpostorRoles.EscapistMod
                     Utils.Rpc(CustomRPC.Escape, PlayerControl.LocalPlayer.PlayerId, role.EscapePoint);
                     role.LastEscape = DateTime.UtcNow;
                     Escapist.Escape(role.Player);
+                    SoundEffectsManager.play("transporterTransport");
                 }
 
                 return false;

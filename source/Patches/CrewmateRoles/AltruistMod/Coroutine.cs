@@ -62,6 +62,7 @@ namespace TownOfUs.CrewmateRoles.AltruistMod
                 Murder.KilledPlayers.FirstOrDefault(x => x.PlayerId == player.PlayerId));
             revived.Add(player);
             player.NetTransform.SnapTo(new Vector2(position.x, position.y + 0.3636f));
+            if (PlayerControl.LocalPlayer == player) SoundEffectsManager.play("altruistRevive");
 
             if (Patches.SubmergedCompatibility.isSubmerged() && PlayerControl.LocalPlayer.PlayerId == player.PlayerId)
             {
