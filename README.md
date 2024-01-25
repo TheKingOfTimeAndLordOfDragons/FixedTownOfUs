@@ -21,7 +21,9 @@ Check out the [Wiki](https://github.com/TheKingOfTimeAndLordOfDragons/FixedTownO
 # Releases
 | Among Us - Version| Mod Version | Link |
 |----------|-------------|-----------------|
-| v2023.7.12 | v5.0.3 | [Download](https//www.google.com) |
+| v2023.7.12 | v5.0.5 | [Download](https://github.com/TheKingOfTimeAndLordOfDragons/FixedTownOfUs/releases/download/v5.0.5/FixedTownOfUs.zip) |
+| v2023.7.12 | v5.0.4 | [Download](https://github.com/TheKingOfTimeAndLordOfDragons/FixedTownOfUs/releases/download/v5.0.4/FixedTownOfUs.zip) |
+| v2023.7.12 | v5.0.3 | [Download](https://github.com/TheKingOfTimeAndLordOfDragons/FixedTownOfUs/releases/download/v5.0.3/FixedTownOfUs.zip) |
 
 #
 <p align="center">This mod is not affiliated with Among Us or Innersloth LLC, and the content contained therein is not endorsed or otherwise sponsored by Innersloth LLC. Portions of the materials contained herein are property of Innersloth LLC.</p>
