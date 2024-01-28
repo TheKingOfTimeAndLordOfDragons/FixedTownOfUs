@@ -1,4 +1,5 @@
 using System;
+using TownOfUs.Extensions;
 using UnityEngine;
 
 namespace TownOfUs.Roles
@@ -13,8 +14,8 @@ namespace TownOfUs.Roles
         public Lighter(PlayerControl player) : base(player)
         {
             Name = "Lighter";
-            ImpostorText = () => "Need a light?";
-            TaskText = () => "Use your lighter for extra visibility.";
+            ImpostorText = () => Language.GetString("roles.lighter");
+            TaskText = () => Language.GetString("roles.lighter");
             Color = Patches.Colors.Lighter;
             LastUsed = DateTime.UtcNow;
             RoleType = RoleEnum.Lighter;

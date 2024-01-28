@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using TMPro;
+using TownOfUs.Extensions;
 
 namespace TownOfUs.Roles
 {
@@ -20,8 +21,8 @@ namespace TownOfUs.Roles
         public Survivor(PlayerControl player) : base(player)
         {
             Name = "Survivor";
-            ImpostorText = () => "Do Whatever It Takes To Live";
-            TaskText = () => SpawnedAs ? "Stay alive to win" : "Your target was killed. Now you just need to live!";
+            ImpostorText = () => Language.GetString("roles.survivor");
+            TaskText = () => SpawnedAs ? Language.GetString("roles.survivor") : Language.GetString("roles.survivor.not");
             Color = Patches.Colors.Survivor;
             LastVested = DateTime.UtcNow;
             RoleType = RoleEnum.Survivor;

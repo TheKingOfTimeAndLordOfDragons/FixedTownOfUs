@@ -1,6 +1,7 @@
 using HarmonyLib;
 using TMPro;
 using TownOfUs.CustomOption;
+using TownOfUs.Extensions;
 using UnityEngine;
 
 namespace TownOfUs.Patches
@@ -10,13 +11,13 @@ namespace TownOfUs.Patches
         public static string fullCredentialsVersion =
 $@"<size=130%><color=#00FF00FF>Fixed Town Of Us</color></size> v{TownOfUs.Version.ToString()}";
         public static string fullCredentials =
-$@"<size=60%>Remodded by <color=#00FF00FF>NesTT17</color> & <color=#00FF00FF>KTLD</color>
-Modded by <color=#00FF00FF>Donners</color> & <color=#00FF00FF>MyDragonBreath</color></size>";
+$@"<size=60%>{Language.GetString("credentials.remodded").Replace("%one%", "<color=#00FF00FF>NesTT17</color>").Replace("%two%", "<color=#00FF00FF>KTLD</color>")}
+{Language.GetString("credentials.modded").Replace("%one%", "<color=#00FF00FF>Donners</color>").Replace("%two%", "<color=#00FF00FF>MyDragonBreath</color>")}</size>";
         public static string mainMenuCredentials =
-$@"Remodded by <color=#00FF00FF>NesTT17</color> & <color=#00FF00FF>KTLD</color>
-Modded by <color=#00FF00FF>Donners</color> & <color=#00FF00FF>MyDragonBreath</color>";
+$@"{Language.GetString("credentials.remodded").Replace("%one%", "<color=#00FF00FF>NesTT17</color>").Replace("%two%", "<color=#00FF00FF>KTLD</color>")}
+{Language.GetString("credentials.modded").Replace("%one%", "<color=#00FF00FF>Donners</color>").Replace("%two%", "<color=#00FF00FF>MyDragonBreath</color>")}";
         public static string contributorsCredentials =
-$@"<size=60%> <color=#00FF00FF>Formerly: Slushiegoose & Polus.gg</color></size>";
+$@"<size=60%> <color=#00FF00FF>{Language.GetString("credentials.formerly")}</color></size>";
 
         [HarmonyPatch(typeof(PingTracker), nameof(PingTracker.Update))]
         internal static class PingTrackerPatch

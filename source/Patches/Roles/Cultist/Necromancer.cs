@@ -1,4 +1,5 @@
 using System;
+using TownOfUs.Extensions;
 
 namespace TownOfUs.Roles.Cultist
 {
@@ -13,8 +14,8 @@ namespace TownOfUs.Roles.Cultist
         public Necromancer(PlayerControl player) : base(player)
         {
             Name = "Necromancer";
-            ImpostorText = () => "Revive The Dead To Do Your Dirty Work";
-            TaskText = () => "Revive Crewmates to turn them into Impostors";
+            ImpostorText = () => Language.GetString("roles.cultist.necromancer");
+            TaskText = () => Language.GetString("roles.cultist.necromancer");
             Color = Patches.Colors.Impostor;
             LastRevived = DateTime.UtcNow;
             RoleType = RoleEnum.Necromancer;

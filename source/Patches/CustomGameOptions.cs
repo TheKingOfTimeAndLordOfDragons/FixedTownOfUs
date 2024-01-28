@@ -336,7 +336,6 @@ namespace TownOfUs
         public static float RandomMapMira => Generate.RandomMapMira.GetFloat();
         public static float RandomMapPolus => Generate.RandomMapPolus.GetFloat();
         public static float RandomMapAirship => Generate.RandomMapAirship.GetFloat();
-        public static float RandomMapFungle => Generate.RandomMapFungle.GetFloat();
         public static float RandomMapSubmerged => Patches.SubmergedCompatibility.Loaded ? Generate.RandomMapSubmerged.GetFloat() : 0f;
         public static bool AutoAdjustSettings => Generate.AutoAdjustSettings.GetBool();
         public static bool SmallMapHalfVision => Generate.SmallMapHalfVision.GetBool();

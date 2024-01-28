@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Object = UnityEngine.Object;
 using TMPro;
+using TownOfUs.Extensions;
 
 namespace TownOfUs.Roles
 {
@@ -20,8 +21,8 @@ namespace TownOfUs.Roles
         public Tracker(PlayerControl player) : base(player)
         {
             Name = "Tracker";
-            ImpostorText = () => "Track Everyone's Movement";
-            TaskText = () => "Track suspicious players";
+            ImpostorText = () => Language.GetString("roles.tracker");
+            TaskText = () => Language.GetString("roles.tracker");
             Color = Patches.Colors.Tracker;
             LastTracked = DateTime.UtcNow;
             RoleType = RoleEnum.Tracker;

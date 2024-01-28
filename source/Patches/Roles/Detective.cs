@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using TownOfUs.Extensions;
 
 namespace TownOfUs.Roles
 {
@@ -15,8 +16,8 @@ namespace TownOfUs.Roles
         public Detective(PlayerControl player) : base(player)
         {
             Name = "Detective";
-            ImpostorText = () => "Find A Body Then Examine Players To Find Blood";
-            TaskText = () => "Examine suspicious players to find evildoers";
+            ImpostorText = () => Language.GetString("roles.detective");
+            TaskText = () => Language.GetString("roles.detective");
             Color = Patches.Colors.Detective;
             LastExamined = DateTime.UtcNow;
             RoleType = RoleEnum.Detective;

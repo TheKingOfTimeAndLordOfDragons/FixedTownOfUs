@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using TownOfUs.Extensions;
 using TownOfUs.Patches.ScreenEffects;
 using UnityEngine;
 
@@ -16,8 +17,8 @@ namespace TownOfUs.Roles
         public Aurial(PlayerControl player) : base(player)
         {
             Name = "Aurial";
-            ImpostorText = () => "Radiate To See The Auras Of Other Players";
-            TaskText = () => "Radiate to discover evildoers";
+            ImpostorText = () => Language.GetString("roles.aurial");
+            TaskText = () => Language.GetString("roles.aurial");
             Color = Patches.Colors.Aurial;
             RoleType = RoleEnum.Aurial;
             AddToRoleHistory(RoleType);

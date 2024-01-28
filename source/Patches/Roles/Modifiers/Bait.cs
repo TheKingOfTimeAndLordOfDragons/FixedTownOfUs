@@ -1,3 +1,5 @@
+using TownOfUs.Extensions;
+
 namespace TownOfUs.Roles.Modifiers
 {
     public class Bait : Modifier
@@ -5,7 +7,7 @@ namespace TownOfUs.Roles.Modifiers
         public Bait(PlayerControl player) : base(player)
         {
             Name = "Bait";
-            TaskText = () => "Killing you causes an instant self-report";
+            TaskText = () => Language.GetString("roles.modifiers.bait");
             Color = Patches.Colors.Bait;
             ModifierType = ModifierEnum.Bait;
         }

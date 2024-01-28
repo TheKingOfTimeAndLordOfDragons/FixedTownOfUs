@@ -17,7 +17,6 @@ namespace TownOfUs.Modifiers.ButtonBarryMod
             if (PlayerControl.LocalPlayer.Data.IsDead) return false;
             if (role.ButtonUsed) return false;
             if (role.StartTimer() > 0) return false;
-            if (PlayerControl.LocalPlayer.RemainingEmergencies <= 0) return false;
             if (!__instance.enabled) return false;
 
             role.ButtonUsed = true;
@@ -26,6 +25,7 @@ namespace TownOfUs.Modifiers.ButtonBarryMod
 
             if (AmongUsClient.Instance.AmHost)
             {
+                PlayerControl.LocalPlayer.RemainingEmergencies++;
                 MeetingRoomManager.Instance.reporter = PlayerControl.LocalPlayer;
                 MeetingRoomManager.Instance.target = null;
                 AmongUsClient.Instance.DisconnectHandlers.AddUnique(

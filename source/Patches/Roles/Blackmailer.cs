@@ -1,4 +1,5 @@
 using System;
+using TownOfUs.Extensions;
 
 namespace TownOfUs.Roles
 {
@@ -13,8 +14,8 @@ namespace TownOfUs.Roles
         public Blackmailer(PlayerControl player) : base(player)
         {
             Name = "Blackmailer";
-            ImpostorText = () => "Silence Crewmates During Meetings";
-            TaskText = () => "Silence a crewmate for the next meeting";
+            ImpostorText = () => Language.GetString("roles.blackmailer");
+            TaskText = () => Language.GetString("roles.blackmailer");
             Color = Patches.Colors.Impostor;
             LastBlackmailed = DateTime.UtcNow;
             RoleType = RoleEnum.Blackmailer;

@@ -7,6 +7,7 @@ using TownOfUs.NeutralRoles.ExecutionerMod;
 using TownOfUs.NeutralRoles.GuardianAngelMod;
 using System;
 using TownOfUs.CrewmateRoles.VampireHunterMod;
+using TownOfUs.Extensions;
 
 namespace TownOfUs.Roles
 {
@@ -22,8 +23,8 @@ namespace TownOfUs.Roles
         public Doomsayer(PlayerControl player) : base(player)
         {
             Name = "Doomsayer";
-            ImpostorText = () => "Guess People's Roles To Win!";
-            TaskText = () => "Win by guessing player's roles\nFake Tasks:";
+            ImpostorText = () => Language.GetString("roles.doomsayer");
+            TaskText = () => Language.GetString("roles.doomsayer");
             Color = Patches.Colors.Doomsayer;
             RoleType = RoleEnum.Doomsayer;
             LastObserved = DateTime.UtcNow;

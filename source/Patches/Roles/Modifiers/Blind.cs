@@ -1,3 +1,5 @@
+using TownOfUs.Extensions;
+
 namespace TownOfUs.Roles.Modifiers
 {
     public class Blind : Modifier
@@ -5,7 +7,7 @@ namespace TownOfUs.Roles.Modifiers
         public Blind(PlayerControl player) : base(player)
         {
             Name = "Blind";
-            TaskText = () => "Your report button does not light up";
+            TaskText = () => Language.GetString("roles.modifiers.blind");
             Color = Patches.Colors.Blind;
             ModifierType = ModifierEnum.Blind;
         }

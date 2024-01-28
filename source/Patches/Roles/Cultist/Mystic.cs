@@ -1,3 +1,5 @@
+using TownOfUs.Extensions;
+
 namespace TownOfUs.Roles.Cultist
 {
     public class CultistMystic : Role
@@ -5,8 +7,8 @@ namespace TownOfUs.Roles.Cultist
         public CultistMystic(PlayerControl player) : base(player)
         {
             Name = "Mystic";
-            ImpostorText = () => "Understand When Someone Gets Converted";
-            TaskText = () => "Know when someone gets converted";
+            ImpostorText = () => Language.GetString("roles.cultist.mystic");
+            TaskText = () => Language.GetString("roles.cultist.mystic");
             Color = Patches.Colors.Mystic;
             RoleType = RoleEnum.CultistMystic;
             AddToRoleHistory(RoleType);

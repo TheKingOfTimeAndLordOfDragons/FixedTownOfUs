@@ -1,4 +1,5 @@
 using TMPro;
+using TownOfUs.Extensions;
 
 namespace TownOfUs.Roles
 {
@@ -7,8 +8,8 @@ namespace TownOfUs.Roles
         public Engineer(PlayerControl player) : base(player)
         {
             Name = "Engineer";
-            ImpostorText = () => "Maintain Important Systems On The Ship";
-            TaskText = () => CustomGameOptions.GameMode == GameMode.Cultist ? "Vent around" : "Vent around and fix sabotages";
+            ImpostorText = () => CustomGameOptions.GameMode == GameMode.Cultist ? Language.GetString("roles.engineer.cultist") : Language.GetString("roles.engineer");
+            TaskText = () => CustomGameOptions.GameMode == GameMode.Cultist ? Language.GetString("roles.engineer.cultist") : Language.GetString("roles.engineer");
             Color = Patches.Colors.Engineer;
             RoleType = RoleEnum.Engineer;
             AddToRoleHistory(RoleType);

@@ -332,7 +332,6 @@ namespace TownOfUs
             {
                 Rpc(CustomRPC.AttemptSound, target.GetMedic().Player.PlayerId, target.PlayerId);
 
-                System.Console.WriteLine(CustomGameOptions.ShieldBreaks + "- shield break");
                 if (CustomGameOptions.ShieldBreaks) data.FullCooldownReset = true;
                 else data.ZeroSecReset = true;
                 StopKill.BreakShield(target.GetMedic().Player.PlayerId, target.PlayerId, CustomGameOptions.ShieldBreaks);
@@ -820,7 +819,7 @@ namespace TownOfUs
             {
                 var snitch = Role.GetRole<CultistSnitch>(player);
                 snitch.Name = "Informant";
-                snitch.TaskText = () => "Complete all your tasks to reveal a fake Impostor!";
+                snitch.TaskText = () => Language.GetString("roles.cultist.informant");
                 snitch.Color = Patches.Colors.Impostor;
                 snitch.Faction = Faction.Impostors;
                 snitch.RegenTask();
@@ -857,7 +856,7 @@ namespace TownOfUs
             {
                 var vigi = Role.GetRole<Vigilante>(player);
                 vigi.Name = "Assassin";
-                vigi.TaskText = () => "Guess the roles of crewmates mid-meeting to kill them!";
+                vigi.TaskText = () => Language.GetString("roles.modifiers.assassin");
                 vigi.Color = Patches.Colors.Impostor;
                 vigi.Faction = Faction.Impostors;
                 vigi.RegenTask();
@@ -1442,6 +1441,10 @@ namespace TownOfUs
         {
             PlayerControl player = PlayerById(playerId);
             return player.Is(Faction.Crewmates);
+        }
+
+        public static int lineCount(string text) {
+            return text.Count(c => c == '\n');
         }
     }
 }

@@ -166,7 +166,7 @@ namespace TownOfUs
             {
                 __instance.KillButton.graphic.sprite = Kill;
                 __instance.KillButton.buttonLabelText.gameObject.SetActive(true);
-                __instance.KillButton.buttonLabelText.text = "Kill";
+                __instance.KillButton.buttonLabelText.text = Language.GetString("killbutton.kill");
                 flag = PlayerControl.LocalPlayer.Is(RoleEnum.Sheriff) || PlayerControl.LocalPlayer.Is(RoleEnum.Pestilence) ||
                     PlayerControl.LocalPlayer.Is(RoleEnum.Werewolf) || PlayerControl.LocalPlayer.Is(RoleEnum.Juggernaut);
             }

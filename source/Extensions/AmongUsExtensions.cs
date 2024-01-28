@@ -131,12 +131,38 @@ public static class MapUtilities
             }
             var newOutfit = playerControl.Data.Outfits[outfitType];
             playerControl.CurrentOutfitType = outfitType;
+
             playerControl.RawSetName(newOutfit.PlayerName);
             playerControl.RawSetColor(newOutfit.ColorId);
-            playerControl.RawSetHat(newOutfit.HatId, newOutfit.ColorId);
             playerControl.RawSetVisor(newOutfit.VisorId, newOutfit.ColorId);
+            playerControl.RawSetHat(newOutfit.HatId, newOutfit.ColorId);
+
             if (!playerControl.Data.IsDead) playerControl.RawSetPet(newOutfit.PetId, newOutfit.ColorId);
-            if (!playerControl.Data.IsDead) playerControl.RawSetSkin(newOutfit.SkinId, newOutfit.ColorId);
+            if (!playerControl.Data.IsDead) {
+                SkinViewData nextSkin = null;
+                try { nextSkin = ShipStatus.Instance.CosmeticsCache.GetSkin(newOutfit.SkinId); } catch { return; };
+                
+                PlayerPhysics playerPhysics = playerControl.MyPhysics;
+                AnimationClip clip = null;
+                var spriteAnim = playerPhysics.myPlayer.cosmetics.skin.animator;
+                var currentPhysicsAnim = playerPhysics.Animations.Animator.GetCurrentAnimation();
+
+
+                if (currentPhysicsAnim == playerPhysics.Animations.group.RunAnim) clip = nextSkin.RunAnim;
+                else if (currentPhysicsAnim == playerPhysics.Animations.group.SpawnAnim) clip = nextSkin.SpawnAnim;
+                else if (currentPhysicsAnim == playerPhysics.Animations.group.EnterVentAnim) clip = nextSkin.EnterVentAnim;
+                else if (currentPhysicsAnim == playerPhysics.Animations.group.ExitVentAnim) clip = nextSkin.ExitVentAnim;
+                else if (currentPhysicsAnim == playerPhysics.Animations.group.IdleAnim) clip = nextSkin.IdleAnim;
+                else clip = nextSkin.IdleAnim;
+                float progress = playerPhysics.Animations.Animator.m_animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
+                playerPhysics.myPlayer.cosmetics.skin.skin = nextSkin;
+                playerPhysics.myPlayer.cosmetics.skin.UpdateMaterial();
+
+                spriteAnim.Play(clip, 1f);
+                spriteAnim.m_animator.Play("a", 0, progress % 1);
+                spriteAnim.m_animator.Update(0f);
+            }
+
             playerControl.cosmetics.colorBlindText.color = Color.white;
             if (PlayerControl.LocalPlayer.Data.IsImpostor() && playerControl.Data.IsImpostor()) playerControl.nameText().color = Patches.Colors.Impostor;
         }

@@ -18,8 +18,8 @@ namespace TownOfUs.Roles
         public Werewolf(PlayerControl player) : base(player)
         {
             Name = "Werewolf";
-            ImpostorText = () => "Rampage To Kill Everyone";
-            TaskText = () => "Rampage to kill everyone\nFake Tasks:";
+            ImpostorText = () => Language.GetString("roles.werewolf");
+            TaskText = () => Language.GetString("roles.werewolf");
             Color = Patches.Colors.Werewolf;
             LastRampaged = DateTime.UtcNow;
             LastKilled = DateTime.UtcNow;

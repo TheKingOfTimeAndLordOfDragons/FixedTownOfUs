@@ -1,3 +1,4 @@
+using AmongUs.Data;
 using HarmonyLib;
 using UnityEngine;
 
@@ -15,7 +16,7 @@ namespace TownOfUs
             {
                 PlayerMaterial.SetColors(voterPlayer.DefaultOutfit.ColorId, spriteRenderer);
             }
-            else if (GameOptionsManager.Instance.currentNormalGameOptions.AnonymousVotes && (!CustomGameOptions.DeadSeeRoles || !PlayerControl.LocalPlayer.Data.IsDead))
+            else if (GameOptionsManager.Instance.currentNormalGameOptions.AnonymousVotes && (!CustomGameOptions.DeadSeeRoles || !PlayerControl.LocalPlayer.Data.IsDead || !DataManager.Settings.Gameplay.StreamerMode))
             {
                 PlayerMaterial.SetColors(Palette.DisabledGrey, spriteRenderer);
             }

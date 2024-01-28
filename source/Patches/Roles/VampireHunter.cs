@@ -1,5 +1,6 @@
 using System;
 using TMPro;
+using TownOfUs.Extensions;
 
 namespace TownOfUs.Roles
 {
@@ -17,8 +18,8 @@ namespace TownOfUs.Roles
         public VampireHunter(PlayerControl player) : base(player)
         {
             Name = "Vampire Hunter";
-            ImpostorText = () => "Stake The Vampires";
-            TaskText = () => "Stake the Vampires";
+            ImpostorText = () => Language.GetString("roles.vh");
+            TaskText = () => Language.GetString("roles.vh");
             Color = Patches.Colors.VampireHunter;
             LastStaked = DateTime.UtcNow;
             RoleType = RoleEnum.VampireHunter;

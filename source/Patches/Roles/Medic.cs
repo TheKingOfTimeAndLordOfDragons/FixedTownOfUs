@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using TownOfUs.Extensions;
 
 namespace TownOfUs.Roles
 {
@@ -12,8 +13,8 @@ namespace TownOfUs.Roles
         public Medic(PlayerControl player) : base(player)
         {
             Name = "Medic";
-            ImpostorText = () => "Create A Shield To Protect A Crewmate";
-            TaskText = () => "Protect a crewmate with a shield";
+            ImpostorText = () => Language.GetString("roles.medic");
+            TaskText = () => Language.GetString("roles.medic");
             Color = Patches.Colors.Medic;
             StartingCooldown = DateTime.UtcNow;
             RoleType = RoleEnum.Medic;

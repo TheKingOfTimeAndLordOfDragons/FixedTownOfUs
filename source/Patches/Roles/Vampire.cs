@@ -10,8 +10,8 @@ namespace TownOfUs.Roles
         public Vampire(PlayerControl player) : base(player)
         {
             Name = "Vampire";
-            ImpostorText = () => "Convert Crewmates And Kill The Rest";
-            TaskText = () => "Bite all other players\nFake Tasks:";
+            ImpostorText = () => Language.GetString("roles.vampire");
+            TaskText = () => Language.GetString("roles.vampire");
             Color = Patches.Colors.Vampire;
             LastBit = DateTime.UtcNow;
             RoleType = RoleEnum.Vampire;

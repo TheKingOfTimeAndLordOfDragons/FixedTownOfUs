@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TownOfUs.Extensions;
 using UnityEngine;
 
 namespace TownOfUs.Roles
@@ -17,8 +18,8 @@ namespace TownOfUs.Roles
         public Imitator(PlayerControl player) : base(player)
         {
             Name = "Imitator";
-            ImpostorText = () => "Use The True-Hearted Dead To Benefit The Crew";
-            TaskText = () => "Use dead roles to benefit the crew";
+            ImpostorText = () => Language.GetString("roles.imitator");
+            TaskText = () => Language.GetString("roles.imitator");
             Color = Patches.Colors.Imitator;
             RoleType = RoleEnum.Imitator;
             AddToRoleHistory(RoleType);

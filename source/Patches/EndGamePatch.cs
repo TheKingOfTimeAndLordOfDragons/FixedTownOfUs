@@ -4,6 +4,7 @@ using System.Text;
 using HarmonyLib;
 using Reactor.Utilities.Extensions;
 using TownOfUs.Extensions;
+using TownOfUs.ImpostorRoles.TraitorMod;
 using TownOfUs.Patches.ScreenEffects;
 using TownOfUs.Roles;
 using TownOfUs.Roles.Modifiers;
@@ -237,28 +238,28 @@ namespace TownOfUs.Patches
                 var player = Role.GetRole(playerControl);
                 if (playerControl.Is(RoleEnum.Phantom) || playerControl.Is(Faction.Crewmates))
                 {
-                    if ((player.TotalTasks - player.TasksLeft)/player.TotalTasks == 1) playerRole += " | Tasks: <color=#" + Color.green.ToHtmlStringRGBA() + $">{player.TotalTasks - player.TasksLeft}/{player.TotalTasks}</color>";
-                    else playerRole += $" | Tasks: {player.TotalTasks - player.TasksLeft}/{player.TotalTasks}";
+                    if ((player.TotalTasks - player.TasksLeft)/player.TotalTasks == 1) playerRole += $" | "+ Language.GetString("endgame.tasks") + $": <color=#" + Color.green.ToHtmlStringRGBA() + $">{player.TotalTasks - player.TasksLeft}/{player.TotalTasks}</color>";
+                    else playerRole += $" | " + Language.GetString("endgame.tasks") + $": {player.TotalTasks - player.TasksLeft}/{player.TotalTasks}";
                 }
                 if (player.Kills > 0 && !playerControl.Is(Faction.Crewmates))
                 {
-                    playerRole += " |<color=#" + Patches.Colors.Impostor.ToHtmlStringRGBA() + $"> Kills: {player.Kills}</color>";
+                    playerRole += " |<color=#" + Patches.Colors.Impostor.ToHtmlStringRGBA() + $"> " + Language.GetString("endgame.kills") + $": {player.Kills}</color>";
                 }
                 if (player.CorrectKills > 0)
                 {
-                    playerRole += " |<color=#" + Color.green.ToHtmlStringRGBA() + $"> Correct Kills: {player.CorrectKills}</color>";
+                    playerRole += " |<color=#" + Color.green.ToHtmlStringRGBA() + $"> " + Language.GetString("endgame.kills.correct") + $": {player.CorrectKills}</color>";
                 }
                 if (player.IncorrectKills > 0)
                 {
-                    playerRole += " |<color=#" + Patches.Colors.Impostor.ToHtmlStringRGBA() + $"> Incorrect Kills: {player.IncorrectKills}</color>";
+                    playerRole += " |<color=#" + Patches.Colors.Impostor.ToHtmlStringRGBA() + $"> " + Language.GetString("endgame.kills.incorrect") + $": {player.IncorrectKills}</color>";
                 }
                 if (player.CorrectAssassinKills > 0)
                 {
-                    playerRole += " |<color=#" + Color.green.ToHtmlStringRGBA() + $"> Correct Guesses: {player.CorrectAssassinKills}</color>";
+                    playerRole += " |<color=#" + Color.green.ToHtmlStringRGBA() + $"> " + Language.GetString("endgame.guesses.correct") + $": {player.CorrectAssassinKills}</color>";
                 }
                 if (player.IncorrectAssassinKills > 0)
                 {
-                    playerRole += " |<color=#" + Patches.Colors.Impostor.ToHtmlStringRGBA() + $"> Incorrect Guesses: {player.IncorrectAssassinKills}</color>";
+                    playerRole += " |<color=#" + Patches.Colors.Impostor.ToHtmlStringRGBA() + $"> " + Language.GetString("endgame.guesses.incorrect") + $": {player.IncorrectAssassinKills}</color>";
                 }
 
                 AdditionalTempData.playerRoles.Add(new AdditionalTempData.PlayerRoleInfo()
@@ -680,86 +681,86 @@ namespace TownOfUs.Patches
             textRenderer.text = "";
 
             if (AdditionalTempData.winCondition == WinCondition.JesterWin) {
-                textRenderer.text = "Jester Wins";
+                textRenderer.text = Language.GetString("endgame.jester");
                 textRenderer.color = Colors.Jester;
                 __instance.BackgroundBar.material.SetColor("_Color", Colors.Jester);
                 SoundEffectsManager.play("jesterWin");
             }
             if (AdditionalTempData.winCondition == WinCondition.ExecutionerWin) {
-                textRenderer.text = "Executioner Wins";
+                textRenderer.text = Language.GetString("endgame.executioner");
                 textRenderer.color = Colors.Executioner;
                 __instance.BackgroundBar.material.SetColor("_Color", Colors.Executioner);
                 SoundEffectsManager.play("executionerWin");
             }
             if (AdditionalTempData.winCondition == WinCondition.GlitchWin) {
-                textRenderer.text = "Glitch Wins";
+                textRenderer.text = Language.GetString("endgame.glitch");
                 textRenderer.color = Colors.Glitch;
                 __instance.BackgroundBar.material.SetColor("_Color", Colors.Glitch);
                 SoundEffectsManager.play("glitchWin");
             }
             if (AdditionalTempData.winCondition == WinCondition.ArsonistWin) {
-                textRenderer.text = "Arsonist Wins";
+                textRenderer.text = Language.GetString("endgame.arsonist");
                 textRenderer.color = Colors.Arsonist;
                 __instance.BackgroundBar.material.SetColor("_Color", Colors.Arsonist);
                 SoundEffectsManager.play("arsonistWin");
             }
             if (AdditionalTempData.winCondition == WinCondition.PhantomWin) {
-                textRenderer.text = "Phantom Wins";
+                textRenderer.text = Language.GetString("endgame.phantom");
                 textRenderer.color = Colors.Phantom;
                 __instance.BackgroundBar.material.SetColor("_Color", Colors.Phantom);
                 SoundEffectsManager.play("phantomWin");
             }
             if (AdditionalTempData.winCondition == WinCondition.JuggernautWin) {
-                textRenderer.text = "Juggernaut Wins";
+                textRenderer.text = Language.GetString("endgame.juggernaut");
                 textRenderer.color = Colors.Juggernaut;
                 __instance.BackgroundBar.material.SetColor("_Color", Colors.Juggernaut);
             }
             if (AdditionalTempData.winCondition == WinCondition.PlaguebearerWin) {
-                textRenderer.text = "Plaguebearer Wins";
+                textRenderer.text = Language.GetString("endgame.plaguebearer");
                 textRenderer.color = Colors.Plaguebearer;
                 __instance.BackgroundBar.material.SetColor("_Color", Colors.Plaguebearer);
                 SoundEffectsManager.play("plaguebearerWin");
             }
             if (AdditionalTempData.winCondition == WinCondition.PestilenceWin) {
-                textRenderer.text = "Pestilence Wins";
+                textRenderer.text = Language.GetString("endgame.pestilence");
                 textRenderer.color = Colors.Pestilence;
                 __instance.BackgroundBar.material.SetColor("_Color", Colors.Pestilence);
                 SoundEffectsManager.play("plaguebearerWin");
             }
             if (AdditionalTempData.winCondition == WinCondition.WerewolfWin) {
-                textRenderer.text = "Werewolf Wins";
+                textRenderer.text = Language.GetString("endgame.werewolf");
                 textRenderer.color = Colors.Werewolf;
                 __instance.BackgroundBar.material.SetColor("_Color", Colors.Werewolf);
                 SoundEffectsManager.play("werewolfWin");
             }
             if (AdditionalTempData.winCondition == WinCondition.DoomsayerWin) {
-                textRenderer.text = "Doomsayer Wins";
+                textRenderer.text = Language.GetString("endgame.doomsayer");
                 textRenderer.color = Colors.Doomsayer;
                 __instance.BackgroundBar.material.SetColor("_Color", Colors.Doomsayer);
                 SoundEffectsManager.play("doomsayerWin");
             }
             if (AdditionalTempData.winCondition == WinCondition.VampireWin) {
-                textRenderer.text = "Vampire Wins";
+                textRenderer.text = Language.GetString("endgame.vampire");
                 textRenderer.color = Colors.Vampire;
                 __instance.BackgroundBar.material.SetColor("_Color", Colors.Vampire);
                 SoundEffectsManager.play("vampireWin");
             }
             if (AdditionalTempData.winCondition == WinCondition.LoversTeamWin) {
-                textRenderer.text = "Lovers And Crewmates Win";
+                textRenderer.text = Language.GetString("endgame.lovers");
                 textRenderer.color = Colors.Lovers;
                 __instance.BackgroundBar.material.SetColor("_Color", Colors.Lovers);
             }
             if (AdditionalTempData.winCondition == WinCondition.LoversSoloWin) {
-                textRenderer.text = "Lovers Win";
+                textRenderer.text = Language.GetString("endgame.lovers.only");
                 textRenderer.color = Colors.Lovers;
                 __instance.BackgroundBar.material.SetColor("_Color", Colors.Lovers);
             }
 
             foreach (WinCondition cond in AdditionalTempData.additionalWinConditions) {
                 if (cond == WinCondition.AdditionalGABonusWin)
-                    textRenderer.text += $"\n{Utils.cs(Colors.GuardianAngel, "The Guardian Angel wins with the target")}";
+                    textRenderer.text += $"\n{Utils.cs(Colors.GuardianAngel, Language.GetString("endgame.additional.ga"))}";
                 if (cond == WinCondition.AdditionalAliveSurvivorBonusWin)
-                    textRenderer.text += $"\n{Utils.cs(Colors.Survivor, "The Survivor alive")}";
+                    textRenderer.text += $"\n{Utils.cs(Colors.Survivor, Language.GetString("endgame.additional.surv"))}";
             }
 
             var position = Camera.main.ViewportToWorldPoint(new Vector3(0f, 1f, Camera.main.nearClipPlane));
@@ -768,7 +769,7 @@ namespace TownOfUs.Patches
             roleSummary.transform.localScale = new Vector3(1f, 1f, 1f);
 
             var roleSummaryText = new StringBuilder();
-            roleSummaryText.AppendLine("Players and roles at the end of the game:");
+            roleSummaryText.AppendLine(Language.GetString("endgame.summary"));
             foreach(var data in AdditionalTempData.playerRoles) {
                 var role = string.Join(" ", data.Role);
                 string loved = data.Loved ? " <color=#FF66CCFF>♥</color>" : "";
@@ -778,7 +779,7 @@ namespace TownOfUs.Patches
             }
 
             if (AdditionalTempData.otherWinners.Count != 0) {
-                roleSummaryText.AppendLine("\n\n\nOther Winners:");
+                roleSummaryText.AppendLine("\n\n\n" + Language.GetString("endgame.summary.others") + ":");
                 foreach (var data in AdditionalTempData.otherWinners)
                 {
                     if (data.Role == RoleEnum.Doomsayer) roleSummaryText.AppendLine("<color=#" + Patches.Colors.Doomsayer.ToHtmlStringRGBA() + $">{data.PlayerName}</color>");
@@ -1045,6 +1046,11 @@ namespace TownOfUs.Patches
                         if (lover) numLoversAlive++;
 
                         if (playerInfo.Role.IsImpostor) {
+                            teamImpostorsAlive++;
+                            if (lover) teamImpostorsHasAliveLover = true;
+                        }
+
+                        if (SetTraitor.WillBeTraitor != null && SetTraitor.WillBeTraitor.PlayerId == playerInfo.PlayerId) {
                             teamImpostorsAlive++;
                             if (lover) teamImpostorsHasAliveLover = true;
                         }

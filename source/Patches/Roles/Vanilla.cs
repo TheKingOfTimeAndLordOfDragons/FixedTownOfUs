@@ -1,3 +1,5 @@
+using TownOfUs.Extensions;
+
 namespace TownOfUs.Roles
 {
     public class Impostor : Role
@@ -5,8 +7,8 @@ namespace TownOfUs.Roles
         public Impostor(PlayerControl player) : base(player)
         {
             Name = "Impostor";
-            ImpostorText = () => "Kill All Crewmates";
-            TaskText = () => "Kill all crewmates";
+            ImpostorText = () => Language.GetString("roles.vanilla.imp");
+            TaskText = () => Language.GetString("roles.vanilla.imp");
             Faction = Faction.Impostors;
             RoleType = RoleEnum.Impostor;
             AddToRoleHistory(RoleType);
@@ -19,8 +21,8 @@ namespace TownOfUs.Roles
         public Crewmate(PlayerControl player) : base(player)
         {
             Name = "Crewmate";
-            ImpostorText = () => "Do Your tasks And Find The Impostors";
-            TaskText = () => "Do your tasks and find the Impostors";
+            ImpostorText = () => Language.GetString("roles.vanilla.crew");
+            TaskText = () => Language.GetString("roles.vanilla.crew");
             Faction = Faction.Crewmates;
             RoleType = RoleEnum.Crewmate;
             AddToRoleHistory(RoleType);

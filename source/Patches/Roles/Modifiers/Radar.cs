@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TownOfUs.Extensions;
 
 namespace TownOfUs.Roles.Modifiers
 {
@@ -9,7 +10,7 @@ namespace TownOfUs.Roles.Modifiers
         public Radar(PlayerControl player) : base(player)
         {
             Name = "Radar";
-            TaskText = () => "Be on high alert";
+            TaskText = () => Language.GetString("roles.modifiers.radar");
             Color = Patches.Colors.Radar;
             ModifierType = ModifierEnum.Radar;
         }

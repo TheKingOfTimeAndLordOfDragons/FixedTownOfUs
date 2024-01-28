@@ -752,8 +752,6 @@ namespace TownOfUs
                         readSByte2 = reader.ReadSByte();
                         SwapVotes.Swap2 =
                             MeetingHud.Instance.playerStates.FirstOrDefault(x => x.TargetPlayerId == readSByte2);
-                        PluginSingleton<TownOfUs>.Instance.Log.LogMessage("Bytes received - " + readSByte + " - " +
-                                                                          readSByte2);
                         break;
 
                     case CustomRPC.Imitate:

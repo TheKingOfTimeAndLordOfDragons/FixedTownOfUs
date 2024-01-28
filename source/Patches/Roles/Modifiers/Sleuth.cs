@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TownOfUs.Extensions;
 
 namespace TownOfUs.Roles.Modifiers
 {
@@ -8,7 +9,7 @@ namespace TownOfUs.Roles.Modifiers
         public Sleuth(PlayerControl player) : base(player)
         {
             Name = "Sleuth";
-            TaskText = () => "Know the roles of bodies you report";
+            TaskText = () => Language.GetString("roles.modifiers.sleuth");
             Color = Patches.Colors.Sleuth;
             ModifierType = ModifierEnum.Sleuth;
         }

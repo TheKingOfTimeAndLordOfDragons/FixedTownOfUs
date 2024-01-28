@@ -1,4 +1,5 @@
 using System;
+using TownOfUs.Extensions;
 
 namespace TownOfUs.Roles
 {
@@ -9,8 +10,8 @@ namespace TownOfUs.Roles
         public Undertaker(PlayerControl player) : base(player)
         {
             Name = "Undertaker";
-            ImpostorText = () => "Drag Bodies And Hide Them";
-            TaskText = () => "Drag bodies around to hide them from being reported";
+            ImpostorText = () => Language.GetString("roles.undertaker");
+            TaskText = () => Language.GetString("roles.undertaker");
             Color = Patches.Colors.Impostor;
             LastDragged = DateTime.UtcNow;
             RoleType = RoleEnum.Undertaker;

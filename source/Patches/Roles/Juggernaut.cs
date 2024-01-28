@@ -13,8 +13,8 @@ namespace TownOfUs.Roles
             LastKill = DateTime.UtcNow;
             RoleType = RoleEnum.Juggernaut;
             AddToRoleHistory(RoleType);
-            ImpostorText = () => "Your Power Grows With Every Kill";
-            TaskText = () => "With each kill your kill cooldown decreases\nFake Tasks:";
+            ImpostorText = () => Language.GetString("roles.juggernaut");
+            TaskText = () => Language.GetString("roles.juggernaut");
             Faction = Faction.NeutralKilling;
         }
 

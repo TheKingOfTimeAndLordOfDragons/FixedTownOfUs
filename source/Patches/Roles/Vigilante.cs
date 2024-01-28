@@ -5,6 +5,7 @@ using TownOfUs.Patches;
 using UnityEngine;
 using TownOfUs.NeutralRoles.ExecutionerMod;
 using TownOfUs.NeutralRoles.GuardianAngelMod;
+using TownOfUs.Extensions;
 
 namespace TownOfUs.Roles
 {
@@ -17,8 +18,8 @@ namespace TownOfUs.Roles
         public Vigilante(PlayerControl player) : base(player)
         {
             Name = "Vigilante";
-            ImpostorText = () => "Kill Impostors If You Can Guess Their Roles";
-            TaskText = () => "Guess the roles of impostors mid-meeting to kill them!";
+            ImpostorText = () => Language.GetString("roles.vigilante");
+            TaskText = () => Language.GetString("roles.vigilante");
             Color = Patches.Colors.Vigilante;
             RoleType = RoleEnum.Vigilante;
             AddToRoleHistory(RoleType);

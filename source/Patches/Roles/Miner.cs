@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using TownOfUs.Extensions;
 using UnityEngine;
 
 namespace TownOfUs.Roles
@@ -15,8 +16,8 @@ namespace TownOfUs.Roles
         public Miner(PlayerControl player) : base(player)
         {
             Name = "Miner";
-            ImpostorText = () => "From The Top, Make It Drop, That's A Vent";
-            TaskText = () => "Place vents around the map";
+            ImpostorText = () => Language.GetString("roles.miner");
+            TaskText = () => Language.GetString("roles.miner");
             Color = Patches.Colors.Impostor;
             LastMined = DateTime.UtcNow;
             RoleType = RoleEnum.Miner;

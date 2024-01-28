@@ -2,6 +2,7 @@ using TownOfUs.Roles;
 using TownOfUs.Roles.Modifiers;
 using HarmonyLib;
 using AmongUs.GameOptions;
+using AmongUs.Data;
 
 namespace TownOfUs
 {
@@ -18,7 +19,7 @@ namespace TownOfUs
             var role = Role.GetRole(__instance.HauntTarget);
             var modifier = Modifier.GetModifier(__instance.HauntTarget);
 
-            if (CustomGameOptions.DeadSeeRoles) __instance.FilterText.text = modifier != null ? $"{role.Name} - {modifier.Name}" : $"{role.Name}";
+            if (CustomGameOptions.DeadSeeRoles && !DataManager.Settings.Gameplay.StreamerMode) __instance.FilterText.text = modifier != null ? $"{role.Name} - {modifier.Name}" : $"{role.Name}";
             else __instance.FilterText.text = "";
             
             return false;

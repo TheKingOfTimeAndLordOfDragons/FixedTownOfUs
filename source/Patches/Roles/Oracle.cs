@@ -1,4 +1,5 @@
 using System;
+using TownOfUs.Extensions;
 
 namespace TownOfUs.Roles
 {
@@ -15,8 +16,8 @@ namespace TownOfUs.Roles
         public Oracle(PlayerControl player) : base(player)
         {
             Name = "Oracle";
-            ImpostorText = () => "Get Other Player's To Confess Their Sins";
-            TaskText = () => "Get another player to confess on your passing";
+            ImpostorText = () => Language.GetString("roles.oracle");
+            TaskText = () => Language.GetString("roles.oracle");
             Color = Patches.Colors.Oracle;
             LastConfessed = DateTime.UtcNow;
             Accuracy = CustomGameOptions.RevealAccuracy;

@@ -1,4 +1,5 @@
-﻿using TownOfUs.Modifiers.UnderdogMod;
+﻿using TownOfUs.Extensions;
+using TownOfUs.Modifiers.UnderdogMod;
 
 namespace TownOfUs.Roles.Modifiers
 {
@@ -7,7 +8,7 @@ namespace TownOfUs.Roles.Modifiers
         public Underdog(PlayerControl player) : base(player)
         {
             Name = "Underdog";
-            TaskText = () => "When you're alone your kill cooldown is shortened";
+            TaskText = () => Language.GetString("roles.modifiers.underdog");
             Color = Patches.Colors.Impostor;
             ModifierType = ModifierEnum.Underdog;
         }

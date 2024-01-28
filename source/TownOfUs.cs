@@ -20,18 +20,18 @@ using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TownOfUs.Patches.ScreenEffects;
-using TownOfUs.MCI;
 
 namespace TownOfUs
 {
     [BepInPlugin(Id, "Town Of Us", VersionString)]
     [BepInDependency(ReactorPlugin.Id)]
-    [BepInDependency(SubmergedCompatibility.SUBMERGED_GUID, BepInDependency.DependencyFlags.SoftDependency)]
     [ReactorModFlags(Reactor.Networking.ModFlags.RequireOnAllClients)]
+    [BepInDependency(SubmergedCompatibility.SUBMERGED_GUID, BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("gg.reactor.debugger", BepInDependency.DependencyFlags.SoftDependency)] //Fix debugger overwriting MinPlayers
     public class TownOfUs : BasePlugin
     {
         public const string Id = "com.edonnes124.townofus";
-        public const string VersionString = "5.0.5";
+        public const string VersionString = "5.0.6";
 
         public static System.Version Version = System.Version.Parse(VersionString);
         internal static BepInEx.Logging.ManualLogSource Logger;
@@ -47,7 +47,6 @@ namespace TownOfUs
         public static Sprite SwapperSwitch;
         public static Sprite SwapperSwitchDisabled;
         public static Sprite Footprint;
-        public static Sprite NormalKill;
         public static Sprite MedicSprite;
         public static Sprite SeerSprite;
         public static Sprite SampleSprite;
@@ -60,9 +59,6 @@ namespace TownOfUs
         public static Sprite ReviveSprite;
         public static Sprite ButtonSprite;
         public static Sprite DisperseSprite;
-        public static Sprite CycleBackSprite;
-        public static Sprite CycleForwardSprite;
-        public static Sprite GuessSprite;
         public static Sprite DragSprite;
         public static Sprite DropSprite;
         public static Sprite FlashSprite;
@@ -107,14 +103,7 @@ namespace TownOfUs
         public static Sprite TargetIcon;
         public static Sprite LighterButton;
 
-        public static Sprite SettingsButtonSprite;
-        public static Sprite CrewSettingsButtonSprite;
-        public static Sprite NeutralSettingsButtonSprite;
-        public static Sprite ImposterSettingsButtonSprite;
-        public static Sprite ModifierSettingsButtonSprite;
         public static Sprite ToUBanner;
-        public static Sprite UpdateTOUButton;
-        public static Sprite UpdateSubmergedButton;
 
         public static Sprite ZoomPlusButton;
         public static Sprite ZoomMinusButton;
@@ -123,7 +112,6 @@ namespace TownOfUs
         public static bool LobbyCapped = true;
         public static bool Persistence = true;
         public static bool MCIActive = false;
-        public static DebuggerBehaviour Debugger;
         #pragma warning restore
 
         private static DLoadImage _iCallLoadImage;
@@ -136,15 +124,12 @@ namespace TownOfUs
             Logger = Log;
             Instance = this;
 
-            Generate.GenerateAll();
-
             bundledAssets = new();
             JanitorClean = CreateSprite("TownOfUs.Resources.Janitor.png");
-            EngineerFix = CreateSprite("TownOfUs.Resources.Engineer.png");
+            EngineerFix = CreateSprite("TownOfUs.Resources.Engineer.png", 115f);
             SwapperSwitch = CreateSprite("TownOfUs.Resources.SwapperSwitch.png");
             SwapperSwitchDisabled = CreateSprite("TownOfUs.Resources.SwapperSwitchDisabled.png");
             Footprint = CreateSprite("TownOfUs.Resources.Footprint.png");
-            NormalKill = CreateSprite("TownOfUs.Resources.NormalKill.png");
             MedicSprite = CreateSprite("TownOfUs.Resources.Medic.png");
             SeerSprite = CreateSprite("TownOfUs.Resources.Seer.png");
             SampleSprite = CreateSprite("TownOfUs.Resources.Sample.png");
@@ -159,9 +144,6 @@ namespace TownOfUs
             DisperseSprite = CreateSprite("TownOfUs.Resources.Disperse.png");
             DragSprite = CreateSprite("TownOfUs.Resources.Drag.png");
             DropSprite = CreateSprite("TownOfUs.Resources.Drop.png");
-            CycleBackSprite = CreateSprite("TownOfUs.Resources.CycleBack.png");
-            CycleForwardSprite = CreateSprite("TownOfUs.Resources.CycleForward.png");
-            GuessSprite = CreateSprite("TownOfUs.Resources.Guess.png");
             FlashSprite = CreateSprite("TownOfUs.Resources.Flash.png");
             AlertSprite = CreateSprite("TownOfUs.Resources.Alert.png");
             RememberSprite = CreateSprite("TownOfUs.Resources.Remember.png");
@@ -204,22 +186,10 @@ namespace TownOfUs
             TargetIcon = CreateSprite("TownOfUs.Resources.TargetIcon.png", 150f);
             LighterButton = CreateSprite("TownOfUs.Resources.LighterButton.png");
 
-            SettingsButtonSprite = CreateSprite("TownOfUs.Resources.SettingsButton.png");
-            CrewSettingsButtonSprite = CreateSprite("TownOfUs.Resources.Crewmate.png");
-            NeutralSettingsButtonSprite = CreateSprite("TownOfUs.Resources.Neutral.png");
-            ImposterSettingsButtonSprite = CreateSprite("TownOfUs.Resources.Impostor.png");
-            ModifierSettingsButtonSprite = CreateSprite("TownOfUs.Resources.Modifiers.png");
             ToUBanner = CreateSprite("TownOfUs.Resources.TownOfUsBanner.png");
-            UpdateTOUButton = CreateSprite("TownOfUs.Resources.UpdateToUButton.png");
-            UpdateSubmergedButton = CreateSprite("TownOfUs.Resources.UpdateSubmergedButton.png");
 
             ZoomPlusButton = CreateSprite("TownOfUs.Resources.Plus.png");
             ZoomMinusButton = CreateSprite("TownOfUs.Resources.Minus.png");
-
-            PalettePatch.Load();
-            ClassInjector.RegisterTypeInIl2Cpp<RainbowBehaviour>();
-
-            // RegisterInIl2CppAttribute.Register();
 
             Ip = Config.Bind("Custom", "Ipv4 or Hostname", "127.0.0.1");
             Port = Config.Bind("Custom", "Port", (ushort) 22023);
@@ -241,11 +211,16 @@ namespace TownOfUs
                 try { ModManager.Instance.ShowModStamp(); }
                 catch { }
             }));
-            
-            AddComponent<DebuggerBehaviour>();
-            ClassInjector.RegisterTypeInIl2Cpp<DebuggerBehaviour>();
 
             Harmony.PatchAll();
+
+            Language.LoadDefaultKey();
+            Language.Load();
+            Generate.GenerateAll();
+
+            PalettePatch.Load();
+            ClassInjector.RegisterTypeInIl2Cpp<RainbowBehaviour>();
+            
             AddComponent<ModUpdateBehaviour>();
             SubmergedCompatibility.Initialize();
         }

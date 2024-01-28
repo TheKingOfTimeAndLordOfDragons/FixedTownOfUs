@@ -22,11 +22,11 @@ namespace TownOfUs.Roles
         {
             Name = "Guardian Angel";
             ImpostorText = () =>
-                target == null ? "You don't have a target for some reason... weird..." : $"Protect {target.name} With Your Life!";
+                target == null ? Language.GetString("roles.ga") : Language.GetString("roles.ga.target").Replace("%target%", target.name.ToString());
             TaskText = () =>
                 target == null
-                    ? "You don't have a target for some reason... weird..."
-                    : $"Protect {target.name}!";
+                    ? Language.GetString("roles.ga")
+                    : Language.GetString("roles.ga.target").Replace("%target%", target.name.ToString());
             Color = Patches.Colors.GuardianAngel;
             LastProtected = DateTime.UtcNow;
             RoleType = RoleEnum.GuardianAngel;

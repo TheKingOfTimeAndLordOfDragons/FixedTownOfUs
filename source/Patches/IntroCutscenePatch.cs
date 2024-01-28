@@ -65,7 +65,7 @@ namespace TownOfUs.Patches
             if (PlayerControl.LocalPlayer.Is(Faction.NeutralBenign) || PlayerControl.LocalPlayer.Is(Faction.NeutralEvil) || PlayerControl.LocalPlayer.Is(Faction.NeutralKilling)) {
                 var neutralColor = new Color32(76, 84, 78, 255);
                 __instance.BackgroundBar.material.color = neutralColor;
-                __instance.TeamTitle.text = "Neutral";
+                __instance.TeamTitle.text = Language.GetString("intro.faction.neutral");
                 __instance.TeamTitle.color = neutralColor;
             }
         }

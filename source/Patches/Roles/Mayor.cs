@@ -1,3 +1,4 @@
+using TownOfUs.Extensions;
 using UnityEngine;
 
 namespace TownOfUs.Roles
@@ -7,8 +8,8 @@ namespace TownOfUs.Roles
         public Mayor(PlayerControl player) : base(player)
         {
             Name = "Mayor";
-            ImpostorText = () => "Reveal Yourself To Save The Town";
-            TaskText = () => "Reveal yourself when the time is right";
+            ImpostorText = () => Language.GetString("roles.mayor");
+            TaskText = () => Language.GetString("roles.mayor");
             Color = Patches.Colors.Mayor;
             RoleType = RoleEnum.Mayor;
             AddToRoleHistory(RoleType);

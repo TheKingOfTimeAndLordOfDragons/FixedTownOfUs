@@ -122,6 +122,10 @@ namespace TownOfUs.CrewmateRoles.AurialMod
                 if (c == Color.green) p.cosmetics.SetBodyColor(2);
                 if (c == Color.white) p.cosmetics.SetBodyColor(7);
                 if (c == Color.gray) p.cosmetics.SetBodyColor(15);
+                p.RawSetSkin("", 15);
+                p.RawSetPet("", 15);
+                p.RawSetHat("", 15);
+                p.RawSetVisor("", 15);
                 p.myRend().color = c;
                 p.nameText().color = Color.clear;
                 if (c == Color.clear) p.cosmetics.colorBlindText.color = c;

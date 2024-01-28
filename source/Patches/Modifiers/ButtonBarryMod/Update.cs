@@ -57,7 +57,7 @@ namespace TownOfUs.Modifiers.ButtonBarryMod
                     position1.z);
             }
 
-            if (!role.ButtonUsed && PlayerControl.LocalPlayer.RemainingEmergencies > 0)
+            if (!role.ButtonUsed)
             {
                 renderer.color = Palette.EnabledColor;
                 renderer.material.SetFloat("_Desat", 0f);

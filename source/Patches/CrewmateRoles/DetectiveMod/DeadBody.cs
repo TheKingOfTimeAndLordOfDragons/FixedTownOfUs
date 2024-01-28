@@ -1,4 +1,5 @@
 ﻿using System;
+using TownOfUs.Extensions;
 using TownOfUs.Roles;
 
 namespace TownOfUs.CrewmateRoles.DetectiveMod
@@ -14,29 +15,29 @@ namespace TownOfUs.CrewmateRoles.DetectiveMod
         {
             if (br.KillAge > CustomGameOptions.DetectiveFactionDuration * 1000)
                 return
-                    $"Body Report: The corpse is too old to gain information from. (Killed {Math.Round(br.KillAge / 1000)}s ago)";
+                    Language.GetString("roles.crewmate.detective.report.old").Replace("%time%", (Math.Round(br.KillAge / 1000).ToString()));
 
             if (br.Killer.PlayerId == br.Body.PlayerId)
                 return
-                    $"Body Report: The kill appears to have been a suicide! (Killed {Math.Round(br.KillAge / 1000)}s ago)";
+                    Language.GetString("roles.crewmate.detective.report.suicide").Replace("%time%", (Math.Round(br.KillAge / 1000).ToString()));
 
             var role = Role.GetRole(br.Killer);
 
             if (br.KillAge < CustomGameOptions.DetectiveRoleDuration * 1000)
                 return
-                    $"Body Report: The killer appears to be a {role.Name}! (Killed {Math.Round(br.KillAge / 1000)}s ago)";
+                    Language.GetString("roles.crewmate.detective.report.name").Replace("%role%", role.Name.ToString()).Replace("%time%", (Math.Round(br.KillAge / 1000).ToString()));
 
             if (br.Killer.Is(Faction.Crewmates))
                 return
-                    $"Body Report: The killer appears to be a Crewmate! (Killed {Math.Round(br.KillAge / 1000)}s ago)";
+                    Language.GetString("roles.crewmate.detective.report.crew").Replace("%time%", (Math.Round(br.KillAge / 1000).ToString()));
 
             else if (br.Killer.Is(Faction.NeutralKilling) || br.Killer.Is(Faction.NeutralBenign))
                 return
-                    $"Body Report: The killer appears to be a Neutral Role! (Killed {Math.Round(br.KillAge / 1000)}s ago)";
+                    Language.GetString("roles.crewmate.detective.report.neut").Replace("%time%", (Math.Round(br.KillAge / 1000).ToString()));
 
             else
                 return
-                    $"Body Report: The killer appears to be an Impostor! (Killed {Math.Round(br.KillAge / 1000)}s ago)";
+                    Language.GetString("roles.crewmate.detective.report.imp").Replace("%time%", (Math.Round(br.KillAge / 1000).ToString()));
         }
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using TownOfUs.Extensions;
 using Object = UnityEngine.Object;
 
 namespace TownOfUs.Roles
@@ -10,8 +11,8 @@ namespace TownOfUs.Roles
         public Mystic(PlayerControl player) : base(player)
         {
             Name = "Mystic";
-            ImpostorText = () => "Understand When And Where Kills Happen";
-            TaskText = () => "Know When and Where Kills Happen";
+            ImpostorText = () => Language.GetString("roles.mystic");
+            TaskText = () => Language.GetString("roles.mystic");
             Color = Patches.Colors.Mystic;
             RoleType = RoleEnum.Mystic;
             AddToRoleHistory(RoleType);
@@ -27,4 +28,4 @@ namespace TownOfUs.Roles
             BodyArrows.Remove(arrow.Key);
         }
     }
-}
+} 

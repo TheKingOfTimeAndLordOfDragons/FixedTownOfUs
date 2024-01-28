@@ -1,3 +1,5 @@
+using TownOfUs.Extensions;
+
 namespace TownOfUs.Roles
 {
     public class Janitor : Role
@@ -7,8 +9,8 @@ namespace TownOfUs.Roles
         public Janitor(PlayerControl player) : base(player)
         {
             Name = "Janitor";
-            ImpostorText = () => "Clean Up Bodies";
-            TaskText = () => "Clean bodies to prevent Crewmates from discovering them";
+            ImpostorText = () => Language.GetString("roles.janitor");
+            TaskText = () => Language.GetString("roles.janitor");
             Color = Patches.Colors.Impostor;
             RoleType = RoleEnum.Janitor;
             AddToRoleHistory(RoleType);

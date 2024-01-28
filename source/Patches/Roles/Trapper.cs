@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using TMPro;
 using TownOfUs.CrewmateRoles.TrapperMod;
+using TownOfUs.Extensions;
 using UnityEngine;
 
 namespace TownOfUs.Roles
@@ -21,8 +22,8 @@ namespace TownOfUs.Roles
         public Trapper(PlayerControl player) : base(player)
         {
             Name = "Trapper";
-            ImpostorText = () => "Catch Killers In The Act";
-            TaskText = () => "Place traps around the map";
+            ImpostorText = () => Language.GetString("roles.trapper");
+            TaskText = () => Language.GetString("roles.trapper");
             Color = Patches.Colors.Trapper;
             RoleType = RoleEnum.Trapper;
             LastTrapped = DateTime.UtcNow;

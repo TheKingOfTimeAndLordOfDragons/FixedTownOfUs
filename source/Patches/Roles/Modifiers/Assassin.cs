@@ -6,6 +6,7 @@ using UnityEngine;
 using TownOfUs.NeutralRoles.ExecutionerMod;
 using TownOfUs.NeutralRoles.GuardianAngelMod;
 using TownOfUs.CrewmateRoles.VampireHunterMod;
+using TownOfUs.Extensions;
 
 namespace TownOfUs.Roles.Modifiers
 {
@@ -18,7 +19,7 @@ namespace TownOfUs.Roles.Modifiers
         public Assassin(PlayerControl player) : base(player)
         {
             Name = "Assassin";
-            TaskText = () => "Guess the roles of the people and kill them mid-meeting";
+            TaskText = () => Language.GetString("roles.modifiers.assassin");
             Color = Patches.Colors.Impostor;
             AbilityType = AbilityEnum.Assassin;
 

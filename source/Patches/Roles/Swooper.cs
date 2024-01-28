@@ -14,8 +14,8 @@ namespace TownOfUs.Roles
         public Swooper(PlayerControl player) : base(player)
         {
             Name = "Swooper";
-            ImpostorText = () => "Turn Invisible Temporarily";
-            TaskText = () => "Turn invisible and sneakily kill";
+            ImpostorText = () => Language.GetString("roles.swooper");
+            TaskText = () => Language.GetString("roles.swooper");
             Color = Patches.Colors.Impostor;
             LastSwooped = DateTime.UtcNow;
             RoleType = RoleEnum.Swooper;

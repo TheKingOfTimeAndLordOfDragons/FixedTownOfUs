@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using TMPro;
+using TownOfUs.Extensions;
 
 namespace TownOfUs.Roles
 {
@@ -18,8 +19,8 @@ namespace TownOfUs.Roles
         public Veteran(PlayerControl player) : base(player)
         {
             Name = "Veteran";
-            ImpostorText = () => "Alert To Kill Anyone Who Interacts With You";
-            TaskText = () => "Alert to kill whoever interacts with you";
+            ImpostorText = () => Language.GetString("roles.veteran");
+            TaskText = () => Language.GetString("roles.veteran");
             Color = Patches.Colors.Veteran;
             LastAlerted = DateTime.UtcNow;
             RoleType = RoleEnum.Veteran;

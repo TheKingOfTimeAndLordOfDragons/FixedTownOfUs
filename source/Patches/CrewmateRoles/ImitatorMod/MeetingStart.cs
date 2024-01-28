@@ -3,6 +3,7 @@ using TownOfUs.Roles;
 using System;
 using System.Linq;
 using TownOfUs.CrewmateRoles.OracleMod;
+using TownOfUs.Extensions;
 
 namespace TownOfUs.CrewmateRoles.ImitatorMod
 {
@@ -18,15 +19,15 @@ namespace TownOfUs.CrewmateRoles.ImitatorMod
             {
                 if (imitatorRole.trappedPlayers.Count == 0)
                 {
-                    DestroyableSingleton<HudManager>.Instance.Chat.AddChat(PlayerControl.LocalPlayer, "No players entered any of your traps");
+                    DestroyableSingleton<HudManager>.Instance.Chat.AddChat(PlayerControl.LocalPlayer, Language.GetString("roles.crewmate.imitator.trap.info.noplayers"));
                 }
                 else if (imitatorRole.trappedPlayers.Count < CustomGameOptions.MinAmountOfPlayersInTrap)
                 {
-                    DestroyableSingleton<HudManager>.Instance.Chat.AddChat(PlayerControl.LocalPlayer, "Not enough players triggered your traps");
+                    DestroyableSingleton<HudManager>.Instance.Chat.AddChat(PlayerControl.LocalPlayer, Language.GetString("roles.crewmate.imitator.trap.info.notenough"));
                 }
                 else
                 {
-                    string message = "Roles caught in your trap:\n";
+                    string message = Language.GetString("roles.crewmate.imitator.trap.info.caught") + "\n";
                     foreach (RoleEnum role in imitatorRole.trappedPlayers.OrderBy(x => Guid.NewGuid()))
                     {
                         message += $" {role},";

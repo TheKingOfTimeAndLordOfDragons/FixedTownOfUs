@@ -1,4 +1,5 @@
 using System;
+using TownOfUs.Extensions;
 
 namespace TownOfUs.Roles.Modifiers
 {
@@ -11,7 +12,7 @@ namespace TownOfUs.Roles.Modifiers
         public Frosty(PlayerControl player) : base(player)
         {
             Name = "Frosty";
-            TaskText = () => "Leave behind an icy surprise";
+            TaskText = () => Language.GetString("roles.modifiers.frosty");
             Color = Patches.Colors.Frosty;
             ModifierType = ModifierEnum.Frosty;
         }

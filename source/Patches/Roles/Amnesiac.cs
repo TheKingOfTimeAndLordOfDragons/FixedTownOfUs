@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using TownOfUs.Extensions;
 using Object = UnityEngine.Object;
 
 namespace TownOfUs.Roles
@@ -12,8 +13,8 @@ namespace TownOfUs.Roles
         public Amnesiac(PlayerControl player) : base(player)
         {
             Name = "Amnesiac";
-            ImpostorText = () => "Remember A Role Of A Deceased Player";
-            TaskText = () => SpawnedAs ? "Find a dead body to remember a role" : "Your target was killed. Now remember a new role!";
+            ImpostorText = () => Language.GetString("roles.amnesiac");
+            TaskText = () => SpawnedAs ? Language.GetString("roles.amnesiac") : Language.GetString("roles.amnesiac.not");
             Color = Patches.Colors.Amnesiac;
             RoleType = RoleEnum.Amnesiac;
             AddToRoleHistory(RoleType);

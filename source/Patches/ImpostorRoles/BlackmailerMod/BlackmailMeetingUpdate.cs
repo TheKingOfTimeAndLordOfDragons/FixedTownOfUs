@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Linq;
 using System.Collections;
 using Reactor.Utilities;
+using TownOfUs.Extensions;
 
 namespace TownOfUs.ImpostorRoles.BlackmailerMod
 {
@@ -58,7 +59,7 @@ namespace TownOfUs.ImpostorRoles.BlackmailerMod
                     HudManager.Instance.shhhEmblem.transform.localPosition.x,
                     HudManager.Instance.shhhEmblem.transform.localPosition.y,
                     HudManager.Instance.FullScreen.transform.position.z + 1f);
-                HudManager.Instance.shhhEmblem.TextImage.text = "YOU ARE BLACKMAILED";
+                HudManager.Instance.shhhEmblem.TextImage.text = Language.GetString("roles.impostor.blackmailer.shhh");
                 HudManager.Instance.shhhEmblem.HoldDuration = 2.5f;
                 yield return HudManager.Instance.ShowEmblem(true);
                 HudManager.Instance.shhhEmblem.transform.localPosition = TempPosition;

@@ -13,7 +13,7 @@ namespace TownOfUs.Roles.Modifiers
             Name = "Lover";
             SymbolName = "♥";
             TaskText = () =>
-                "You are in Love with " + OtherLover.Player.GetDefaultOutfit().PlayerName;
+                Language.GetString("roles.modifiers.lovers") + OtherLover.Player.GetDefaultOutfit().PlayerName;
             Color = Colors.Lovers;
             ModifierType = ModifierEnum.Lover;
         }

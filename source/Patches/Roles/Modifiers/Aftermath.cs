@@ -14,7 +14,7 @@ namespace TownOfUs.Roles.Modifiers
         public Aftermath(PlayerControl player) : base(player)
         {
             Name = "Aftermath";
-            TaskText = () => "Force your killer to use their ability";
+            TaskText = () => Language.GetString("roles.modifiers.aftermath");
             Color = Patches.Colors.Aftermath;
             ModifierType = ModifierEnum.Aftermath;
         }
@@ -58,7 +58,12 @@ namespace TownOfUs.Roles.Modifiers
             }
             else if (role is Glitch glitch)
             {
-                if (glitch.Player.GetCustomOutfitType() != CustomPlayerOutfitType.Morph) glitch.RpcSetMimicked(corpse);
+                var num = UnityEngine.Random.RandomRangeInt(0, 2);
+                if (num == 0) {
+                    if (glitch.Player.GetCustomOutfitType() != CustomPlayerOutfitType.Morph) glitch.RpcSetMimicked(corpse);
+                } else {
+                    glitch.RpcSetHacked(player);
+                }
             }
             else if (role is Escapist escapist)
             {

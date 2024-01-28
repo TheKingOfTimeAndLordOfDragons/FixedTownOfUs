@@ -24,57 +24,57 @@ namespace TownOfUs.CrewmateRoles.MedicMod
             //System.Console.WriteLine(br.KillAge);
             if (br.KillAge > CustomGameOptions.MedicReportColorDuration * 1000)
                 return
-                    $"Body Report: The corpse is too old to gain information from. (Killed {Math.Round(br.KillAge / 1000)}s ago)";
+                    Language.GetString("roles.crewmate.medic.report.old").Replace("%time%", (Math.Round(br.KillAge / 1000)).ToString());
 
             if (br.Killer.PlayerId == br.Body.PlayerId)
                 return
-                    $"Body Report: The kill appears to have been a suicide! (Killed {Math.Round(br.KillAge / 1000)}s ago)";
+                    Language.GetString("roles.crewmate.medic.report.suicide").Replace("%time%", (Math.Round(br.KillAge / 1000)).ToString());
 
             if (br.KillAge < CustomGameOptions.MedicReportNameDuration * 1000)
                 return
-                    $"Body Report: The killer appears to be {br.Killer.Data.PlayerName}! (Killed {Math.Round(br.KillAge / 1000)}s ago)";
+                    Language.GetString("roles.crewmate.medic.report.name").Replace("%name%", br.Killer.Data.PlayerName.ToString()).Replace("%time%", (Math.Round(br.KillAge / 1000)).ToString());
 
             var colors = new Dictionary<int, string>
             {
-                {0, "darker"},// red
-                {1, "darker"},// blue
-                {2, "darker"},// green
-                {3, "lighter"},// pink
-                {4, "lighter"},// orange
-                {5, "lighter"},// yellow
-                {6, "darker"},// black
-                {7, "lighter"},// white
-                {8, "darker"},// purple
-                {9, "darker"},// brown
-                {10, "lighter"},// cyan
-                {11, "lighter"},// lime
-                {12, "darker"},// maroon
-                {13, "lighter"},// rose
-                {14, "lighter"},// banana
-                {15, "darker"},// gray
-                {16, "darker"},// tan
-                {17, "lighter"},// coral
-                {18, "darker"},// watermelon
-                {19, "darker"},// chocolate
-                {20, "lighter"},// sky blue
-                {21, "lighter"},// beige
-                {22, "darker"},// magenta
-                {23, "lighter"},// turquoise
-                {24, "lighter"},// lilac
-                {25, "darker"},// olive
-                {26, "lighter"},// azure
-                {27, "darker"},// plum
-                {28, "darker"},// jungle
-                {29, "lighter"},// mint
-                {30, "lighter"},// chartreuse
-                {31, "darker"},// macau
-                {32, "darker"},// tawny
-                {33, "lighter"},// gold
-                {34, "lighter"},// rainbow
+                {0, Language.GetString("roles.crewmate.medic.darker")},// red
+                {1, Language.GetString("roles.crewmate.medic.darker")},// blue
+                {2, Language.GetString("roles.crewmate.medic.darker")},// green
+                {3, Language.GetString("roles.crewmate.medic.lighter")},// pink
+                {4, Language.GetString("roles.crewmate.medic.lighter")},// orange
+                {5, Language.GetString("roles.crewmate.medic.lighter")},// yellow
+                {6, Language.GetString("roles.crewmate.medic.darker")},// black
+                {7, Language.GetString("roles.crewmate.medic.lighter")},// white
+                {8, Language.GetString("roles.crewmate.medic.darker")},// purple
+                {9, Language.GetString("roles.crewmate.medic.darker")},// brown
+                {10, Language.GetString("roles.crewmate.medic.lighter")},// cyan
+                {11, Language.GetString("roles.crewmate.medic.lighter")},// lime
+                {12, Language.GetString("roles.crewmate.medic.darker")},// maroon
+                {13, Language.GetString("roles.crewmate.medic.lighter")},// rose
+                {14, Language.GetString("roles.crewmate.medic.lighter")},// banana
+                {15, Language.GetString("roles.crewmate.medic.darker")},// gray
+                {16, Language.GetString("roles.crewmate.medic.darker")},// tan
+                {17, Language.GetString("roles.crewmate.medic.lighter")},// coral
+                {18, Language.GetString("roles.crewmate.medic.darker")},// watermelon
+                {19, Language.GetString("roles.crewmate.medic.darker")},// chocolate
+                {20, Language.GetString("roles.crewmate.medic.lighter")},// sky blue
+                {21, Language.GetString("roles.crewmate.medic.lighter")},// beige
+                {22, Language.GetString("roles.crewmate.medic.darker")},// magenta
+                {23, Language.GetString("roles.crewmate.medic.lighter")},// turquoise
+                {24, Language.GetString("roles.crewmate.medic.lighter")},// lilac
+                {25, Language.GetString("roles.crewmate.medic.darker")},// olive
+                {26, Language.GetString("roles.crewmate.medic.lighter")},// azure
+                {27, Language.GetString("roles.crewmate.medic.darker")},// plum
+                {28, Language.GetString("roles.crewmate.medic.darker")},// jungle
+                {29, Language.GetString("roles.crewmate.medic.lighter")},// mint
+                {30, Language.GetString("roles.crewmate.medic.lighter")},// chartreuse
+                {31, Language.GetString("roles.crewmate.medic.darker")},// macau
+                {32, Language.GetString("roles.crewmate.medic.darker")},// tawny
+                {33, Language.GetString("roles.crewmate.medic.lighter")},// gold
+                {34, Language.GetString("roles.crewmate.medic.lighter")},// rainbow
             };
             var typeOfColor = colors[br.Killer.GetDefaultOutfit().ColorId];
             return
-                $"Body Report: The killer appears to be a {typeOfColor} color. (Killed {Math.Round(br.KillAge / 1000)}s ago)";
+                Language.GetString("roles.crewmate.medic.report.color").Replace("%color%", typeOfColor.ToString()).Replace("%time%", (Math.Round(br.KillAge / 1000)).ToString());
         }
     }
 }

@@ -28,32 +28,32 @@ namespace TownOfUs.NeutralRoles.DoomsayerMod
             if (player.Is(RoleEnum.Aurial) || player.Is(RoleEnum.Imitator) || StartImitate.ImitatingPlayer == player
                 || player.Is(RoleEnum.Morphling) || player.Is(RoleEnum.Mystic)
                  || player.Is(RoleEnum.Spy) || player.Is(RoleEnum.Glitch))
-                return $"You observe that {player.GetDefaultOutfit().PlayerName} has an altered perception of reality";
+                return Language.GetString("roles.neutral.doomsayer.observe.perception").Replace("%player%", player.GetDefaultOutfit().PlayerName.ToString());
             else if (player.Is(RoleEnum.Blackmailer) || player.Is(RoleEnum.Detective) || player.Is(RoleEnum.Doomsayer)
                  || player.Is(RoleEnum.Oracle) || player.Is(RoleEnum.Snitch) || player.Is(RoleEnum.Trapper))
-                return $"You observe that {player.GetDefaultOutfit().PlayerName} has an insight for private information";
+                return Language.GetString("roles.neutral.doomsayer.observe.private").Replace("%player%", player.GetDefaultOutfit().PlayerName.ToString());
             else if (player.Is(RoleEnum.Altruist) || player.Is(RoleEnum.Amnesiac) || player.Is(RoleEnum.Janitor)
                  || player.Is(RoleEnum.Medium) || player.Is(RoleEnum.Undertaker) || player.Is(RoleEnum.Vampire))
-                return $"You observe that {player.GetDefaultOutfit().PlayerName} has an unusual obsession with dead bodies";
+                return Language.GetString("roles.neutral.doomsayer.observe.dead").Replace("%player%", player.GetDefaultOutfit().PlayerName.ToString());
             else if (player.Is(RoleEnum.Investigator) || player.Is(RoleEnum.Swooper) || player.Is(RoleEnum.Tracker) || player.Is(RoleEnum.Lighter)
                 || player.Is(RoleEnum.VampireHunter) || player.Is(RoleEnum.Venerer) || player.Is(RoleEnum.Werewolf))
-                return $"You observe that {player.GetDefaultOutfit().PlayerName} is well trained in hunting down prey";
+                return Language.GetString("roles.neutral.doomsayer.observe.hunting").Replace("%player%", player.GetDefaultOutfit().PlayerName.ToString());
             else if (player.Is(RoleEnum.Arsonist) || player.Is(RoleEnum.Miner) || player.Is(RoleEnum.Plaguebearer)
                   || player.Is(RoleEnum.Prosecutor) || player.Is(RoleEnum.Seer) || player.Is(RoleEnum.Transporter))
-                return $"You observe that {player.GetDefaultOutfit().PlayerName} spreads fear amonst the group";
+                return Language.GetString("roles.neutral.doomsayer.observe.spreads").Replace("%player%", player.GetDefaultOutfit().PlayerName.ToString());
             else if (player.Is(RoleEnum.Engineer) || player.Is(RoleEnum.Escapist) || player.Is(RoleEnum.Grenadier)
                 || player.Is(RoleEnum.GuardianAngel) || player.Is(RoleEnum.Medic) || player.Is(RoleEnum.Survivor))
-                return $"You observe that {player.GetDefaultOutfit().PlayerName} hides to guard themself or others";
+                return Language.GetString("roles.neutral.doomsayer.observe.guard").Replace("%player%", player.GetDefaultOutfit().PlayerName.ToString());
             else if (player.Is(RoleEnum.Executioner) || player.Is(RoleEnum.Jester) || player.Is(RoleEnum.Mayor)
                  || player.Is(RoleEnum.Swapper) || player.Is(RoleEnum.Traitor) || player.Is(RoleEnum.Veteran))
-                return $"You observe that {player.GetDefaultOutfit().PlayerName} has a trick up their sleeve";
+                return Language.GetString("roles.neutral.doomsayer.observe.trick").Replace("%player%", player.GetDefaultOutfit().PlayerName.ToString());
             else if (player.Is(RoleEnum.Bomber) || player.Is(RoleEnum.Juggernaut) || player.Is(RoleEnum.Pestilence)
                  || player.Is(RoleEnum.Sheriff) || player.Is(RoleEnum.Vigilante) || player.Is(RoleEnum.Warlock))
-                return $"You observe that {player.GetDefaultOutfit().PlayerName} is capable of performing relentless attacks";
+                return Language.GetString("roles.neutral.doomsayer.observe.attacks").Replace("%player%", player.GetDefaultOutfit().PlayerName.ToString());
             else if (player.Is(RoleEnum.Crewmate) || player.Is(RoleEnum.Impostor))
-                return $"You observe that {player.GetDefaultOutfit().PlayerName} appears to be roleless";
+                return Language.GetString("roles.neutral.doomsayer.observe.roleless").Replace("%player%", player.GetDefaultOutfit().PlayerName.ToString());
             else
-                return "Error";
+                return Language.GetString("roles.neutral.doomsayer.observe.error");
         }
 
         public static string RoleReportFeedback(PlayerControl player)

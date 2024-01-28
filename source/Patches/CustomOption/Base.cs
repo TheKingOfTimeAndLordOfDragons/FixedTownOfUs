@@ -4,6 +4,7 @@ using System.Linq;
 using BepInEx.Configuration;
 using Hazel;
 using Reactor.Utilities.Extensions;
+using TownOfUs.Extensions;
 using UnityEngine;
 
 namespace TownOfUs.CustomOption
@@ -88,7 +89,7 @@ namespace TownOfUs.CustomOption
         }
 
         public static CustomOption CreateString(int id, CustomOptionType type, string name, string[] selections, CustomOption parent = null, bool isHeader = false, bool IsHidden = false, GameMode GameMode = GameMode.All) {
-            Func<float, string> format = (float value) => selections[Math.Clamp((int)value, 0, selections.Length - 1)];
+            Func<float, string> format = (float value) => Language.GetString(selections[Math.Clamp((int)value, 0, selections.Length - 1)]);
             return new CustomOption(id, type, name, ValueType.String, selections, "", format, parent, isHeader, IsHidden, GameMode);
         }
 
@@ -102,8 +103,8 @@ namespace TownOfUs.CustomOption
         }
 
         public static CustomOption CreateToggle(int id, CustomOptionType type, string name, bool defaultValue, CustomOption parent = null, bool isHeader = false, bool IsHidden = false, GameMode GameMode = GameMode.All) {
-            Func<float, string> format = (float val) => (int)val <= 0 ? "Off" : "On";
-            return new CustomOption(id, type, name, ValueType.Toggle, new string[] { "Off", "On" }, defaultValue ? "On" : "Off", format, parent, isHeader, IsHidden, GameMode);
+            Func<float, string> format = (float val) => (int)val <= 0 ? Language.GetString("option.value.off") : Language.GetString("option.value.on");
+            return new CustomOption(id, type, name, ValueType.Toggle, new string[] { Language.GetString("option.value.off"), Language.GetString("option.value.on") }, defaultValue ? Language.GetString("option.value.on") : Language.GetString("option.value.off"), format, parent, isHeader, IsHidden, GameMode);
         }
 
         public static CustomOption CreateHeader(int id, CustomOptionType type, string name, bool IsHidden = false, GameMode GameMode = GameMode.All) {

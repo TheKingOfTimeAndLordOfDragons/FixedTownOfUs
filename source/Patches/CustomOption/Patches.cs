@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using HarmonyLib;
+using TownOfUs.Extensions;
 using UnityEngine;
 
 namespace TownOfUs.CustomOption
@@ -15,11 +16,11 @@ namespace TownOfUs.CustomOption
         private static void createClassicTabs(GameOptionsMenu __instance) {
             bool isReturn = setNames(
                 new Dictionary<string, string>() {
-                    ["TOUSettings"] = "Town Of Us Settings",
-                    ["CrewmateSettings"] = "Crewmate Roles Settings",
-                    ["NeutralSettings"] = "Neutral Roles Settings",
-                    ["ImpostorSettings"] = "Impostor Roles Settings",
-                    ["ModifierSettings"] = "Modifier Settings"
+                    ["TOUSettings"] = Language.GetString("option.tab.general"),
+                    ["CrewmateSettings"] = Language.GetString("option.tab.crewmate"),
+                    ["NeutralSettings"] = Language.GetString("option.tab.neutral"),
+                    ["ImpostorSettings"] = Language.GetString("option.tab.impostor"),
+                    ["ModifierSettings"] = Language.GetString("option.tab.modifier")
                 }
             );
             if (isReturn) return;
@@ -391,30 +392,30 @@ namespace TownOfUs.CustomOption
                 vanillaSettings = GameOptionsManager.Instance.CurrentGameOptions.ToHudString(PlayerControl.AllPlayerControls.Count);
             int counter = TownOfUs.optionsPage;
             int maxPage = 6;
-            string hudString = counter != 0 && !hideExtras ? CustomOption.cs(System.DateTime.Now.Second % 2 == 0 ? Color.white : Color.red, "(Use scroll wheel if necessary)\n\n") : "";
+            string hudString = counter != 0 && !hideExtras ? CustomOption.cs(System.DateTime.Now.Second % 2 == 0 ? Color.white : Color.red, "(" + Language.GetString("option.page.scroll") + ")\n\n") : "";
 
             switch (counter) {
                 case 0:
-                    hudString += "Page 1: Among Us Settings \n" + vanillaSettings;
+                    hudString += Language.GetString("option.page.one") + " \n" + vanillaSettings;
                     break;
                 case 1:
-                    hudString += "Page 2: Town Of Us Settings \n" + buildOptionsOfType(CustomOption.CustomOptionType.General, false);
+                    hudString += Language.GetString("option.page.two") + " \n" + buildOptionsOfType(CustomOption.CustomOptionType.General, false);
                     break;
                 case 2:
-                    hudString += "Page 3: Crewmate Role Settings \n" + buildOptionsOfType(CustomOption.CustomOptionType.Crewmate, false);
+                    hudString += Language.GetString("option.page.three") + " \n" + buildOptionsOfType(CustomOption.CustomOptionType.Crewmate, false);
                     break;
                 case 3:
-                    hudString += "Page 4: Neutral Role Settings \n" + buildOptionsOfType(CustomOption.CustomOptionType.Neutral, false);
+                    hudString += Language.GetString("option.page.four") + " \n" + buildOptionsOfType(CustomOption.CustomOptionType.Neutral, false);
                     break;
                 case 4:
-                    hudString += "Page 5: Impostor Role Settings \n" + buildOptionsOfType(CustomOption.CustomOptionType.Impostor, false);
+                    hudString += Language.GetString("option.page.five") + " \n" + buildOptionsOfType(CustomOption.CustomOptionType.Impostor, false);
                     break;
                 case 5:
-                    hudString += "Page 6: Modifier Settings \n" + buildOptionsOfType(CustomOption.CustomOptionType.Modifier, false);
+                    hudString += Language.GetString("option.page.six") + " \n" + buildOptionsOfType(CustomOption.CustomOptionType.Modifier, false);
                     break;
             }
 
-            hudString += $"\n Press TAB or Page Number for more... ({counter + 1}/{maxPage})";
+            hudString += $"\n " + Language.GetString("option.page.toggle").Replace("%PAGE%", (counter + 1).ToString()).Replace("%MAX%", maxPage.ToString());
             return hudString;
         }
 
@@ -600,6 +601,13 @@ namespace TownOfUs.CustomOption
     }
 
     [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
+    public class GameSettingsScalePatch {
+        public static void Prefix(HudManager __instance) {
+            if (__instance.GameSettings != null) __instance.GameSettings.fontSize = 1.2f; 
+        }
+    }
+
+    [HarmonyPatch(typeof(HudManager), nameof(HudManager.Update))]
     public class HudManagerUpdate {
         public static float
             MinX,/*-5.3F*/
@@ -635,7 +643,7 @@ namespace TownOfUs.CustomOption
 
             var rows = __instance.GameSettings.text.Count(c => c == '\n');
             float LobbyTextRowHeight = 0.06F;
-            var maxY = Mathf.Max(MinY, rows * LobbyTextRowHeight + (rows - 38) * LobbyTextRowHeight);
+            var maxY = Mathf.Max(MinY, rows * LobbyTextRowHeight + (rows - 1) * LobbyTextRowHeight);
 
             Scroller.ContentYBounds = new FloatRange(MinY, maxY);
 

@@ -1,5 +1,6 @@
 using System;
 using TMPro;
+using TownOfUs.Extensions;
 
 namespace TownOfUs.Roles.Cultist
 {
@@ -12,8 +13,8 @@ namespace TownOfUs.Roles.Cultist
         public CultistSeer(PlayerControl player) : base(player)
         {
             Name = "Seer";
-            ImpostorText = () => "Reveal If Other Players Have Been Converted";
-            TaskText = () => "Reveal if other players have been converted";
+            ImpostorText = () => Language.GetString("roles.cultist.seer");
+            TaskText = () => Language.GetString("roles.cultist.seer");
             Color = Patches.Colors.Seer;
             LastInvestigated = DateTime.UtcNow;
             RoleType = RoleEnum.CultistSeer;

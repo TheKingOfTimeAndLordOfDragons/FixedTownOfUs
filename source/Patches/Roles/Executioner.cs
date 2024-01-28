@@ -1,4 +1,5 @@
 using Il2CppSystem.Collections.Generic;
+using TownOfUs.Extensions;
 
 namespace TownOfUs.Roles
 {
@@ -11,11 +12,11 @@ namespace TownOfUs.Roles
         {
             Name = "Executioner";
             ImpostorText = () =>
-                target == null ? "You don't have a target for some reason... weird..." : $"Vote {target.name} Out";
+                target == null ? Language.GetString("roles.executioner") : Language.GetString("roles.executioner.target").Replace("%target%", target.name.ToString());
             TaskText = () =>
                 target == null
-                    ? "You don't have a target for some reason... weird..."
-                    : $"Vote {target.name} out!\nFake Tasks:";
+                    ? Language.GetString("roles.executioner")
+                    : Language.GetString("roles.executioner.target").Replace("%target%", target.name.ToString());
             Color = Patches.Colors.Executioner;
             RoleType = RoleEnum.Executioner;
             AddToRoleHistory(RoleType);

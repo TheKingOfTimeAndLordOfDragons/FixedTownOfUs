@@ -57,12 +57,12 @@ namespace TownOfUs.Patches
                     Executioner.TargetVotedOut = true;
 
                     if (!CustomGameOptions.NeutralEvilWinEndsGame) {
-                        KillButtonTarget.DontRevive = role.Player.PlayerId;
-                        role.Player.Exiled();
-                        if (CustomGameOptions.ExecutionerTorment && PlayerControl.LocalPlayer == role.Player) {
-                            byte[] toKill = MeetingHud.Instance.playerStates.Where(x => !Utils.PlayerById(x.TargetPlayerId).Is(RoleEnum.Pestilence) && x.VotedFor == ((Executioner)role).target.PlayerId).Select(x => x.TargetPlayerId).ToArray();
+                        KillButtonTarget.DontRevive = exe.Player.PlayerId;
+                        exe.Player.Exiled();
+                        if (CustomGameOptions.ExecutionerTorment && PlayerControl.LocalPlayer == exe.Player) {
+                            byte[] toKill = MeetingHud.Instance.playerStates.Where(x => !Utils.PlayerById(x.TargetPlayerId).Is(RoleEnum.Pestilence)).Select(x => x.TargetPlayerId).ToArray();
                             var pk = new PunishmentKill((x) => {
-                                Utils.RpcMultiMurderPlayer(role.Player, x);
+                                Utils.RpcMultiMurderPlayer(exe.Player, x);
                             }, (y) => {
                                 return toKill.Contains(y.PlayerId);
                             });
@@ -80,11 +80,11 @@ namespace TownOfUs.Patches
                     Jester.VotedOut = true;
 
                     if (!CustomGameOptions.NeutralEvilWinEndsGame && CustomGameOptions.JesterHaunt) {
-                        if (PlayerControl.LocalPlayer == role.Player) {
-                            byte[] toKill = MeetingHud.Instance.playerStates.Where(x => !Utils.PlayerById(x.TargetPlayerId).Is(RoleEnum.Pestilence) && x.VotedFor == role.Player.PlayerId).Select(x => x.TargetPlayerId).ToArray();
+                        if (PlayerControl.LocalPlayer == jester.Player) {
+                            byte[] toKill = MeetingHud.Instance.playerStates.Where(x => !Utils.PlayerById(x.TargetPlayerId).Is(RoleEnum.Pestilence)).Select(x => x.TargetPlayerId).ToArray();
                             var pk = new PunishmentKill((x) =>
                             {
-                                Utils.RpcMultiMurderPlayer(role.Player, x);
+                                Utils.RpcMultiMurderPlayer(jester.Player, x);
                             }, (y) =>
                             {
                                 return toKill.Contains(y.PlayerId);

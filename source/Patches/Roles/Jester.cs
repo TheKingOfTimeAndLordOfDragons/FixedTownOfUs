@@ -1,4 +1,5 @@
 using Il2CppSystem.Collections.Generic;
+using TownOfUs.Extensions;
 
 namespace TownOfUs.Roles
 {
@@ -11,8 +12,8 @@ namespace TownOfUs.Roles
         public Jester(PlayerControl player) : base(player)
         {
             Name = "Jester";
-            ImpostorText = () => "Get Voted Out";
-            TaskText = () => SpawnedAs ? "Get voted out!\nFake Tasks:" : "Your target was killed. Now you get voted out!\nFake Tasks:";
+            ImpostorText = () => Language.GetString("roles.jester");
+            TaskText = () => SpawnedAs ? Language.GetString("roles.jester") : Language.GetString("roles.jester.not");
             Color = Patches.Colors.Jester;
             RoleType = RoleEnum.Jester;
             AddToRoleHistory(RoleType);

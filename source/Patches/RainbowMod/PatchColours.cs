@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using Il2CppInterop.Runtime.InteropTypes.Arrays;
+using TownOfUs.Extensions;
 
 namespace TownOfUs.RainbowMod
 {
@@ -11,23 +12,23 @@ namespace TownOfUs.RainbowMod
         {
             var newResult = (int)name switch
             {
-                999983 => "Watermelon",
-                999984 => "Chocolate",
-                999985 => "Sky Blue",
-                999986 => "Beige",
-                999987 => "Magenta",
-                999988 => "Turquoise",
-                999989 => "Lilac",
-                999990 => "Olive",
-                999991 => "Azure",
-                999992 => "Plum",
-                999993 => "Jungle",
-                999994 => "Mint",
-                999995 => "Chartreuse",
-                999996 => "Macau",
-                999997 => "Tawny",
-                999998 => "Gold",
-                999999 => "Rainbow",
+                999983 => Language.GetString("cosmetics.colors.watermelon"),
+                999984 => Language.GetString("cosmetics.colors.chocolate"),
+                999985 => Language.GetString("cosmetics.colors.skyblue"),
+                999986 => Language.GetString("cosmetics.colors.beige"),
+                999987 => Language.GetString("cosmetics.colors.magenta"),
+                999988 => Language.GetString("cosmetics.colors.turquoise"),
+                999989 => Language.GetString("cosmetics.colors.lilac"),
+                999990 => Language.GetString("cosmetics.colors.olive"),
+                999991 => Language.GetString("cosmetics.colors.azure"),
+                999992 => Language.GetString("cosmetics.colors.plum"),
+                999993 => Language.GetString("cosmetics.colors.jungle"),
+                999994 => Language.GetString("cosmetics.colors.mint"),
+                999995 => Language.GetString("cosmetics.colors.chartreuse"),
+                999996 => Language.GetString("cosmetics.colors.macau"),
+                999997 => Language.GetString("cosmetics.colors.tawny"),
+                999998 => Language.GetString("cosmetics.colors.gold"),
+                999999 => Language.GetString("cosmetics.colors.rainbow"),
                 _ => null
             };
             if (newResult != null)

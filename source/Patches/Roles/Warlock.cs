@@ -1,5 +1,6 @@
 using TMPro;
 using System;
+using TownOfUs.Extensions;
 
 namespace TownOfUs.Roles
 {
@@ -8,8 +9,8 @@ namespace TownOfUs.Roles
         public Warlock(PlayerControl player) : base(player)
         {
             Name = "Warlock";
-            ImpostorText = () => "Charge Up Your Kill Button To Multi Kill";
-            TaskText = () => "Kill people in small bursts";
+            ImpostorText = () => Language.GetString("roles.warlock");
+            TaskText = () => Language.GetString("roles.warlock");
             Color = Patches.Colors.Impostor;
             RoleType = RoleEnum.Warlock;
             AddToRoleHistory(RoleType);

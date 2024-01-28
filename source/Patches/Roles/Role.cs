@@ -12,6 +12,7 @@ using Random = UnityEngine.Random;
 using TownOfUs.Extensions;
 using AmongUs.GameOptions;
 using TownOfUs.ImpostorRoles.TraitorMod;
+using AmongUs.Data;
 
 namespace TownOfUs.Roles
 {
@@ -116,7 +117,7 @@ namespace TownOfUs.Roles
 
         internal virtual bool DeadCriteria()
         {
-            if (PlayerControl.LocalPlayer.Data.IsDead && CustomGameOptions.DeadSeeRoles) return Utils.ShowDeadBodies;
+            if (PlayerControl.LocalPlayer.Data.IsDead && CustomGameOptions.DeadSeeRoles && !DataManager.Settings.Gameplay.StreamerMode) return Utils.ShowDeadBodies;
             return false;
         }
 
@@ -441,7 +442,7 @@ namespace TownOfUs.Roles
                                 if (oracleRole.SavedConfessor)
                                 {
                                     oracleRole.SavedConfessor = false;
-                                    __result = $"{oracleRole.Confessor.GetDefaultOutfit().PlayerName} was blessed by an Oracle!";
+                                    __result = Language.GetString("roles.role.bless").Replace("%player%", oracleRole.Confessor.GetDefaultOutfit().PlayerName.ToString());
                                 }
                             }
                         }

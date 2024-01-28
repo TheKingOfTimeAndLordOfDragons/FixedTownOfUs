@@ -1,4 +1,5 @@
 using System;
+using TownOfUs.Extensions;
 
 namespace TownOfUs.Roles
 {
@@ -7,8 +8,8 @@ namespace TownOfUs.Roles
         public Sheriff(PlayerControl player) : base(player)
         {
             Name = "Sheriff";
-            ImpostorText = () => "Shoot The <color=#FF0000FF>Impostor</color>";
-            TaskText = () => "Kill off the impostor but don't kill crewmates";
+            ImpostorText = () => Language.GetString("roles.sheriff");
+            TaskText = () => Language.GetString("roles.sheriff");
             Color = Patches.Colors.Sheriff;
             LastKilled = DateTime.UtcNow;
             RoleType = RoleEnum.Sheriff;

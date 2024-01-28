@@ -38,7 +38,6 @@ namespace TownOfUs.CrewmateRoles.MedicMod
                 {
                     ((Medic) role).ShieldedPlayer = null;
                     ((Medic) role).exShielded = player;
-                    System.Console.WriteLine(player.name + " Is Ex-Shielded");
                 }
 
             player.myRend().material.SetColor("_VisorColor", Palette.VisorColor);

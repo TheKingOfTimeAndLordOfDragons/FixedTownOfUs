@@ -13,8 +13,8 @@ namespace TownOfUs.Roles.Cultist
         public Chameleon(PlayerControl player) : base(player)
         {
             Name = "Chameleon";
-            ImpostorText = () => "Turn Invisible Temporarily";
-            TaskText = () => "Turn invisible to catch killers";
+            ImpostorText = () => Language.GetString("roles.cultist.chameleon");
+            TaskText = () => Language.GetString("roles.cultist.chameleon");
             Color = Patches.Colors.Chameleon;
             LastSwooped = DateTime.UtcNow;
             RoleType = RoleEnum.Chameleon;

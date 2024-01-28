@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using Reactor.Utilities;
 using System.Collections.Generic;
+using TownOfUs.Extensions;
 
 namespace TownOfUs.Roles
 {
@@ -16,8 +17,8 @@ namespace TownOfUs.Roles
         public Medium(PlayerControl player) : base(player)
         {
             Name = "Medium";
-            ImpostorText = () => "Watch The Spooky Ghosts";
-            TaskText = () => "Follow ghosts to get clues from them";
+            ImpostorText = () => Language.GetString("roles.medium");
+            TaskText = () => Language.GetString("roles.medium");
             Color = Patches.Colors.Medium;
             LastMediated = DateTime.UtcNow;
             RoleType = RoleEnum.Medium;

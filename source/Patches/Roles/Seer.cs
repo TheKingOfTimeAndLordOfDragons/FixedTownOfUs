@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using TownOfUs.Extensions;
 
 namespace TownOfUs.Roles
 {
@@ -10,8 +11,8 @@ namespace TownOfUs.Roles
         public Seer(PlayerControl player) : base(player)
         {
             Name = "Seer";
-            ImpostorText = () => "Reveal The Alliance Of Other Players";
-            TaskText = () => "Reveal alliances of other players to find the Impostors";
+            ImpostorText = () => Language.GetString("roles.seer");
+            TaskText = () => Language.GetString("roles.seer");
             Color = Patches.Colors.Seer;
             LastInvestigated = DateTime.UtcNow;
             RoleType = RoleEnum.Seer;

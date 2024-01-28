@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using TownOfUs.Extensions;
 
 namespace TownOfUs.Roles.Cultist
 {
@@ -17,8 +18,8 @@ namespace TownOfUs.Roles.Cultist
         public Whisperer(PlayerControl player) : base(player)
         {
             Name = "Whisperer";
-            ImpostorText = () => "Psst";
-            TaskText = () => "Persuade Crewmates of your ideas";
+            ImpostorText = () => Language.GetString("roles.cultist.whisperer");
+            TaskText = () => Language.GetString("roles.cultist.whisperer");
             Color = Patches.Colors.Impostor;
             LastWhispered = DateTime.UtcNow;
             RoleType = RoleEnum.Whisperer;

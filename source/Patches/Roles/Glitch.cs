@@ -44,8 +44,8 @@ namespace TownOfUs.Roles
             IsUsingMimic = false;
             RoleType = RoleEnum.Glitch;
             AddToRoleHistory(RoleType);
-            ImpostorText = () => "Murder, Mimic, Hack... Data Lost";
-            TaskText = () => "Murder everyone to win\nFake Tasks:";
+            ImpostorText = () => Language.GetString("roles.glitch");
+            TaskText = () => Language.GetString("roles.glitch");
             Faction = Faction.NeutralKilling;
         }
 
@@ -246,8 +246,7 @@ namespace TownOfUs.Roles
 
                 hackText = new GameObject("_Player").AddComponent<ImportantTextTask>();
                 hackText.transform.SetParent(PlayerControl.LocalPlayer.transform, false);
-                hackText.Text =
-                    $"{__instance.ColorString}Hacked {hackPlayer.Data.PlayerName} ({CustomGameOptions.HackDuration}s)</color>";
+                hackText.Text = __instance.ColorString + Language.GetString("roles.glitch.hacked").Replace("%hacked%", hackPlayer.Data.PlayerName.ToString()).Replace("%time%", CustomGameOptions.HackDuration.ToString()) + "</color>";
                 hackText.Index = hackPlayer.PlayerId;
                 tickDictionary.Add(hackPlayer.PlayerId, DateTime.UtcNow);
                 PlayerControl.LocalPlayer.myTasks.Insert(0, hackText);
@@ -355,8 +354,7 @@ namespace TownOfUs.Roles
 
                     var totalHacktime = (DateTime.UtcNow - tickDictionary[hackPlayer.PlayerId]).TotalMilliseconds /
                                         1000;
-                    hackText.Text =
-                        $"{__instance.ColorString}Hacked {hackPlayer.Data.PlayerName} ({CustomGameOptions.HackDuration - Math.Round(totalHacktime)}s)</color>";
+                    hackText.Text = __instance.ColorString + Language.GetString("roles.glitch.hacked").Replace("%hacked%", hackPlayer.Data.PlayerName.ToString()).Replace("%time%", (CustomGameOptions.HackDuration - Math.Round(totalHacktime)).ToString()) + "</color>";
                     if (MeetingHud.Instance || totalHacktime > CustomGameOptions.HackDuration || hackPlayer?.Data.IsDead != false)
                     {
                         foreach (var obj in lockImg)
@@ -421,8 +419,7 @@ namespace TownOfUs.Roles
                     {
                         totalMimickTime = CustomGameOptions.MimicDuration;
                     }
-                    mimicText.Text =
-                        $"{__instance.ColorString}Mimicking {mimicPlayer.Data.PlayerName} ({CustomGameOptions.MimicDuration - Math.Round(totalMimickTime)}s)</color>";
+                    mimicText.Text = __instance.ColorString + Language.GetString("roles.glitch.mimicked").Replace("%mimicked%", mimicPlayer.Data.PlayerName.ToString()).Replace("%time%", (CustomGameOptions.MimicDuration - Math.Round(totalMimickTime)).ToString()) + "</color>";
                     if (totalMimickTime > CustomGameOptions.MimicDuration ||
                         PlayerControl.LocalPlayer.Data.IsDead ||
                         AmongUsClient.Instance.GameState == InnerNetClient.GameStates.Ended)
@@ -699,7 +696,7 @@ namespace TownOfUs.Roles
                     {
                         if (!player.Data.IsDead)
                         {
-                            __gInstance.MimicList.AddChat(player, "Click here");
+                            __gInstance.MimicList.AddChat(player, Language.GetString("roles.glitch.click"));
                         }
                         else
                         {
@@ -708,7 +705,7 @@ namespace TownOfUs.Roles
                                 if (body.ParentId == player.PlayerId)
                                 {
                                     player.Data.IsDead = false;
-                                    __gInstance.MimicList.AddChat(player, "Click here");
+                                    __gInstance.MimicList.AddChat(player, Language.GetString("roles.glitch.click"));
                                     player.Data.IsDead = true;
                                 }
                             }

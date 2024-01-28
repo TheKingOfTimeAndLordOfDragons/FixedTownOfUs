@@ -1,3 +1,5 @@
+using TownOfUs.Extensions;
+
 namespace TownOfUs.Roles.Modifiers
 {
     public class Torch : Modifier
@@ -5,7 +7,7 @@ namespace TownOfUs.Roles.Modifiers
         public Torch(PlayerControl player) : base(player)
         {
             Name = "Torch";
-            TaskText = () => "You can see in the dark";
+            TaskText = () => Language.GetString("roles.modifiers.torch");
             Color = Patches.Colors.Torch;
             ModifierType = ModifierEnum.Torch;
         }

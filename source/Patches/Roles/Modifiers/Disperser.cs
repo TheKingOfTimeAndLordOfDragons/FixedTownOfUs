@@ -9,6 +9,7 @@ using Reactor.Networking.Extensions;
 using System;
 using TownOfUs.Patches;
 using UnityEngine.LowLevel;
+using TownOfUs.Extensions;
 
 namespace TownOfUs.Roles.Modifiers
 {
@@ -21,7 +22,7 @@ namespace TownOfUs.Roles.Modifiers
         public Disperser(PlayerControl player) : base(player)
         {
             Name = "Disperser";
-            TaskText = () => "Separate the Crew";
+            TaskText = () => Language.GetString("roles.modifiers.disperser");
             Color = Patches.Colors.Impostor;
             StartingCooldown = DateTime.UtcNow;
             ModifierType = ModifierEnum.Disperser;
